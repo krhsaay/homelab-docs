@@ -185,11 +185,7 @@ Pour tirer le meilleur parti de Proxmox dans un homelab sécurisé, voici quelqu
 
   
 
-## **Gestion du stockage : NVMe,**
-
-## **cold storage**
-
-## **sur HDD, intégration TrueNAS, etc.**
+## **Gestion du stockage : NVMe,cold storage sur HDD, intégration TrueNAS, etc.**
 
   
 
