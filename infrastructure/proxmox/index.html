@@ -421,27 +421,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gestion-du-stockage-nvme" class="md-nav__link">
+  <a href="#gestion-du-stockage-nvmecold-storage-sur-hdd-integration-truenas-etc" class="md-nav__link">
     <span class="md-ellipsis">
-      Gestion du stockage : NVMe,
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cold-storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      cold storage
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sur-hdd-integration-truenas-etc" class="md-nav__link">
-    <span class="md-ellipsis">
-      sur HDD, intégration TrueNAS, etc.
+      Gestion du stockage : NVMe,cold storage sur HDD, intégration TrueNAS, etc.
     </span>
   </a>
   
@@ -1810,9 +1792,7 @@
 <p><strong>Optimisations spécifiques</strong> : Activez  <strong>l’IOMMU</strong>  dans le BIOS/UEFI de votre machine pour permettre le  <strong>pass-through</strong>  de périphériques (GPU, USB contrôleur) vers les VM si vous en avez besoin (par ex. une VM media center avec GPU pour transcodage). Assurez-vous que la fonction VT-x/AMD-V est activée également pour les VMs. Si vous utilisez un cluster multi-nœuds, configurez un réseau dédié Gigabit+ (ou mieux 10 Gb) pour le trafic de synchronisation (Corosync, Ceph) et un autre pour les VMs, afin d’éviter les saturations. Enfin, en environnement domestique, un onduleur (UPS) communiquant avec l’hyperviseur est conseillé pour envoyer une commande d’arrêt propre en cas de coupure prolongée – il existe des connecteurs NUT ou APCUPSd que l’on peut installer sur Proxmox pour cela.</p>
 </li>
 </ul>
-<h2 id="gestion-du-stockage-nvme"><strong>Gestion du stockage : NVMe,</strong><a class="headerlink" href="#gestion-du-stockage-nvme" title="Permanent link">&para;</a></h2>
-<h2 id="cold-storage"><strong>cold storage</strong><a class="headerlink" href="#cold-storage" title="Permanent link">&para;</a></h2>
-<h2 id="sur-hdd-integration-truenas-etc"><strong>sur HDD, intégration TrueNAS, etc.</strong><a class="headerlink" href="#sur-hdd-integration-truenas-etc" title="Permanent link">&para;</a></h2>
+<h2 id="gestion-du-stockage-nvmecold-storage-sur-hdd-integration-truenas-etc"><strong>Gestion du stockage : NVMe,cold storage sur HDD, intégration TrueNAS, etc.</strong><a class="headerlink" href="#gestion-du-stockage-nvmecold-storage-sur-hdd-integration-truenas-etc" title="Permanent link">&para;</a></h2>
 <p>La configuration du stockage est un élément clé d’un homelab. Proxmox offre la flexibilité de combiner différentes catégories de disques et même des solutions externes pour obtenir le meilleur compromis entre performance, capacité et résilience :</p>
 <ul>
 <li>
