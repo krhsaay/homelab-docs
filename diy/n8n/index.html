@@ -13,6 +13,8 @@
       
       
       
+        <link rel="prev" href="../esp32/">
+      
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +22,7 @@
     
     
       
-        <title>Spectrum Master Backpack : guide du sac à dos de hacking - Homelab Doc</title>
+        <title>N8N Automatisation - Homelab Doc</title>
       
     
     
@@ -62,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spectrum-master-backpack-guide-du-sac-a-dos-de-hacking" class="md-skip">
+        <a href="#n8n-automatisation-no-code" class="md-skip">
           Aller au contenu
         </a>
       
@@ -98,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Spectrum Master Backpack : guide du sac à dos de hacking
+              N8N Automatisation
             
           </span>
         </div>
@@ -1225,8 +1227,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -1237,13 +1241,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
         
           
           <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
@@ -1259,7 +1261,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             🧪 DIY
@@ -1316,10 +1318,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../n8n/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1330,6 +1354,104 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-generale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture générale
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture générale">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evolutivite-et-modes-dexecution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Évolutivité et modes d’exécution
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nuds-connecteurs-et-declencheurs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Nœuds, connecteurs et déclencheurs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-et-supervision" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface et supervision
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-typiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage typiques
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#licence-et-modele-de-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Licence et modèle de déploiement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performances-et-ressources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performances et ressources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommandations-par-profil-dusage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommandations par profil d’usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1358,109 +1480,102 @@
 
 
 
-<h1 id="spectrum-master-backpack-guide-du-sac-a-dos-de-hacking">Spectrum Master Backpack : guide du sac à dos de hacking<a class="headerlink" href="#spectrum-master-backpack-guide-du-sac-a-dos-de-hacking" title="Permanent link">&para;</a></h1>
-<p><em>Le Spectrum Master Backpack de Bag-Builds, conçu comme une plateforme mobile de hacking sur le terrain. Les deux faces intérieures du sac contiennent divers modules SDR, Wi‑Fi et de stockage</em></p>
-<p>Le  <strong>Spectrum Master Backpack</strong>  est un sac à dos « cyber » pensé pour la capture de signaux sans fil et le pentesting nomade. Alimenté par deux  <strong>Raspberry Pi 4</strong>, il embarque un vaste arsenal d’outils (radio logicielle, adaptateurs Wi‑Fi puissants, GPS, etc.) et permet d’y accéder à distance. En clair, l’ensemble forme un véritable laboratoire « portable », dans lequel le matériel est fixé sur des supports imprimés en 3D à l’intérieur du sac. L’utilisateur peut piloter le système depuis son smartphone/tablette (via le réseau interne ou un câble USB unique) ou depuis un ordinateur connecté en USB. Cette configuration multi-outils est idéale pour des activités variées : hacking éthique,  <strong>wardriving</strong>, CTF mobiles, démonstrations de cybersécurité, etc. En résumé, c’est un centre d’interception sans fil autonome que l’on peut porter sur soi et déployer sur le terrain.</p>
-<h2 id="equipements-embarques">Équipements embarqués<a class="headerlink" href="#equipements-embarques" title="Permanent link">&para;</a></h2>
-<p>Le sac regroupe  <strong>presque tous les outils de hacking et d’analyse radio</strong>  imaginables. Parmi l’équipement listé sur le site Bag-Builds, on trouve notamment：</p>
+<h1 id="n8n-automatisation-no-code">n8n — Automatisation no-code<a class="headerlink" href="#n8n-automatisation-no-code" title="Permanent link">&para;</a></h1>
+<p>n8n (prononcé « en-eight-en ») est une plateforme d’automatisation de flux de travail (workflow)  <strong>no-code/low-code</strong>  et  <em>source-available</em>, conçue en Node.js pour être exécutée sur site ou dans le cloud. Elle sert de « colle digitale » très flexible, permettant de connecter des applications, services, bases de données et APIs pour automatiser presque tout ce qu’on peut imaginer. L’interface web drag-and-drop de n8n facilite la création de workflows sans coder, tout en offrant la possibilité d’ajouter du code JavaScript ou Python personnalisé via un nœud  <em>Code</em>. La version gratuite (« Community Edition ») est disponible en auto-hébergement ; une licence dite  <em>Sustainable Use License</em>(fair-code, depuis 2022) autorise un usage interne ou personnel gratuit mais limite la revente commerciale du service. n8n propose aussi une offre SaaS (n8n Cloud) ainsi qu’une édition Entreprise avec fonctionnalités avancées (authentification SSO, audit, environnements). Son modèle « fair code » garantit toutefois la gratuité pour usage privé ou éducatif.</p>
+<h2 id="architecture-generale">Architecture générale<a class="headerlink" href="#architecture-generale" title="Permanent link">&para;</a></h2>
+<p>n8n est une application Node.js qui s’exécute typiquement dans un environnement conteneurisé (Docker/LXC) ou sur une VM/Linux. Par défaut, un déploiement de base consiste en un seul service n8n (UI et moteur d’exécution) avec une base SQLite embarquée. Cet  <strong>environnement monolithique</strong>  est facile à lancer (par exemple via l’image Docker officielle) et convient aux tests ou homelabs légers. Dans ce mode, n8n stocke toutes les données (credentials, logs d’exécution, définitions de workflows) dans un fichier SQLite (par défaut  <code>~/.n8n/database.sqlite</code>). Pour un usage plus robuste, on privilégie une base de données dédiée (PostgreSQL) pour la persistance, ainsi qu’un  <em>mode file d’attente</em>  distribué.
+En  <strong>mode distribué</strong>  (« queue mode »), l’application n8n se découple en plusieurs composants : les instances  <em>main</em>(UI/API) gèrent l’interface utilisateur et ajoutent les exécutions à la file, un broker Redis sert de file de messages, et des instances  <em>workers</em>  récupèrent les jobs pour les exécuter. Chaque nœud  <em>Main</em>  traite les webhooks et appels API, réplique les workflows, puis pousse les tâches en file d’attente. Les nœuds  <em>Worker</em>  écoutent Redis, extraient les workflows et les exécutent en parallèle. Les données persistantes (définition des workflows, résultats, logs, credentials) sont stockées dans PostgreSQL (ou autre SGBD), partagé entre les instances. Cette architecture supporte la haute disponibilité (réplication des pods/UI) et la montée en charge horizontale (ajout de workers selon la charge).</p>
+<h3 id="evolutivite-et-modes-dexecution">Évolutivité et modes d’exécution<a class="headerlink" href="#evolutivite-et-modes-dexecution" title="Permanent link">&para;</a></h3>
+<p>En pratique, on commence souvent par un seul conteneur Docker n8n (SQLite) pour prototyper rapidement. Quand la charge augmente, on active le mode  <em>queue</em>: il faut alors configurer  <code>EXECUTIONS_MODE=queue</code>, définir les connexions Redis et PostgreSQL, et déployer plusieurs pods n8n (main) et workers. Sous Kubernetes, on utilise typiquement un Deployment (ou StatefulSet) pour n8n, un Deployment Redis et un StatefulSet PostgreSQL (ou service managé). Il faut aussi définir la clé d’encryption globale  <code>N8N_ENCRYPTION_KEY</code>  identique pour tous les pods – c’est indispensable pour chiffrer/déchiffrer les credentials utilisateurs. Cette clé peut être stockée dans un secret K8s.</p>
+<p>Dans un homelab classique (ex. un seul serveur ou LXC), on peut se contenter d’un conteneur Docker n8n « all-in-one », ou d’installer n8n via Node.js (voir ci-dessous). Sur des machines plus puissantes, un petit cluster n8n (avec 2+ nœuds main et quelques workers) et une base Postgres permettent de traiter plusieurs workflows concurrents sans goulot d’étranglement. En résumé, n8n peut être déployé en mode  <em>monolite</em>  (pour commencer) ou en mode  <em>cluster</em>  (queue mode) pour évoluer avec la charge.</p>
+<h2 id="nuds-connecteurs-et-declencheurs">Nœuds, connecteurs et déclencheurs<a class="headerlink" href="#nuds-connecteurs-et-declencheurs" title="Permanent link">&para;</a></h2>
+<p>n8n repose sur le concept de  <strong>flux de données</strong>  à travers des  <em>nœuds</em>  (nodes) connectés visuellement. L’éditeur graphique permet de faire glisser des nœuds sur la toile et de les relier par des flèches pour définir l’ordre d’exécution. Il existe deux grandes familles de nœuds :</p>
 <ul>
 <li>
-<p><strong>Radio logicielle (SDR)</strong> : un USRP B205mini, un HackRF One et deux dongles RTL‑SDR. Ces SDR couvrent de larges plages de fréquences (de la bande FM aux GHz).</p>
+<p><strong>Nœuds déclencheurs (Trigger nodes)</strong>  : ils initient un workflow lorsqu’un événement survient. Par exemple, un  <em>Webhook</em>  peut recevoir un appel HTTP externe, un nœud  <em>Cron/Schedule</em>  se déclenche à intervalles réguliers, un nœud  <em>IMAP Email</em>  surveille une boîte mail, etc. Lorsqu’un trigger se produit, il active le début du workflow correspondant.</p>
 </li>
 <li>
-<p><strong>Amplificateur de signaux</strong> : l’antenne active Nooelec LaNA, pour améliorer la portée des récepteurs SDR.</p>
+<p><strong>Nœuds d’action (Action nodes)</strong>  : ils réalisent les opérations après le déclenchement. Il en existe des centaines pour interfacer des services variés : envoi d’email (SMTP), messages Slack/Telegram/Discord, requêtes API HTTP, lectures/écritures en base de données (MySQL, PostgreSQL, MongoDB, etc.), manipulation de fichiers (CSV, JSON, Excel), et bien d’autres. Il y a aussi des nœuds  <em>prêt-à-l’emploi</em>  pour des applications SaaS (Gmail, Google Sheets, Notion, Salesforce, etc.). L’éditeur facilite la configuration de chaque nœud sans code.</p>
 </li>
 <li>
-<p><strong>Wi‑Fi</strong> : deux adaptateurs de haute puissance ALFA (AWUS036ACM et AWUS036ACHM non carénés) capables de passer en mode moniteur (sniffing).</p>
-</li>
-<li>
-<p><strong>Outils réseau</strong> : l’Ubertooth One pour l’analyse Bluetooth, un CatSniffer (v2) pour le Wi‑Fi, un module GPS u‑blox NEO-M9N (assez courant) et un  <strong>GPSDO</strong>  (oscillateur à stabilité temporelle élevée).</p>
-</li>
-<li>
-<p><strong>Ordinateurs embarqués</strong> : deux Raspberry Pi 4, qui font office de cœurs informatiques exécutant des OS de pentest (Kali Linux, etc.). Ils gèrent le traitement des données et les interfaces web/SSH.</p>
-</li>
-<li>
-<p><strong>Stockage</strong> : un SSD Samsung T7 externe pour conserver les captures et outils.</p>
-</li>
-<li>
-<p><strong>Hub USB</strong> : deux hubs multiports (USB-A Aceele et Kensington SD5700T ouvert) pour relier tous les dongles et cartes aux Pi.</p>
-</li>
-<li>
-<p><strong>Réseau étendu</strong> : un routeur de voyage GL.iNet AX Slate (Wi‑Fi 6, décarcéré) et un modem 4G Quectel EC25-E pour la connectivité cellulaire. Ainsi, le sac peut créer son propre réseau privé ou se connecter au réseau mobile sur le terrain.</p>
-</li>
-<li>
-<p><strong>Alimentation</strong> : quatre grandes batteries Anker 737 de 24 000 mAh chacune, placées en vis-à-vis des cartes informatiques. Cela offre plusieurs dizaines d’heures d’autonomie selon l’utilisation (le Pi 4 consomme en général quelques watts).</p>
-</li>
-<li>
-<p><strong>Ventilation</strong> : deux petits ventilateurs Noctua A4x20 pour évacuer la chaleur des Raspberry Pi et autres modules.</p>
+<p><strong>Nœud Code (Function node)</strong>  : ce nœud spécial permet d’écrire du code JavaScript (ou Python en auto-hébergement) pour traiter des données complexes ou définir des logiques personnalisées dans le flux. C’est utile si les nœuds standards ne suffisent pas.</p>
 </li>
 </ul>
-<p>En plus de ces composants de base, on peut enrichir le sac avec d’autres outils de pentest portables. Par exemple, Bag-Builds a souvent inclus un  <strong>Flipper Zero</strong>  et un  <strong>CatSniffer v3</strong>  dans ses kits. Un  <em>Flipper Zero</em>  est utile pour tester les protocoles RFID/IR et servir d’outil polyvalent en pentest embarqué. On peut aussi emporter un clavier pliable, un écran portable (connecté aux Pi), voire un Wi‑Fi Pineapple ou des dongles LoRa supplémentaires. L’idée est de maximiser le matériel disponible, tout en restant raisonnable sur le poids.</p>
-<h2 id="assemblage-et-integration">Assemblage et intégration<a class="headerlink" href="#assemblage-et-integration" title="Permanent link">&para;</a></h2>
-<p><em>Installation des modules sur la structure interne du sac. Les Raspberry Pi sont fixés sur une plaque principale, et les dongles/antennes sont montés sur les panneaux latéraux</em></p>
-<p>Le montage commence par l’impression et l’installation d’une  <strong>structure interne</strong>  sur mesure (panneaux et supports 3D) qui sera fixée à l’intérieur du sac. Cette structure comporte :</p>
+<p>n8n dispose de plus de 500 intégrations prêtes à l’emploi couvrant l’essentiel des services et apps (API tierces, bases de données, messageries, réseaux sociaux, etc.), ainsi que plus de 1 250 modèles de workflows partageables. Par exemple, on trouve des nœuds dédiés pour Slack, Telegram, Discord, GitHub, Jira, Twitter, Stripe, Zapier, Trello, Matrix, et même des outils d’IA (OpenAI, LangChain, etc.). L’abondance de nœuds intégrés et le support de la  <strong>Code node</strong>  rendent n8n extrêmement polyvalent. Les nœuds sont configurés via l’interface : on saisit les paramètres (url, clés API, requêtes, conditions, etc.) dans des champs, sans écrire de script.</p>
+<h2 id="interface-et-supervision">Interface et supervision<a class="headerlink" href="#interface-et-supervision" title="Permanent link">&para;</a></h2>
+<p>n8n s’utilise principalement via une  <strong>interface web</strong>  unifiée (port 5678 par défaut) qui permet de concevoir, exécuter et surveiller les workflows. Le tableau de bord principal affiche la liste des workflows, leur état (activé/désactivé), ainsi que les journaux d’exécution (succès ou erreurs). Depuis l’UI, on peut lancer des workflows manuellement pour les tester, et consulter l’historique de chaque exécution (valeurs entrées/sorties). Un mode  <em>Debug</em>  permet de retracer étape par étape un workflow. L’interface gère aussi les  <em>crédentials</em>  (clés API, logins) avec chiffrement et partage entre utilisateurs, ainsi que la gestion multi-utilisateurs et rôles (RBAC) en version Entreprise.</p>
+<p>Côté supervision technique, n8n ne propose pas de tableaux de bord analytiques intégrés (comme Kibana ou Graylog). En revanche, il expose quelques endpoints REST pour la santé du service :</p>
 <ul>
 <li>
-<p>Une plaque principale (par exemple sur le panneau arrière du sac) pour y visser les  <strong>Raspberry Pi</strong>  et l’alimentation principale.</p>
+<p><code>/healthz</code>  (200 si le service est en ligne),</p>
 </li>
 <li>
-<p>Des panneaux latéraux pour maintenir verticalement les dongles SDR, adaptateurs Wi‑Fi, antennes et hubs USB.</p>
+<p><code>/healthz/readiness</code>  (200 si la DB est accessible et migrée),</p>
 </li>
 <li>
-<p>Des compartiments ou poches pour glisser les batteries et le SSD.</p>
+<p><code>/metrics</code>  (informations détaillées type Prometheus).</p>
 </li>
 </ul>
-<p>Ensuite, on  <strong>visse chaque composant</strong>  sur son support : les Raspberry Pi sont fixés avec leurs dissipateurs sur la plaque, puis on connecte les hubs USB aux Pi. Les dongles SDR et adaptateurs Wi‑Fi sont montés sur les panneaux latéraux via leurs vis de fixation. Les câbles (USB, antennes coaxiales, alimentation) sont acheminés de manière propre vers les Pi. Les ventilateurs Noctua sont positionnés pour brasser de l’air frais vers les cartes (généralement accolés aux bordures du sac).</p>
-<p><strong>Étapes clés</strong>  (guide pas-à-pas) :</p>
-<ol>
-<li>
-<p><strong>Préparer la base</strong>  – Imprimer/fabriquer les panneaux 3D selon le plan (disponible sur la page Bag-Builds). Fixer ces supports au sac (coutures ou velcro industriel).</p>
-</li>
-<li>
-<p><strong>Monter les Pi</strong>  – Visser les deux Raspberry Pi 4 sur la plaque arrière. Brancher les dissipateurs.</p>
-</li>
-<li>
-<p><strong>Raccorder l’alimentation</strong>  – Connecter les câbles d’alimentation des batteries aux Pi (par USB-C ou via un hub power).</p>
-</li>
-<li>
-<p><strong>Installer les dongles SDR &amp; Wi‑Fi</strong>  – Visser les modules (USRP, HackRF, RTL-SDR, adaptateurs ALFA) sur les panneaux latéraux. Connecter chaque dongle à un port USB.</p>
-</li>
-<li>
-<p><strong>Placer le stockage et le réseau</strong>  – Installer le SSD sur un support dédié. Fixer le routeur GL.iNet et le modem EC25-E, les relier aux Pi (généralement par USB et RJ45).</p>
-</li>
-<li>
-<p><strong>Ajouter les accessoires</strong>  – Glisser le GPS et le GPSDO dans des emplacements sécurisés. Placer les batteries dans leurs poches (idéalement en face de la plaque principale pour l’équilibre). Brancher enfin les ventilateurs sur les Pi ou sur un contrôleur de ventilateur dédié.</p>
-</li>
-<li>
-<p><strong>Tests et configuration</strong>  – Vérifier chaque connexion. Allumer les Raspberry Pi (installés avec l’OS de votre choix) et tester l’accès réseau : par Wi‑Fi interne (routeur) et par USB.</p>
-</li>
-</ol>
-<p>Grâce à ce design modulaire imprimé en 3D, l’ensemble reste solide et bien ventilé. Un guide vidéo ou des instructions pas à pas sont souvent fournis (par exemple sur YouTube) pour aider au montage.</p>
-<h2 id="gestion-de-lalimentation-et-autonomie">Gestion de l’alimentation et autonomie<a class="headerlink" href="#gestion-de-lalimentation-et-autonomie" title="Permanent link">&para;</a></h2>
-<p>L’une des exigences du projet est la  <strong>mobilité et l’autonomie</strong>. Les quatre batteries Anker 24 000 mAh suffisent à alimenter les Raspberry Pi et la plupart des périphériques plusieurs heures, voire une journée complète selon la charge de travail. On peut calculer qu’un Raspberry Pi 4 tire environ 3–4 W en charge lourde (moniteur réseau, SDR actif) ; par conséquent une batterie Anker (~89 Wh) peut alimenter un Pi plusieurs dizaines d’heures à faible charge.</p>
-<p>Pour maximiser l’autonomie sur le terrain, on veille à optimiser la consommation : désactiver les modules inutilisés, utiliser des modes basse consommation sur les SDR/antenne, etc.  <strong>Optionnellement</strong>, on peut envisager d’ajouter un petit panneau solaire USB pliable pour recharger les batteries en continu durant les missions longues. Aucune référence officielle n’indique la présence d’un panneau solaire sur ce modèle spécifique, mais de nombreux hackers utilisent des chargeurs solaires (5–10 W) en randonnée pour prolonger l’autonomie des packs USB. Si on choisit cette option, il faudra considérer son poids et prévoir des sorties USB ou USB-C compatibles pour la recharge.</p>
-<h2 id="utilisation-sur-le-terrain">Utilisation sur le terrain<a class="headerlink" href="#utilisation-sur-le-terrain" title="Permanent link">&para;</a></h2>
-<p>Grâce à son routeur interne et à son modem 4G, le sac peut créer un réseau local privé permettant de contrôler à distance tous les appareils. Typiquement, les Raspberry Pi tournent sous Kali Linux ou un OS similaire, avec des applications comme  <strong>GNU Radio</strong>,  <strong>Wireshark</strong>,  <strong>aircrack-ng</strong>, etc. On peut alors :</p>
+<p>Ces endpoints (désactivés par défaut pour la version open source) peuvent être activés via des variables d’environnement et utilisés pour surveiller n8n avec des outils externes (Prometheus/Grafana, Zabbix, etc.). Plusieurs utilisateurs créent aussi des dashboards personnalisés pour suivre le nombre d’exécutions, les temps de réponse ou les erreurs, en extrayant ces données des métriques ou des logs stockés en base. Enfin, on peut intégrer dans n8n même des notifications d’alerte : par exemple un workflow peut envoyer un mail ou un message Slack lorsqu’un autre workflow échoue plusieurs fois.</p>
+<h2 id="cas-dusage-typiques">Cas d’usage typiques<a class="headerlink" href="#cas-dusage-typiques" title="Permanent link">&para;</a></h2>
+<p>n8n est par essence transversal et trouve des applications dans de nombreux domaines. En homelab ou en entreprise, on l’utilise souvent pour :</p>
 <ul>
 <li>
-<p>Lancer une capture SDR à distance pour analyser les ondes radio (FM, Wi-Fi, Bluetooth, LoRa, etc.).</p>
+<p><strong>Notifications et alertes automatisées</strong>  : envoyer des emails/SMS/Slack lorsqu’un événement survient (un fichier est ajouté sur un serveur, un capteur détecte un incident, un seuil de métrique est dépassé, etc.). Par exemple, on peut déclencher une alerte Slack dès qu’un serveur Linux génère une erreur critique.</p>
 </li>
 <li>
-<p>Mettre en  <strong>sniffing</strong>  les réseaux Wi‑Fi alentour via les adaptateurs ALFA en mode moniteur.</p>
+<p><strong>Synchronisation de données</strong>  : tenir à jour automatiquement des données entre plusieurs systèmes. Par exemple, copier des leads d’un formulaire web vers un CRM, mettre à jour une base de données interne à partir de Google Sheets, répliquer des tickets Jira sur un autre outil de ticketing, etc. n8n peut relier Salesforce, MySQL, Airtable, Notion, etc., en utilisant des déclencheurs de type webhook ou planification.</p>
 </li>
 <li>
-<p>Utiliser le GPS pour  <strong>géolocaliser</strong>  les sources détectées.</p>
+<p><strong>Processus métier récurrents</strong>  : automatiser les tâches répétitives. Par exemple, générer et envoyer automatiquement des factures clients (en prenant les données dans une DB), effectuer des paiements réguliers via Stripe, envoyer des rappels par email avant une échéance, ou encore compiler des rapports hebdomadaires (collecte de données, filtrage, envoi de graphique).</p>
 </li>
 <li>
-<p>Exploiter le Flipper Zero (ajouté au sac) pour attaquer des protocoles RFID ou infrarouges.</p>
+<p><strong>Collecte et agrégation de données</strong>  : réaliser du web scraping ou appeler des APIs externes pour consolider des données. Par exemple, récupérer quotidiennement des données financières via une API, agréger des posts réseaux sociaux, ou importer des fichiers CSV depuis un dépôt. n8n peut ainsi alimenter automatiquement des dashboards ou journaux.</p>
 </li>
 <li>
-<p>Accéder aux interfaces web des dongles (certains SDR ont des interfaces graphiques) ou aux terminaux SSH des Pi depuis un smartphone/tablette sur le même réseau.</p>
+<p><strong>Domotique et IoT</strong>  : piloter des équipements intelligents. Par exemple, changer l’état de systèmes d’éclairage selon l’heure ou la météo (via MQTT), ou déclencher des actions si une caméra détecte du mouvement.</p>
+</li>
+<li>
+<p><strong>Workflows IA</strong>  : intégrer des modèles d’IA. Par exemple, appeler ChatGPT ou LangChain pour générer automatiquement du texte (email, résumé, code) à partir de triggers, ou analyser des images/textes, etc. n8n propose des nœuds pour OpenAI, Hugging Face, et peut orchestrer des chaînes d’outils AI.</p>
+</li>
+<li>
+<p><strong>Orchestration DevOps/SecOps</strong>  : automatiser des tâches IT. Par exemple, créer des tickets Jira lors de pull requests Git, déployer automatiquement une application après un commit, ou encore enrichir des alertes de sécurité (SIEM) en croisant avec MITRE ATT&amp;CK via un agent IA. n8n peut servir de « SOAR » simple, en cascadant appels API, traitements de données et notifications pour fluidifier le travail des équipes IT/Sécurité.</p>
 </li>
 </ul>
-<p>Les câbles USB centralisés permettent aussi de brancher rapidement le sac à un laptop externe comme simple boîtier de dongles. Ainsi, on peut télécharger rapidement les captures ou étendre l’analyse sur un ordinateur portable, sans avoir à retirer les modules du sac.</p>
-<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
-<p>Le  <strong>Spectrum Master Backpack</strong>  est un sac à dos de hacking extrêmement complet, conçu pour gérer toutes sortes de missions sur le terrain. Son design interne repose sur un « rack » imprimé en 3D qui organise solidement chaque outil. En cumulant des SDR, des adaptateurs réseau puissants, un GPS et de grandes batteries, il couvre pratiquement tous les besoins en pentesting et surveillance sans fil. Comme le note la revue associée, il s’agit d’un « laboratoire portable » idéal pour l’analyse des signaux sans fil. Pour un bricoleur, les plans du support 3D et la liste des composants publiés sur bagbuilds.com servent de base ; il ne reste plus qu’à suivre les étapes de montage et à configurer le logiciel. Au final, vous obtenez un cyberdeck embarqué dans un sac à dos, prêt à affronter des missions d’hacking sur le terrain.</p>
+<p>Chaque cas d’usage illustre la flexibilité de n8n. Les nombreux  <em>templates</em>  fournis (sur le site n8n et la communauté) permettent souvent de démarrer un cas courant en modifiant simplement quelques paramètres.</p>
+<h2 id="licence-et-modele-de-deploiement">Licence et modèle de déploiement<a class="headerlink" href="#licence-et-modele-de-deploiement" title="Permanent link">&para;</a></h2>
+<p>La version open n8n est distribuée sous la  <em>Sustainable Use License</em>  (licence fair-code) depuis 2022. Cette licence accorde les droits d’utilisation et de modification en interne ou personnel sans paiement, mais interdit expressément de fournir n8n sous forme de service payant ou de le redistribuer commercialement. En pratique, cela garantit que l’outil reste gratuit pour un usage personnel/homelab, tout en protégeant le modèle économique du fournisseur.</p>
+<p>Pour déployer, n8n propose plusieurs options :</p>
+<ul>
+<li>
+<p><strong>Auto-hébergement</strong>  : via Docker (image  <code>n8nio/n8n</code>  officielle) ou installation directe sur Linux. Les conteneurs Docker sont les plus simples : un seul  <code>docker run</code>  suffit à lancer n8n avec un volume persistant (<code>/home/node/.n8n</code>) sur le port 5678. Des fichiers Docker Compose préconfigurés (dans le dépôt “n8n-hosting” officiel) facilitent le passage à Postgres, Redis, etc. Pour ceux qui préfèrent une VM ou LXC, il suffit d’installer Node.js (version 16+), puis d’installer n8n en global (<code>npm i -g n8n</code>), ou d’utiliser la version Desktop pour tester localement. n8n recommande le self-hosting pour les utilisateurs avancés; les débutants peu à l’aise avec l’infra peuvent préférer l’offre cloud n8n Cloud.</p>
+</li>
+<li>
+<p><strong>n8n Cloud / Entreprise</strong>  : pour un déploiement en mode SaaS sans maintenance, n8n Cloud (service managé) offre un niveau gratuit et des plans payants. L’édition Entreprise d’auto-hébergement ajoute des fonctions (audits, SSO, archivage avancé) adaptées aux organisations.</p>
+</li>
+</ul>
+<p>Dans un environnement domestique ou homelab, on privilégiera généralement Docker ou LXC. Par exemple, on peut créer un conteneur Debian/Ubuntu, y installer Docker Compose, et démarrer un stack n8n complet (nœud n8n, Redis, Postgres) d’un coup. Certains utilisateurs partagent même des templates Proxmox pour n8n. L’interface web de n8n (et ses autres ports de webhook) est ensuite accessible via un reverse-proxy (Nginx, Traefik, Caddy) pour gérer SSL et noms de domaine.</p>
+<h2 id="performances-et-ressources">Performances et ressources<a class="headerlink" href="#performances-et-ressources" title="Permanent link">&para;</a></h2>
+<p>n8n n’est pas très gourmand en CPU si l’on traite peu de workflows, mais son débit dépendra du type de nœuds utilisés. En revanche, la mémoire et l’I/O disque sont les facteurs critiques : chaque instance n8n et la base de données doivent avoir suffisamment de RAM. La documentation indique qu’une instance idle n8n Cloud consomme ~100 Mo, mais les besoins peuvent monter si les workflows manipulent de gros volumes de données (par ex. nœud  <em>Code</em>  dupliquant de larges variables).</p>
+<p><strong>RAM</strong>  – Pour un usage léger, quelques gigaoctets suffisent (une configuration de base comme  <em>2 vCPU + 4–8 Go</em>  permet déjà de lancer n8n avec quelques workflows). En production ou cas de charge plus élevée, on prévoira davantage :  <em>4 vCPU + 8–16 Go</em>  pour des opérations concurrentes importantes. Des utilisateurs notent même 16 Go+ pour un trafic très important. L’optimisation JavaScript repose sur du  <em>heap</em>, donc sur des VMs allouant la moitié (en général) de la RAM à Node.js. Dans tous les cas, privilégier la RAM – n8n recommande au moins 8 Go si possible (Ubuntu/Debian) pour de petits clusters.</p>
+<p><strong>CPU</strong>  – n8n utilise Node.js et peut profiter de plusieurs cœurs lorsqu’il y a plusieurs processus (un nœud worker par cœur par exemple). On rencontre peu de tâches massivement parallèles spécifiques, mais on peut exécuter plusieurs workflows à la fois. Un CPU moderne 4 cœurs est donc souvent un bon début; pour la version cluster, chaque service (main, worker, DB) peut tourner sur un cœur dédié. Selon la charge, multiplier les cœurs pour les workers améliore la réactivité.</p>
+<p><strong>Stockage</strong>  – On stocke les données (workflows, exécutions, credentials) dans la base (SQLite ou Postgres) et dans le volume n8n (<code>/home/node/.n8n</code>). Il est fortement conseillé d’utiliser des disques rapides (SSD/NVMe) car les logs et la DB subissent beaucoup d’écriture. Le guide recommande explicitement un stockage SSD et un volume persistant monté sur Docker/LXC. Pour dimensionner l’espace, on part du principe  <em>[volume de logs journaliers] × [jours de rétention]</em>. n8n stocke aussi tous les logs d’exécution en base : sans purge, la taille peut croître. Il faut donc configurer la rotation/purge automatique via  <code>EXECUTIONS_DATA_PRUNE=true</code>  et  <code>EXECUTIONS_DATA_MAX_AGE</code>  (pour effacer les exécutions anciennes). Sur SQLite, après purge il faut éventuellement lancer un  <code>VACUUM</code>  manuel pour compacter le fichier. En Postgres, la purge libère l’espace automatiquement.</p>
+<p><strong>Scalabilité</strong>  – Toutes les composantes peuvent se mettre en cluster. n8n peut déployer plusieurs  <em>nœuds Main</em>  derrière un load-balancer, et plusieurs  <em>Workers</em>  connectés à un Redis commun. PostgreSQL peut être en cluster primaire/standby pour la résilience. Ce déploiement distribué offre haute-disponibilité (HA) et montée en charge horizontale aisées. En pratique, on commence sur un nœud, puis on passe à 3+ nœuds pour le back-end (Postgres), autant de workers que nécessaire, et éventuellement un nœud master d’API n8n répliqué.</p>
+<p><strong>Sécurité</strong>  – n8n chiffre les données sensibles stockées (avec la clé N8N_ENCRYPTION_KEY) et recommande le TLS pour les connexions UI/API. En version Enterprise, on dispose de contrôles d’accès avancés (RBAC, audit, SSO, etc.). En open-source, on peut quand même activer l’authentification via un proxy et forcer HTTPS. Les communications entre nœuds (Redis, Postgres) doivent être sécurisées si on les distribue sur plusieurs hôtes. En homelab, on peut contenir le tout derrière un VPN interne ou un reverse-proxy sécurisé.</p>
+<p><strong>Maintenabilité</strong>  – Il convient de sauvegarder régulièrement la base de données (Postgres dump) ainsi que le dossier  <code>~/.n8n</code>  (contenant la clé d’encryption et les workflows). Les mises à jour se font simplement en remontant une nouvelle image Docker (commande  <code>docker pull</code>  ou  <code>docker compose pull</code>) puis en redémarrant le conteneur. Un bon automatisme est d’utiliser des scripts d’orchestration (docker-compose, Ansible, etc.) pour limiter l’effort opérationnel. Il faut aussi purger périodiquement les exécutions anciennes (<code>EXECUTIONS_DATA_PRUNE</code>) pour éviter de saturer le disque.</p>
+<h2 id="recommandations-par-profil-dusage">Recommandations par profil d’usage<a class="headerlink" href="#recommandations-par-profil-dusage" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Débutant / homelab simple</strong>  : n8n est agréable pour démarrer grâce à son interface intuitive. Pour un débutant on peut lancer rapidement un container Docker n8n (voire utiliser n8n Desktop) et explorer quelques modèles. L’offre cloud gratuite (n8n Cloud) ou la documentation officielle (quickstarts) permettent de tester sans config complexe. Pas besoin d’optimiser les ressources au départ : un serveur 2 vCPU, 4 Go RAM (comme un petit VPS ou Raspberry Pi 4) fera fonctionner une instance basique. Il vaut mieux se familiariser avec la logique « flow-based » avant de répartir en clusters.</p>
+</li>
+<li>
+<p><strong>Utilisateur avancé</strong>  : si on maîtrise l’infra ou a des besoins plus exigeants, n8n excelle. On peut intégrer du code personnalisé (JS/Python), gérer des connexions API complexes, et scripter le déploiement (via Docker Compose, Terraform, etc.). Les experts tireront profit du « queue mode » pour assurer la stabilité à grande échelle, et pourront lier n8n à d’autres outils (par exemple envoyer ses événements vers un SIEM/Elastic ou un autre système de logs pour corréler). On peut aussi coupler n8n avec des outils de BI/monitoring (Prometheus, ELK) pour aller plus loin.</p>
+</li>
+<li>
+<p><strong>Usage professionnel / gros volume</strong>  : en production, on industrialise n8n sur un cluster : plusieurs instances n8n (UI/API), une base Postgres haute-dispo, Redis en cluster, et de nombreux workers. N8n Entreprise (ou Cloud Enterprise) apporte des fonctions essentielles (gestion multi-environnements, archivage, support) pour les équipes IT/Security. Les pipelines de CI/CD peuvent déployer n8n automatiquement, et les devs intègrent facilement les workflows dans des outils de gestion de version. Dans ces cas, des machines dédiées (8+ cœurs, 16+ Go) sont courantes, tout en gardant des disques SSD et des sauvegardes régulières.</p>
+</li>
+</ul>
+<p>En résumé, n8n est un outil très polyvalent pour l’automatisation low-code. Pour un homelab débutant, on privilégiera la simplicité : Docker-compose officiel ou n8n Cloud, interface web, et quelques workflows d’essai. Avec l’expérience, on peut étendre le système (cluster, code personnalisé) et combiner n8n à d’autres plateformes (par exemple l’utiliser en front-end d’un SIEM ou comme orchestrateur pour des scripts devops). L’essentiel est d’avoir une collecte fiable d’événements et d’actions, et n8n fournit ce cadre flexible. Les utilisateurs avancés peuvent bénéficier des templates existants ou créer les leurs (y compris via Sigma ou autres standards) pour répondre à n’importe quel cas d’usage.</p>
 
 
 
