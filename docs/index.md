@@ -1,6 +1,6 @@
-# Cyber Doc
+# Homelabs Doc
 
-Bienvenue sur **Cyber Doc**, la documentation complète pour construire un **homelab sécurisé**, auto-hébergé et modulaire.
+Bienvenue sur **Homelabs Doc**, la documentation complète pour construire un **homelab sécurisé**, auto-hébergé et modulaire.
 
 ---
 
