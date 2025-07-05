@@ -1,1 +1,77 @@
-site_name: My Docs
+site_name: Cyber Doc
+site_description: Documentation pour construire un homelab sécurisé et complet
+site_author: krhsaay
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.sections
+    - navigation.expand
+    - toc.integrate
+    - content.code.annotate
+    - search.highlight
+    - search.suggest
+
+nav:
+  - Accueil: index.md
+
+  - 🏗 Infrastructure:
+      - Proxmox VE: infrastructure/proxmox.md
+      - Stockage: infrastructure/stockage.md
+      - Réseau & VLANs: infrastructure/reseau.md
+      - LXC vs VM: infrastructure/lxc-vs-vm.md
+
+  - 🌐 Réseau:
+      - Dashboards: reseau/dashboard.md
+      - DNS (Pi-hole, AdGuard...): reseau/dns.md
+      - Accès VPN distant: reseau/vpn-remote-access.md
+      - Reverse Proxy: reseau/reverse-proxy.md
+      - DNS Dynamique (DDNS): reseau/ddns.md
+      - VPN et torrents: reseau/torrent-vpn.md
+
+  - 🧰 Outils:
+      - Gestion de fichiers: outils/gestion-fichiers.md
+      - Mots de passe (Vaultwarden...): outils/gestion-mots-de-passe.md
+      - Favoris et veille (Hoarder): outils/favoris.md
+      - Docker & Portainer: outils/docker.md
+
+  - 📺 Média:
+      - Streaming (Jellyfin, Plex): media/streaming.md
+      - Sonarr, Overseerr: media/overseerr-sonarr.md
+      - Téléchargements (qBittorrent): media/clients-download.md
+      - Photos (Immich): media/photos.md
+
+  - 🏠 Domotique:
+      - Home Assistant: domotique/homeassistant.md
+      - Zigbee2MQTT: domotique/zigbee.md
+      - Vidéosurveillance (Frigate): domotique/surveillance.md
+
+  - 📊 Monitoring:
+      - Grafana: monitoring/grafana.md
+      - Prometheus / InfluxDB: monitoring/prometheus-influx.md
+      - NetAlertX: monitoring/netalert.md
+
+  - 🔐 Sécurité:
+      - Vaultwarden: securite/vaultwarden.md
+      - Authentification MFA: securite/authentification.md
+      - SIEM (Wazuh, ELK...): securite/siem.md
+      - Segmentation & honeypots: securite/segmentation.md
+
+  - 🧪 DIY:
+      - ESP32 & capteurs: diy/esp32.md
+      - OctoPrint & impression 3D: diy/octoprint.md
+      - N8N Automatisation: diy/n8n.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - footnotes
+  - def_list
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed
+
+plugins:
+  - search
