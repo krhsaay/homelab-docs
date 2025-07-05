@@ -1,6 +1,6 @@
-# Homelabs Doc
+# Homelab Doc
 
-Bienvenue sur **Homelabs Doc**, la documentation complète pour construire un **homelab sécurisé**, auto-hébergé et modulaire.
+Bienvenue sur **Homelab Doc**, la documentation complète pour construire un **homelab sécurisé**, auto-hébergé et modulaire.
 
 ---
 
