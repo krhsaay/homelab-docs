@@ -1,0 +1,1682 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../../media/photos/">
+      
+      
+        <link rel="next" href="../zigbee/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Home Assistant - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#installation-et-configuration-de-home-assistant" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home Assistant
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integration-mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration MQTT
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intégration MQTT">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploiement-du-broker-mosquitto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Déploiement du broker (Mosquitto)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appareils-iot-zigbee2mqtt-shelly-esphome-tasmota" class="md-nav__link">
+    <span class="md-ellipsis">
+      Appareils IoT (Zigbee2MQTT, Shelly, ESPHome, Tasmota)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#securite-mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité MQTT
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tableaux-de-bord-lovelace-et-automatisations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tableaux de bord Lovelace et automatisations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-concrets-en-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage concrets en homelab
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="installation-et-configuration-de-home-assistant"><strong>Installation et configuration de Home Assistant</strong><a class="headerlink" href="#installation-et-configuration-de-home-assistant" title="Permanent link">&para;</a></h1>
+<p>Home Assistant est une plateforme domotique open source puissante. Elle peut être installée de plusieurs façons selon vos besoins et votre infrastructure.  <strong>Home Assistant Operating System (HassOS)</strong>  est la méthode recommandée pour la plupart des utilisateurs : il s’agit d’un système minimal dédié qui s’exécute sur SBC ou VM et prend en charge nativement les  <em>add-ons</em>  (extensions)  . Les autres options comprennent l’<strong>installation en conteneur Docker</strong>  (requiert un système hôte Linux et ne supporte pas les add-ons intégrés) et les machines virtuelles. Chaque méthode a ses avantages en termes de maintenance, de performances et d’isolation.</p>
+<ul>
+<li>
+<p><strong>Home Assistant OS</strong>  : s’installe sur Raspberry Pi, NUC, VM, etc. Prévoyez au minimum 2 Go de RAM et ~32 Go de stockage (SSD recommandé)  . L’OS minimalifie les mises à jour et intègre la gestion d’add-ons (MOSQUITTO, Node-RED, etc.)  . Sur Proxmox, on déploie souvent HA OS en VM (notamment pour la compatibilité avec les  <em>dongles</em>  USB)  .</p>
+</li>
+<li>
+<p><strong>Container (Docker)</strong>  : installer le conteneur officiel  ghcr.io/home-assistant/home-assistant:stable. Par exemple :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>homeassistant<span class="w"> </span>--restart<span class="o">=</span>unless-stopped<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">TZ</span><span class="o">=</span>Europe/Paris<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>/PATH_CONFIG:/config<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--network<span class="o">=</span>host<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>ghcr.io/home-assistant/home-assistant:stable
+</code></pre></div>
+<ul>
+<li>
+<p>Ce mode ne gère pas les add-ons internes  . Il est idéal si vous voulez superviser manuellement l’instance via Docker. Pensez à utiliser  --network=host  et à exposer les périphériques USB (--device /dev/ttyUSB0) pour Zigbee/Z-Wave  .</p>
+</li>
+<li>
+<p><strong>VM Proxmox</strong>  : déployer HA OS dans une VM KVM. L’interface Proxmox (KVM) permet le passthrough USB (utile pour les dongles Zigbee/Z-Wave  ). On peut automatiser l’installation avec des scripts (par ex. tteck/Proxmox Helper) pour créer une VM HA OS en quelques commandes  . L’avantage : on peut isoler HA du reste (ex. VLAN dédié) tout en profitant des snapshots de VM.</p>
+</li>
+<li>
+<p><strong>LXC Proxmox</strong>  : HA Supervised (Core + Supervisor) peut fonctionner dans un conteneur LXC, mais ce mode est désormais  <strong>déconseillé</strong>  et instable  . Il offre toutefois un démarrage plus rapide et moins de surcharge qu’une VM. Si vous optez pour LXC, assurez-vous qu’il a accès aux périphériques (lxc.cgroup.devices.allow = c 188:* rwm  pour MQTT USB, etc.).</p>
+</li>
+<li>
+<p><strong>Stockage</strong>  : préférez un SSD ou un volume RAID pour la fiabilité (évitez les SD cards à bas coût). Home Assistant stocke la config, la base de données (SQLite ou MariaDB), les images, etc. Sur une VM ou conteneur, réservez assez d’espace disque selon le nombre d’entités et de journaux que vous collectez. Activez la compression TRIM (ex.  --storagectl --discard on  pour VirtualBox  ) pour optimiser l’espace.</p>
+</li>
+<li>
+<p><strong>Isolement réseau</strong>  : dans un homelab sécuritaire, on recommande de segmenter le réseau IoT. Par exemple, placez HA dans un VLAN distinct. Les “things” (capteurs, lampes, etc.) sont alors isolés du LAN principal. Les VLAN permettent d’<strong>isoler les appareils et de sécuriser le réseau</strong>, car chaque réseau virtuel est indépendant  . Home Assistant doit pouvoir communiquer avec les deux domaines (ex. via plusieurs interfaces ou règles de pare-feu). En pratique, on crée un VLAN “IoT” où résident les appareils, et un VLAN “Serveur” pour HA, en autorisant uniquement les flux strictement nécessaires (MQTT, HTTP, etc.)  . Pensez à mettre en place un pare-feu (p. ex. pfSense) pour contrôler ces échanges (un exemple de règles typiques : autoriser le VLAN IoT vers HA sur le port MQTT, bloquer le reste du LAN)  .</p>
+</li>
+</ul>
+<p>TABLEAU</p>
+<h2 id="integration-mqtt"><strong>Intégration MQTT</strong><a class="headerlink" href="#integration-mqtt" title="Permanent link">&para;</a></h2>
+<p>L’utilisation d’un  <strong>broker MQTT</strong>  est au cœur de nombreux scénarios domotiques. Le choix le plus simple et open-source est  <strong>Mosquitto</strong>. On peut l’installer soit comme add-on (sur HA OS/Supervised), soit dans un conteneur dédié Docker/LXC. Home Assistant propose un add-on officiel  <em>Mosquitto Broker</em>  qui automatise la configuration initiale (il génère un utilisateur/sésame sécurisé)  . En alternative, des brokers MQTT tels qu’<strong>EMQX</strong>,  <strong>VerneMQ</strong>, ou  <strong>NanoMQ</strong>  sont open-source et scalables (tableau comparatif ci-dessous).</p>
+<p>TABLEAU</p>
+<h3 id="deploiement-du-broker-mosquitto"><strong>Déploiement du broker (Mosquitto)</strong><a class="headerlink" href="#deploiement-du-broker-mosquitto" title="Permanent link">&para;</a></h3>
+<p>Installez Mosquitto (ex.  apt-get install mosquitto) ou utilisez le  <em>Add-on</em>  dans HA OS. Configurez l’authentification en créant un utilisateur MQTT propre (ex.  mqtt_user  et mot de passe)  . Exemple de connexion dans Home Assistant (via Intégrations) :  <strong>hôte = IP du broker</strong>, port 1883, et les identifiants choisis. Activez l’option TLS si vous voulez chiffrer les échanges : cela nécessite un certificat (Let’s Encrypt ou auto-signé) et l’activation de TLS sur le broker  . Sur Mosquitto, éditez  /etc/mosquitto/mosquitto.conf  pour ajouter :</p>
+<div class="highlight"><pre><span></span><code><span class="l l-Scalar l-Scalar-Plain">listener 8883</span>
+<span class="l l-Scalar l-Scalar-Plain">cafile /etc/mosquitto/certs/ca.crt</span>
+<span class="l l-Scalar l-Scalar-Plain">certfile /etc/mosquitto/certs/server.crt</span>
+<span class="l l-Scalar l-Scalar-Plain">keyfile /etc/mosquitto/certs/server.key</span>
+<span class="l l-Scalar l-Scalar-Plain">require_certificate false</span>
+</code></pre></div>
+<p>et créez des utilisateurs via  mosquitto_passwd. Redémarrez le service. Home Assistant se connectera alors sur le port 8883 avec TLS activé  .</p>
+<h3 id="appareils-iot-zigbee2mqtt-shelly-esphome-tasmota"><strong>Appareils IoT (Zigbee2MQTT, Shelly, ESPHome, Tasmota)</strong><a class="headerlink" href="#appareils-iot-zigbee2mqtt-shelly-esphome-tasmota" title="Permanent link">&para;</a></h3>
+<p>Une fois le broker en place, on peut brancher divers périphériques  <strong>via MQTT</strong>  :</p>
+<ul>
+<li><strong>Zigbee2MQTT</strong> : requiert un dongle Zigbee (CC2531, CC2652, etc.) branché sur le serveur ou le LXC conteneur. Zigbee2MQTT collecte les données Zigbee et les publie sur MQTT (topiques  zigbee2mqtt/device/friendly_name). Activez le  <em>discover</em>  dans la config de Zigbee2MQTT (homeassistant: enabled: true). Ensuite, dans HA, activer l’intégration MQTT Discovery : Zigbee2MQTT détectera automatiquement ses équipements et les publiera dans HA  . Exemple de configuration  configuration.yaml  de Zigbee2MQTT :</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">homeassistant</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mqtt</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">base_topic</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zigbee2mqtt</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;mqtt://192.168.1.100:1883&#39;</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyUSB0</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Cela crée des entités HA prêtes à l’emploi via MQTT Discovery  .</p>
+</li>
+<li>
+<p><strong>Shelly</strong>  : ces appareils Wi-Fi prennent en charge MQTT nativement. Dans l’interface Web de chaque Shelly, allez dans  <em>Connectivity &gt; MQTT</em>, et activez l’MQTT (mettez l’IP du broker HA, et les identifiants MQTT). Ainsi les messages de l’appareil (température, relais, etc.) seront publiés sur  shellies/<device_id>/.... Home Assistant possède également une intégration native pour Shelly (basée sur CoAP/WebSocket) qui évite MQTT. Mais dans un homelab où l’on prône l’auto-hébergement, on peut utiliser MQTT pour centraliser la communication. Par exemple, le capteur Shelly Relee coupera un circuit quand HA envoie  cmnd/shelly1-abc123/relay/0 = OFF  sur MQTT.</p>
+</li>
+<li>
+<p><strong>ESPHome</strong>  : on programme les microcontrôleurs ESP32/ESP8266 via  <strong>ESPHome</strong>  (firmware custom). Les appareils ESPHome communiquent idéalement en API native (port 6053) avec HA  , mais ils supportent aussi MQTT (en ajoutant un bloc  mqtt:  dans leur YAML). Pour les intégrer, utilisez l’intégration  <em>ESPHome</em>  dans HA. Soit le device est découvert automatiquement (MDNS), soit vous l’ajoutez manuellement en fournissant son IP/port  . Exemple de configuration ESPHome (light_switch.yaml) :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">esphome</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">light_switch</span>
+<span class="nt">wifi</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ssid</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span>
+<span class="nt">mqtt</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">broker</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.100</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mqtt_user</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mqtt_pass</span>
+<span class="nt">switch</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpio</span>
+<span class="w">    </span><span class="nt">pin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GPIO5</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Lampe</span><span class="nv"> </span><span class="s">Salon&quot;</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Ici l’ESP send ses états sur MQTT (homeassistant/light/lamp_salon/state  etc.), mais on peut aussi utiliser l’API native d’ESPHome qui évite MQTT.</p>
+</li>
+<li>
+<p><strong>Tasmota</strong>  : si vous avez flashé des modules Sonoff en Tasmota, l’intégration HA Tasmota via MQTT est simple. Activez MQTT dans la page de configuration web de l’appareil : entrez l’adresse du broker et les identifiants (il vaut mieux créer un utilisateur HA dédié pour Tasmota)  . Sur l’intégration HA  <em>Tasmota</em>, sélectionnez votre device découvert (ou ajoutez-le manuellement). Les équipements Tasmota (relais, capteurs, interrupteurs) seront exposés comme entités HA (switch, light, sensor…). Par exemple,  cmnd/tasmota123/POWER  contrôle le relais, et  stat/tasmota123/POWER  contient l’état  . Notez que  SetOption19 0  active la découverte automatique dans HA.</p>
+</li>
+</ul>
+<h3 id="securite-mqtt"><strong>Sécurité MQTT</strong><a class="headerlink" href="#securite-mqtt" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Authentification</strong>  : N’utilisez jamais un broker ouvert sans mot de passe ! Configurez des utilisateurs MQTT et attribuez-leur des permissions limitées. Par exemple, un utilisateur « homeassistant » avec les droits pour tous les sujets. Sur Mosquitto, définissez un fichier  passwd  via  mosquitto_passwd  et assurez-vous d’ajouter  allow_anonymous false  dans  mosquitto.conf. Home Assistant lui-même peut générer un user/sésame pour l’intégration  .</p>
+</li>
+<li>
+<p><strong>Chiffrement TLS</strong>  : pour chiffrer les données MQTT (même en LAN, c’est recommandé en zone non fiable), générez un certificat SSL et configurez Mosquitto en TLS (ports 8883). Dans Home Assistant, activez la validation du certificat sur la connexion MQTT  . Vous pouvez aussi forcer l’usage de MQTT over WebSockets (port 8083) avec TLS.</p>
+</li>
+<li>
+<p><strong>Pare-feu</strong>  : de la même façon que pour HA, isolez l’accès MQTT par VLAN ou pare-feu. Par exemple, n’autorisez que votre serveur HA à se connecter au broker (ou mieux : utilisez des ACL Mosquitto pour restreindre les topics/clients).</p>
+</li>
+</ul>
+<h2 id="tableaux-de-bord-lovelace-et-automatisations"><strong>Tableaux de bord Lovelace et automatisations</strong><a class="headerlink" href="#tableaux-de-bord-lovelace-et-automatisations" title="Permanent link">&para;</a></h2>
+<p>Home Assistant dispose d’une interface web de  <strong>tableaux de bord (Lovelace)</strong>  très flexible. Un dashboard Lovelace est composé de  <em>cartes</em>  (cards) préconfigurées ou personnalisables  . On peut afficher capteurs, graphiques, commandes de lumières, caméras, etc. Par exemple, les cartes  <em>Sensor</em>,  <em>History Graph</em>,  <em>Entities</em>,  <em>Media Player</em>, ou  <em>Energy</em>  sont natives  .</p>
+<ul>
+<li>
+<p><strong>Ajouter des cartes</strong>  : en mode édition, cliquez sur “Ajouter une carte”, puis choisissez le type (ex.  <em>Card type -&gt; Entities</em>), sélectionnez des entités, et sauvegardez  . Vous pouvez aussi créer des vues (onglets) et regrouper des cartes avec des dispositions (verticale, grille). Chaque carte peut avoir des actions au clic (définir  tap_action,  hold_action) et des conditions de visibilité (uniquement si un capteur x est vrai)  .</p>
+</li>
+<li>
+<p><strong>Cartes personnalisées</strong>  : via le gestionnaire de communautés HACS (Home Assistant Community Store), on peut installer des  <em>custom cards</em>  (développées par la communauté). Par exemple,  <strong>Mini Graph Card</strong>  (graphiques avancés),  <strong>Button Card</strong>  (boutons riches en icônes),  <strong>Gauge Card</strong>, etc. Ces cartes offrent plus de flexibilité visuelle que les cartes de base. Après installation HACS, il suffit d’ajouter la ressource (JS) et de déclarer  type: "custom:mini-graph-card"  dans votre YAML de tableau de bord.</p>
+</li>
+<li>
+<p><strong>Automatisations</strong>  : Home Assistant propose un éditeur visuel pour créer des automatismes (“Automations”) ou on peut directement éditer le YAML. Chaque automatisation combine des  <strong>déclencheurs</strong>  (triggers),  <strong>conditions</strong>(facultatives) et  <strong>actions</strong>. Par exemple, pour une alerte de mouvement :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
+<span class="w">  </span><span class="nt">entity_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">binary_sensor.detecteur_mouvement</span>
+<span class="w">  </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;on&quot;</span>
+<span class="nt">condition</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">state</span>
+<span class="w">  </span><span class="nt">entity_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">person.jean</span>
+<span class="w">  </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;not_home&quot;</span>
+<span class="nt">action</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">camera.snapshot</span>
+<span class="w">    </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> entity_id</span><span class="p">:</span><span class="w"> </span><span class="nv">camera.camera_salon</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> filename</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/config/www/snapshot_{{now().timestamp()}}.jpg&#39;</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telegram_bot.send_photo</span>
+<span class="w">    </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;/config/www/snapshot_{{now().timestamp()}}.jpg&#39;</span>
+<span class="w">      </span><span class="nt">caption</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Mouvement</span><span class="nv"> </span><span class="s">détecté</span><span class="nv"> </span><span class="s">!&#39;</span>
+</code></pre></div>
+<ul>
+<li>Ici, on capture un cliché via  camera.snapshot  et on envoie la photo sur Telegram (bot HA)  . Ce snippet illustre comment combiner YAML et services HA pour des scénarios de sécurité. De même, l’interface graphique permet d’enchaîner ces étapes sans écrire une ligne, avec des choix menus pour les entités et actions.</li>
+</ul>
+<h2 id="cas-dusage-concrets-en-homelab"><strong>Cas d’usage concrets en homelab</strong><a class="headerlink" href="#cas-dusage-concrets-en-homelab" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Surveillance (caméras, capteurs)</strong> : intégrez des caméras IP (ONVIF, MJPEG) avec l’intégration  <em>Camera</em>  de HA. Couplée à un détecteur de mouvement (capteur PIR, NTGR24, etc.) ou à un add-on NVR comme  <em>Frigate</em>  ou  <em>MotionEye</em>, vous pouvez déclencher des actions. Par exemple, dès que le capteur signale un mouvement, Home Assistant peut prendre une photo (camera.snapshot) et l’envoyer par notification (Telegram, email)  . On peut aussi lancer un enregistrement vidéo court. Des solutions de détection  <em>on-device</em>  (Frigate basé sur DeepStack ou TensorFlow) sont opensource et s’intègrent à HA pour réduire les faux positifs.</p>
+</li>
+<li>
+<p><strong>Sécurité</strong> : HA peut s’intégrer à des alarmes DIY ou systèmes plus élaborés. Par exemple, relier un capteur door/window (via Zigbee/ MQTT) et déclencher une sirène ou envoyer une alerte. On peut utiliser  <em>Notifations Telegram</em>  pour recevoir des alertes sécurisées. L’automatisation ci-dessus en est un exemple. De plus, l’application mobile HA (iOS/Android) peut détecter votre présence (via GPS ou réseau), permettant de n’alerter que si personne n’est à la maison.</p>
+</li>
+<li>
+<p><strong>Pilotage énergétique</strong>  : la fonction  <em>Energy</em>  de HA offre un tableau de bord pour suivre la conso électrique, la prod solaire, etc. On y intègre des capteurs de courant (par ex. Shelly EM, S0-compteurs) et on lie un onduleur PV (via son API) pour suivre la production. Home Assistant fournit des graphiques d’autoconsommation et permet d’automatiser la charge/decharge d’une batterie si disponible  . On peut aussi piloter les thermostats (par ex. thermostat DIY via ESPHome ou Nest/Starling via intégration) et les prises intelligentes (Shelly, Tasmota) pour optimiser la charge. Par exemple, couper automatiquement certains appareils en cas de surconso ou allumer le chauffage quand le tarif heures creuses démarre. Les données collectées alimentent le tableau de bord d’énergie  , avec analyse des tendances et prévisions.</p>
+</li>
+<li>
+<p><strong>Sauvegarde / restauration</strong>  : en homelab, il est crucial de backuper régulièrement. Home Assistant propose des snapshots complets (config, base de données, add-ons) via l’UI («  <strong>Settings &gt; Système &gt; Backups</strong>  ») ou l’intégration  <em>Backup</em>. On peut automatiser la création de ces snapshots grâce à une automation programmant  backup.create  la nuit  . Stockez ces fichiers sur un partage réseau ou Nextcloud (via add-on Samba/SSHFS). Pour restaurer, utilisez l’UI de restauration (ou remontez l’archive dans un nouvel HA). Exemple d’automatisation YAML pour un backup quotidien à 3h du mat  :
+<div class="highlight"><pre><span></span><code><span class="nt">automation</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Backup</span><span class="nv"> </span><span class="s">HA</span><span class="nv"> </span><span class="s">tous</span><span class="nv"> </span><span class="s">les</span><span class="nv"> </span><span class="s">jours</span><span class="nv"> </span><span class="s">3h&quot;</span>
+<span class="w">    </span><span class="nt">trigger</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">time</span>
+<span class="w">        </span><span class="nt">at</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;03:00:00&quot;</span>
+<span class="w">    </span><span class="nt">action</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">backup.create</span>
+</code></pre></div>
+Toutes ces solutions n’utilisent que des logiciels open source et auto-hébergés. En combinant Home Assistant avec MQTT, Zigbee2MQTT, Tasmota/ESPHome, on crée un écosystème puissant et sécurisé, idéal pour un homelab de passionné en cybersécurité.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

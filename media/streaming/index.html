@@ -1,0 +1,1761 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../../outils/docker/">
+      
+      
+        <link rel="next" href="../overseerr-sonarr/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Streaming (Jellyfin, Plex) - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#comparatif-plex-vs-jellyfin-vs-emby-pour-un-homelab-securise" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Streaming (Jellyfin, Plex)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#transcodage-et-performances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Transcodage et performances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibilite-multi-appareils" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compatibilité multi-appareils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-utilisateurs-controle-parental-et-metadonnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multi-utilisateurs, contrôle parental et métadonnées
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interface-utilisateur-et-experience" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interface utilisateur et expérience
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modele-economique-licences-open-source-freemium" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modèle économique (licences, Open Source, Freemium)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-overseerr-sonarr-radarr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration Overseerr, Sonarr, Radarr
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aspects-ethiques-et-legaux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aspects éthiques et légaux
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-technique-docker-lxc-vm-reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation technique : Docker, LXC, VM, reverse-proxy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optimisation-des-performances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimisation des performances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-typiques-en-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage typiques en Homelab
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="comparatif-plex-vs-jellyfin-vs-emby-pour-un-homelab-securise"><strong>Comparatif Plex vs Jellyfin vs Emby pour un Homelab Sécurisé</strong><a class="headerlink" href="#comparatif-plex-vs-jellyfin-vs-emby-pour-un-homelab-securise" title="Permanent link">&para;</a></h1>
+<p>Dans un homelab auto-hébergé, Plex, Jellyfin et Emby sont les trois serveurs multimédia majeurs. Chacun offre un ensemble de fonctionnalités similaires (gestion de collections vidéo/musique/photos, transcodage, clients multiples), mais diffère sur des points clés (licence, performance, flexibilité, coût). Nous comparons ci-dessous ces solutions selon plusieurs critères :  <strong>transcodage et performances</strong>,  <strong>clients multi-appareils</strong>,  <strong>gestion multi-utilisateurs et contrôle parental</strong>,  <strong>interface utilisateur</strong>,  <strong>modèle économique</strong>,  <strong>intégration avec Overseerr/Sonarr/Radarr</strong>,  <strong>aspects légaux</strong>, ainsi que  <strong>installation/optimisation techniques</strong>.</p>
+<h2 id="transcodage-et-performances"><strong>Transcodage et performances</strong><a class="headerlink" href="#transcodage-et-performances" title="Permanent link">&para;</a></h2>
+<p>Le transcodage (conversion à la volée) est très exigeant en ressources.  <strong>Plex</strong>  utilise principalement  <em>Intel QuickSync</em>(présent sur les CPU Intel récents) pour l’encodage/décodage matériel  . L’accélération matérielle dans Plex nécessite un abonnement Plex Pass (car activée uniquement sur les versions récentes du serveur)  . Plex peut théoriquement utiliser une carte NVIDIA/AMD dédiée, mais le support est « as is » et peu testé  .  <strong>Emby</strong>  prend en charge un large éventail d’accélération : Intel QuickSync, NVIDIA NVENC/NVDEC, AMD AMF (Windows) et VA-API (Linux)  .  <strong>Jellyfin</strong>, étant un fork open-source d’Emby, supporte aussi QuickSync, NVENC et VA-API. Sa documentation recommande fortement d’utiliser un GPU (Intel Arc ou NVIDIA RTX) pour le transcodage, car le CPU seul peine (un Ryzen 9 5950X ne peut même pas transcoder un flux 4K sans GPU)  . De fait, la qualité d’encodage matériel varie selon le matériel : Jellyfin note  <em>Apple ≥ Intel ≥ Nvidia &gt;&gt;&gt; AMD</em>  (ex. Apple M1/2 excellent, AMD détériore plus la qualité)  . En résumé :</p>
+<ul>
+<li>
+<p><strong>CPU</strong>  : tous peuvent transcoder par CPU seul, mais c’est très lent et lourd. Jellyfin déconseille les systèmes  _sans_GPU (les CPUs, même hauts de gamme, sont insuffisants)  .</p>
+</li>
+<li>
+<p><strong>Intel QuickSync</strong>  : supporté par Plex (nécessite Plex Pass)  , Emby  et Jellyfin (fortement recommandé)  .</p>
+</li>
+<li>
+<p><strong>NVIDIA NVENC/NVDEC</strong>  : supporté nativement par Emby  et Jellyfin (avec quelques patchs pour lever la limite de flux) ; Plex n’a pas de support officiel mature (les GPU NVIDIA sous Plex sont « pas officiellement testés »  ).</p>
+</li>
+<li>
+<p><strong>AMD (VCE/AMF)</strong>  : support partiel dans Emby (Windows)  ; Jellyfin le supporte via VA-API mais la qualité de l’encodeur AMD est très inférieure  . Plex ne le recommande pas.</p>
+</li>
+</ul>
+<p>Globalement, Plex privilégie QuickSync et déconseille AMD/NVIDIA, Emby est plus polyvalent (mais sans abonnement, pas de transcodage matériel), et Jellyfin fonctionne mieux sur Intel/NVIDIA qu’AMD  . Les sorties encodées en matériel peuvent être moins nettes qu’en logiciel (blocages ou flou sous faible débit)  . La configuration réseau et stockage est aussi critique : Jellyfin recommande un  <strong>SSD rapide</strong>  (~100 Go) pour le système et le cache de transcodage et une connexion  <strong>Ethernet Gigabit</strong>  minimum (le Wi-Fi ou le 100 Mb/s sont insuffisants)  . Pour un accès distant fluide, prévoir &gt;20 Mb/s d’upload  . L’accélération matérielle (Intel/NVENC) est essentielle pour du 1080p/4K multiple.</p>
+<h2 id="compatibilite-multi-appareils"><strong>Compatibilité multi-appareils</strong><a class="headerlink" href="#compatibilite-multi-appareils" title="Permanent link">&para;</a></h2>
+<p>Tous trois offrent des clients web et de nombreuses apps natives, mais leur disponibilité et coût diffèrent :</p>
+<ul>
+<li>
+<p><strong>Plex</strong>  dispose d’applications officielles sur pratiquement toutes les plateformes grand public (web, iOS, Android, Apple TV, Roku, Amazon Fire TV, Android TV, consoles Xbox/PlayStation, Smart TV Samsung/LG, etc.). Ces apps sont globalement  <strong>gratuites</strong>, même si certaines fonctionnalités avancées (offline, synchronisation) requièrent Plex Pass. La compatibilité est très étendue et bien supportée.</p>
+</li>
+<li>
+<p><strong>Emby</strong>  propose aussi des clients sur mobiles (iOS/Android), PC (Windows, macOS, Linux), TV (Roku, Android TV, Samsung Tizen, LG WebOS), consoles, etc. Beaucoup de ces apps sont gratuites à installer, mais certaines fonctions ou la vidéo complète peuvent être bloquées derrière l’achat de l’application ou Emby Premiere (par exemple, l’app mobile gratuite ne joue qu’une minute de chaque vidéo sans la licence Premiere  ). Certains clients officiels Emby sur TV ou mobile coûtent un paiement unique.</p>
+</li>
+<li>
+<p><strong>Jellyfin</strong>  a des clients first-party (web, Android, iOS, Windows, etc.) entièrement gratuits, ainsi que des app tiers (Kodi, Infuse, etc.). La portée est grande (Android, Fire TV, Apple TV via TestFlight, Roku, Samsung TV via sideload, etc.), mais certains clients officiels manquent encore ou nécessitent un patch non officiel. En pratique, Jellyfin est « largely free » mais l’installation sur certains appareils demande parfois des solutions tierces  .</p>
+</li>
+</ul>
+<p>D’après un comparatif,  <strong>Plex</strong>  est « le plus simple et convivial », accessible « presque partout » avec peu d’applications payantes  .  <strong>Emby</strong>  offre un bon compromis (surtout si on paie l’app ou Premiere), et  <strong>Jellyfin</strong>  reste gratuit mais avec parfois plus de bricolage client nécessaire  . En résumé : Plex gagne en disponibilité native, Emby suit de près (souvent via achèvement d’app), Jellyfin couvre l’essentiel mais dépend de la communauté pour certains clients.</p>
+<h2 id="multi-utilisateurs-controle-parental-et-metadonnees"><strong>Multi-utilisateurs, contrôle parental et métadonnées</strong><a class="headerlink" href="#multi-utilisateurs-controle-parental-et-metadonnees" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Plex</strong>  : prend en charge plusieurs  <strong>profils utilisateur</strong>  via « Plex Home ». Un serveur peut partager ses bibliothèques jusqu’à ~100 comptes utilisateurs (amis/famille)  . En revanche, pour créer des  <strong>comptes gérés</strong>  dans le Home (permettant une alternance sans re-login) et appliquer des restrictions, il faut un Plex Pass  . Plex propose des profils pré-définis (Jeune/enfant, Adolescent) qui limitent l’accès selon les classifications de contenu  . Les parents peuvent aussi désactiver les sources de contenus en ligne (films/séries Plex) pour ces comptes. Des restrictions plus fines (boutons manuels, filtres personnalisés) demandent également Plex Pass.</p>
+</li>
+<li>
+<p><strong>Emby</strong>  : autorise un nombre illimité de profils d’utilisateurs. Chaque profil peut recevoir des  <strong>contrôles parentaux</strong>sophistiqués. On peut fixer un classement maximum de film/série, bloquer ou autoriser des contenus via des  <em>tags</em>, et même créer un planning d’accès (ex. interdiction en dehors d’un horaire)  . Ces options (classements, tags, planning) sont disponibles en gratuit, bien qu’Emby Premiere active des fonctions supplémentaires (synchro mobile, téléchargements offline, etc.).</p>
+</li>
+<li>
+<p><strong>Jellyfin</strong>  : gère aussi plusieurs utilisateurs et bibliothèques distinctes, mais ne fournit pas (encore) de système de contrôle parental prédéfini. Pour restreindre du contenu, on utilise le tagging manuel et les  <strong>bibliothèques séparées</strong>. Par exemple, on peut marquer les films « adultes » avec un tag et interdire ce tag au profil enfant, ou bien créer deux bibliothèques (« Familial » vs « Adulte ») et ne donner accès qu’à la bibliothèque correspondante  . C’est une approche manuelle (assez puissante, mais fastidieuse à paramétrer). Notez que Jellyfin étant open-source, il repose sur des sources de métadonnées ouvertes (TheMovieDB, TheTVDB, etc.), tout comme Emby/Plex. Les trois extraient affiche, synopsis, cast, etc. automatiquement (via TMDb/IMDb), et permettent la modification manuelle des métadonnées dans l’interface.</p>
+</li>
+</ul>
+<p><strong>Tableau – Multi-utilisateurs et contrôle parental :</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>Fonctionnalité</strong></th>
+<th><strong>Plex</strong></th>
+<th><strong>Emby</strong></th>
+<th><strong>Jellyfin</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Profils (utilisateurs)</td>
+<td>Jusqu’à 100 comptes partagés, 15 dans « Home » (avec Plex Pass)</td>
+<td>Illimité</td>
+<td>Illimité</td>
+</tr>
+<tr>
+<td>Comptes gérés (« Home »)</td>
+<td>Avec Plex Pass (admin crée les profils)</td>
+<td>Natif, paramétrage individuel</td>
+<td>Natif (via utilisateurs séparés)</td>
+</tr>
+<tr>
+<td>Contrôle parental (classement)</td>
+<td>Classes prédéfinies (Jeune, Ados…)  ; avancé avec Plex Pass</td>
+<td>Classement par note max, tags, planning</td>
+<td>Tagging manuellement + bibliothèques séparées</td>
+</tr>
+<tr>
+<td>Restrictions fines</td>
+<td>Plex Pass requis pour filtres avancés</td>
+<td>Sans limite (tags, horaires)</td>
+<td>Via tags/bibliothèques (pas d’interface dédiée)</td>
+</tr>
+<tr>
+<td>Métadonnées &amp; organisation</td>
+<td>Puissant, axé Netflix/Kodi (Pinterest, critiques…); édition possible</td>
+<td>Complète (avec plug-ins)</td>
+<td>Complète (open-source, modifiable)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="interface-utilisateur-et-experience"><strong>Interface utilisateur et expérience</strong><a class="headerlink" href="#interface-utilisateur-et-experience" title="Permanent link">&para;</a></h2>
+<p><strong>Plex</strong>  est souvent perçu comme le plus « polishé » et le plus simple d’emploi, avec une interface épurée et comparable aux services de streaming commerciaux  . La navigation est intuitive (grandes images de couvertures, menus clairs) et les apps officielles offrent une expérience homogène.  <strong>Emby</strong>  propose une interface moderne (basée sur Bootstrap) assez claire, un bon compromis entre Plex et Jellyfin. Les possibilités de personnalisation GUI y sont un peu plus nombreuses (thèmes, plugins).  <strong>Jellyfin</strong>  a une interface fonctionnelle et de plus en plus complète (surtout en version 10+), mais certains utilisateurs trouvent l’UX un peu moins intuitive (par exemple, la nouvelle navigation au scroll horizontal a surpris certains)  . En pratique, Plex séduira ceux qui veulent une expérience « Netflix maison » clé-en-main, tandis qu’Emby et Jellyfin attireront les amateurs prêtes à ajuster les paramètres pour plus de flexibilité  .</p>
+<h2 id="modele-economique-licences-open-source-freemium"><strong>Modèle économique (licences, Open Source, Freemium)</strong><a class="headerlink" href="#modele-economique-licences-open-source-freemium" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Plex</strong>  est un logiciel  <strong>propriétaire</strong>. Le serveur de base et la plupart des apps sont gratuits, mais de nombreuses fonctions avancées requièrent un abonnement  <em>Plex Pass</em>  (mensuel ou annuel, ~5–6 € par mois). Le  <em>hardware transcoding</em>  en est un : il est désactivé sans Plex Pass  . La gestion des comptes « Home » avancée (profils multiples sans re-login) nécessite aussi Plex Pass  .</p>
+</li>
+<li>
+<p><strong>Emby</strong>  est en mode  <strong>freemium</strong>. Le serveur et la quasi-totalité des fonctionnalités de base sont gratuites. Emby propose une clé « Premiere » (à tarif raisonnable unique) pour débloquer certaines fonctions : transcodage matériel (GPU), synchronisation mobile, extensions de plugins, etc. Sans cette clé, le transcodage est strictement logiciel (ou inexistant sur Android TV)  . De plus, certaines apps mobiles ou de bureau ne permettent que la lecture limitée d’une minute sans Emby Premiere  .</p>
+</li>
+<li>
+<p><strong>Jellyfin</strong>  est  <strong>100% libre et gratuit</strong>  (licence GNU GPL)  . Serveur et clients officiels ne coûtent rien, sans aucune restriction payante  . Il n’y a ni abonnement ni frais cachés. Tout est open-source, et l’équipe refuse la publicité ou la collecte de données.</p>
+</li>
+</ul>
+<p><strong>Tableau – Modèle économique :</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>Critère</strong></th>
+<th><strong>Plex</strong></th>
+<th><strong>Emby</strong></th>
+<th><strong>Jellyfin</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Licence</td>
+<td>Propriétaire</td>
+<td>Propriétaire (partiellement)</td>
+<td>Open-source (GPL)</td>
+</tr>
+<tr>
+<td>Hébergement</td>
+<td>SaaS + serveur local</td>
+<td>Serveur local uniquement</td>
+<td>Serveur local uniquement</td>
+</tr>
+<tr>
+<td>Coût de base</td>
+<td>Gratuit</td>
+<td>Gratuit</td>
+<td>Gratuit</td>
+</tr>
+<tr>
+<td>Abonnement</td>
+<td><em>Plex Pass</em>  (facultatif mais requis pour HW transcoding et Home avancé)</td>
+<td><em>Emby Premiere</em>  (un paiement unique pour accélération matérielle, etc.)</td>
+<td>Aucun (pas d’abonnement)</td>
+</tr>
+<tr>
+<td>Clients payants</td>
+<td>Non (applications gratuites sur stores)</td>
+<td>Certaines apps payantes (ex. mobile, TV)</td>
+<td>Non (clients officiels gratuits)</td>
+</tr>
+<tr>
+<td>Support</td>
+<td>Communauté et support Plex</td>
+<td>Communauté et support Emby</td>
+<td>Communauté open-source (forum, GitHub)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="integration-overseerr-sonarr-radarr"><strong>Intégration Overseerr, Sonarr, Radarr</strong><a class="headerlink" href="#integration-overseerr-sonarr-radarr" title="Permanent link">&para;</a></h2>
+<p>Dans un homelab automatisé,  <strong>Sonarr</strong>  (séries TV) et  <strong>Radarr</strong>  (films) gèrent le téléchargement. Ils placent les fichiers dans les dossiers surveillés par le serveur media, qui peut ensuite les rafraîchir. Les trois serveurs se connectent nativement avec Sonarr/Radarr (via API ou SMB mounts) pour mettre à jour la bibliothèque après chaque ajout. Pour la gestion des requêtes utilisateurs,  <strong>Overseerr</strong>  est très populaire : c’est un front-end de demandes conçu pour Plex (et Emby) qui s’interface avec Sonarr/Radarr  . Une variante,  <strong>Jellyseerr</strong>  (fork d’Overseerr), apporte le support  <strong>Jellyfin</strong>  (ainsi qu’Emby et Plex) tout en conservant l’intégration Sonarr/Radarr  . En pratique, on déploie un conteneur Overseerr/Jellyseerr relié aux serveurs Plex/Jellyfin/Emby pour permettre aux utilisateurs de suggérer des films/séries ; les requêtes sont transférées vers Sonarr/Radarr pour l’automatisation du téléchargement  .</p>
+<h2 id="aspects-ethiques-et-legaux"><strong>Aspects éthiques et légaux</strong><a class="headerlink" href="#aspects-ethiques-et-legaux" title="Permanent link">&para;</a></h2>
+<p>Un homelab media presuppose que l’on partage  <em>son propre contenu</em>. Sur le plan légal, si le contenu est acquis légalement (DVD originaux, fichiers achetés), la « copie privée » est souvent tolérée. Aux États-Unis, par exemple, diffuser à ses amis un stream privé est considéré comme analogue au partage des fichiers eux-mêmes  : l’acte lui-même n’est pas illégal, c’est le contenu partagé qui doit être légal. En France, la loi sur la copie privée (article L122-5 CPI) autorise les copies personnelles de DVD/CD possédés,  <em>sans contournement de DRM</em>,  <strong>à condition de ne pas les diffuser</strong>  . Autrement dit, la copie privée doit être strictement individuelle (pas de prêt ni de partage). Ainsi, créer un flux Plex/Jellyfin pour soi ou sa famille proche relève de l’usage privé et entre dans la tolérance du droit (bien que la loi française précise que les copies ne doivent pas être « prêtées ou partagées »  ). En revanche, ouvrir le serveur à des tiers ou publier le contenu sur Internet « comme un service de streaming » serait hors cadre privé et susceptible d’infraction.  <strong>Conseil pratique :</strong>  limiter l’accès (via VPN, accès local seulement, ou authentification stricte) et n’héberger que du contenu dont on détient légalement les droits. Le simple fait d’utiliser ces logiciels n’est pas illégal, mais le respect du droit d’auteur (pas de médias piratés en libre accès) est impératif  .</p>
+<h2 id="installation-technique-docker-lxc-vm-reverse-proxy"><strong>Installation technique : Docker, LXC, VM, reverse-proxy</strong><a class="headerlink" href="#installation-technique-docker-lxc-vm-reverse-proxy" title="Permanent link">&para;</a></h2>
+<p>Ces serveurs peuvent être installés de plusieurs manières. Les deux modes les plus courants en homelab sont :</p>
+<ul>
+<li>
+<p><strong>Docker/Container</strong>  : tous disposent d’images Docker officielles ou communautaires (p.ex.  plexinc/pms-docker,  jellyfin/jellyfin,  emby/embyserver). Un  docker-compose.yml  permet de déclarer les volumes de données (médias, configs, cache transcode) et ports (ex. 32400 pour Plex, 8096/8920 pour Jellyfin, 8096 pour Emby). L’avantage est la portabilité et l’isolation. Les conteneurs doivent avoir accès aux dossiers médias (via bind mounts ou un NAS) et, pour le transcodage, souvent au GPU du système (via runtime NVIDIA ou habilitation QuickSync sur l’hôte Linux).</p>
+</li>
+<li>
+<p><strong>Machine virtuelle ou LXC</strong>  : on peut installer Plex/Jellyfin/Emby sur une VM (Debian/Ubuntu) ou un conteneur LXC (ex. Proxmox). LXC + Docker est aussi courant : on crée un LXC (Debian minimal), on active  iocage devicespour QuickSync, puis on lance Docker à l’intérieur. Cela offre un peu plus de découplage et de sécurité.</p>
+</li>
+</ul>
+<p><strong>Reverse proxy :</strong>  en front-end, on place généralement un reverse proxy HTTP(s) (Nginx, Traefik, Caddy) pour gérer les domaines et TLS. Par exemple,  plex.exemple.com,  jellyfin.exemple.com  pointent vers les ports internes respectifs (ex. 32400, 8096). Le proxy fournit un certificat SSL Let’s Encrypt et peut exiger une authentification (HTTP Auth) ou limiter les IPs pour renforcer la sécurité. Cela évite d’exposer directement les ports Plex/Jellyfin au WAN et permet de centraliser l’accès web en HTTPS. En interne, on peut aussi limiter l’accès direct (p.ex. en ne mappant pas le port 1900/32469 en UDP pour Plex, etc.), tout en autorisant la synchro via clients officiellement. Les guides d’installation officielles (Jellyfin Docs, guides Plex/Emby) détaillent ces approches. Par exemple, Jellyfin recommande un accès dédié (ports 8096/8920) et suggère l’utilisation de Nginx/Caddy pour le SSL.</p>
+<h2 id="optimisation-des-performances"><strong>Optimisation des performances</strong><a class="headerlink" href="#optimisation-des-performances" title="Permanent link">&para;</a></h2>
+<p>Pour un serveur réactif :</p>
+<ul>
+<li>
+<p><strong>Stockage rapide</strong>  : utilisez un SSD (ou NVMe) pour le système d’exploitation, le cache de transcodage et la base de données de métadonnées  . Jellyfin conseille 100 Go de SSD pour le cache et OS, afin d’éviter de saturer les disques lents  . Les médias (vidéos) peuvent rester sur des disques plus grands, mais si plusieurs flux 4K passent simultanément, un RAID SSD ou un NVMe dédié peut améliorer la fluidité.</p>
+</li>
+<li>
+<p><strong>Réseau filaire</strong>  : privilégiez l’Ethernet Gigabit ou supérieur. Jellyfin insiste qu’une carte 1 GbE ou plus est fortement recommandée et déconseille le Wi-Fi ou Powerline  . Pour l’accès distant, prévoyez suffisamment d’upload (&gt;20 Mb/s est un minimum pour du 1080p  ).</p>
+</li>
+<li>
+<p><strong>GPU pour transcodage</strong>  : activez l’accélération matérielle. Par exemple, sur une machine Intel, installez les paquets pour QuickSync (Intel Media Server Studio ou sur Linux le paquet  intel-media-va-driver-non-free), puis activez QuickSync dans Jellyfin/Plex/Emby. Pour NVIDIA, installez les pilotes GPU récents et la runtime Docker NVIDIA, puis activez NVENC dans Jellyfin/Emby ou pointez Plex vers le GPU (ce dernier n’est pas officiellement supporté sous Linux, mieux vaut utiliser un client native ou se reposer sur QuickSync). Ces accélérations déchargent le CPU, permettant plusieurs flux HD/4K à la fois.</p>
+</li>
+<li>
+<p><strong>Configuration réseau</strong>  : limitez les connexions superflues. Par exemple, désactivez la recherche UPnP ou DLNA si inutile. Si vous utilisez un VPN, assurez-vous qu’il gère bien le trafic multicast (certains VPN maison bloquent le DLNA).</p>
+</li>
+<li>
+<p><strong>Optimisations logicielles</strong>  : mettez à jour les serveurs régulièrement (Jellyfin a souvent des correctifs optimisant FFmpeg, Emby/Plex publient des versions stables). Dans Jellyfin, assurez-vous d’avoir FFmpeg 5+ via les packages officiels, et activez  <em>Tone Mapping HDR</em>  si vous mixez contenu HDR/SDR. Dans Emby, on peut fixer le nombre max de transcodages simultanés. Dans tous les cas, pré-téléchargez les vidéos en résolution native compatible (direct play) autant que possible pour limiter le transcodage sur le serveur.</p>
+</li>
+</ul>
+<h2 id="cas-dusage-typiques-en-homelab"><strong>Cas d’usage typiques en Homelab</strong><a class="headerlink" href="#cas-dusage-typiques-en-homelab" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Streaming familial</strong>  : serveur Plex/Jellyfin accessible sur le LAN (ou via VPN pour les membres autorisés), diffusant sur smart TV, Chromecast, smartphones, etc. Les parents créent un profil « Enfant » avec uniquement les dessins animés et films G/PG, tandis que leur profil « Adulte » débloque tout le contenu.</p>
+</li>
+<li>
+<p><strong>Automatisation média</strong>  : dès qu’un nouvel épisode sort, Sonarr le télécharge et actualise Plex. Un utilisateur peut faire une requête via Overseerr/Jellyseerr (par exemple, « Je veux la S05 de The Mandalorian »), qui lance Radarr/Sonarr et notifie le serveur.</p>
+</li>
+<li>
+<p><strong>Accès distant sécurisé</strong>  : au lieu d’exposer Plex direct sur Internet, on se connecte au homelab via VPN (WireGuard/IPv6 local) ou via un reverse proxy avec authentification forte, garantissant que seuls les utilisateurs légitimes peuvent streamer en mobilité.</p>
+</li>
+<li>
+<p><strong>Enregistrement TV et livres</strong>  : Emby/Jellyfin supportent la TV en direct et l’enregistrement DVR (avec une carte TV ou un tuner réseau). Ils peuvent aussi organiser une collection de musique/ebooks/photos au-delà de la vidéo. Dans un cadre homelab, on peut ainsi centraliser  <strong>tous</strong>  les médias personnels (vidéos, audio, livres) dans une seule plateforme.</p>
+</li>
+<li>
+<p><strong>Sécurité avancée</strong>  : comme pour tout service web hébergé, on surveille les logs, on applique des mises à jour de sécurité (OS et serveurs médias) et on limite les accès (pare-feu, authentification). L’option multi-utilisateur permet de cloisonner la navigation de chacun. Par exemple, Jellyfin est « privacy-focused » et ne phone home jamais  , ce qui rassure les ingénieurs cybersécurité.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

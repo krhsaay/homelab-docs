@@ -1,0 +1,1908 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../reverse-proxy/">
+      
+      
+        <link rel="next" href="../torrent-vpn/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>DNS Dynamique (DDNS) - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dns-dynamique-et-dns-local-comparatif-et-guide-technique" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DNS Dynamique (DDNS)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-au-dns-dynamique-ddns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction au DNS dynamique (DDNS)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparaison-technique-des-services-ddns-cloudflare-duckdns-no-ip-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparaison technique des services DDNS (Cloudflare, DuckDNS, No-IP, etc.)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparaison technique des services DDNS (Cloudflare, DuckDNS, No-IP, etc.)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloudflare-dns-dynamique-via-api-sur-son-propre-domaine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cloudflare (DNS dynamique via API sur son propre domaine)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#duckdns-service-ddns-gratuit" class="md-nav__link">
+    <span class="md-ellipsis">
+      DuckDNS (service DDNS gratuit)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-ip-service-freemium-historique" class="md-nav__link">
+    <span class="md-ellipsis">
+      No-IP (service freemium, historique)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autres-alternatives-notables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Autres alternatives notables
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenarios-dusage-types-avec-le-dns-dynamique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scénarios d’usage types avec le DNS dynamique
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scénarios d’usage types avec le DNS dynamique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-homelab-derriere-une-ip-dynamique-acces-distant-a-un-reseau-domestique" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Homelab derrière une IP dynamique (accès distant à un réseau domestique)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-integration-avec-un-reverse-proxy-pour-multi-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Intégration avec un reverse proxy pour multi-services
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-considerations-de-securite-et-bonnes-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Considérations de sécurité et bonnes pratiques
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serveurs-dns-locaux-unbound-dnsmasq-et-leur-role-en-reseau-domestique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serveurs DNS locaux (Unbound, Dnsmasq) et leur rôle en réseau domestique
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serveurs DNS locaux (Unbound, Dnsmasq) et leur rôle en réseau domestique">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-dun-dns-local-dans-une-architecture-domestique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rôle d’un DNS local dans une architecture domestique
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unbound-vs-dnsmasq-differences-et-complementarite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unbound vs. Dnsmasq : différences et complémentarité
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mise-en-place-dans-un-reseau-domestique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mise en place dans un réseau domestique
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guide-de-configuration-clients-ddns-et-integration-routeur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guide de configuration : clients DDNS et intégration routeur
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guide de configuration : clients DDNS et intégration routeur">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clients-et-scripts-pour-le-dns-dynamique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clients et scripts pour le DNS dynamique
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exemples-de-configuration-rapides" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemples de configuration rapides
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mise-en-place-dun-dns-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mise en place d’un DNS local
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="dns-dynamique-et-dns-local-comparatif-et-guide-technique"><strong>DNS Dynamique et DNS Local : Comparatif et Guide Technique</strong><a class="headerlink" href="#dns-dynamique-et-dns-local-comparatif-et-guide-technique" title="Permanent link">&para;</a></h1>
+<h2 id="introduction-au-dns-dynamique-ddns"><strong>Introduction au DNS dynamique (DDNS)</strong><a class="headerlink" href="#introduction-au-dns-dynamique-ddns" title="Permanent link">&para;</a></h2>
+<p><strong>Schéma – Fonctionnement d’un service de DNS dynamique.</strong>  Un routeur partage son IP actuelle avec le serveur DynDNS, qui associe cette IP au nom d’hôte (ici  <em>homexyz</em>). Le routeur devient alors joignable via une URL fixe (<em>homexyz.dyndns.org</em>), malgré la variabilité de son adresse IP  . Le DNS dynamique (DDNS) est un mécanisme qui  <strong>met à jour automatiquement un enregistrement DNS</strong>  lorsque l’adresse IP publique d’un client change  . Cela permet d’accéder à une machine ou un service chez soi via un nom de domaine stable, même si l’IP fournie par le FAI est dynamique et change régulièrement. En pratique, un petit programme (client DDNS) s’exécute sur votre routeur ou serveur local, surveille les changements d’IP et informe le fournisseur de DDNS lorsque nécessaire. Ce dernier met à jour l’enregistrement DNS (généralement de type A pour IPv4 et AAAA pour IPv6) pointant vers la nouvelle IP. Ainsi, les  <strong>clients peuvent toujours utiliser le même nom de domaine</strong>  pour atteindre votre réseau domestique, sans se soucier des changements d’adresse  .</p>
+<h2 id="comparaison-technique-des-services-ddns-cloudflare-duckdns-no-ip-etc"><strong>Comparaison technique des services DDNS (Cloudflare, DuckDNS, No-IP, etc.)</strong><a class="headerlink" href="#comparaison-technique-des-services-ddns-cloudflare-duckdns-no-ip-etc" title="Permanent link">&para;</a></h2>
+<p>Plusieurs services de DNS dynamique coexistent, chacun avec ses atouts, limitations et modalités. Nous présentons ci-dessous un comparatif technique des solutions populaires, notamment  <strong>Cloudflare DDNS</strong>,  <strong>DuckDNS</strong>,  <strong>No-IP</strong>, ainsi que quelques alternatives, en examinant leurs caractéristiques principales.</p>
+<h3 id="cloudflare-dns-dynamique-via-api-sur-son-propre-domaine"><strong>Cloudflare (DNS dynamique via API sur son propre domaine)</strong><a class="headerlink" href="#cloudflare-dns-dynamique-via-api-sur-son-propre-domaine" title="Permanent link">&para;</a></h3>
+<p><strong>Cloudflare</strong>  n’est pas à proprement parler un service DDNS traditionnel, mais la popularité de son offre DNS gratuite fait qu’on peut l’utiliser pour du DNS dynamique en mettant à jour ses enregistrements via l’API. Il faut  <strong>détenir son propre nom de domaine</strong>  et le configurer sur Cloudflare (plan gratuit). Ensuite, on utilise l’API de Cloudflare pour mettre à jour l’enregistrement DNS pointant vers l’IP dynamique. Cloudflare recommande d’ailleurs cette approche : un script local peut surveiller les changements d’IP et pousser les mises à jour via l’API Cloudflare  . Alternativement, on peut utiliser un client existant comme  <strong>ddclient</strong>  (un utilitaire compatible avec de nombreux fournisseurs DNS) qui supporte Cloudflare nativement  .</p>
+<ul>
+<li>
+<p><strong>Coût</strong> : Cloudflare ne facture pas ce service – le plan gratuit Cloudflare DNS suffit, hormis l’achat du nom de domaine auprès d’un registrar.</p>
+</li>
+<li>
+<p><strong>Mécanisme</strong> : la mise à jour se fait via des requêtes HTTPS à l’API REST de Cloudflare, en fournissant un  <strong>token API</strong>  ou une clé API globale pour authentification. Il est  <strong>recommandé d’utiliser un token API restreint</strong>  aux droits DNS sur la zone concernée, par mesure de sécurité  . Dans l’interface Cloudflare, on crée un jeton avec permissions « Zone : DNS : Edit » sur le domaine cible. Ce token pourra être utilisé par ddclient ou un script maison. Par exemple, sur OPNsense on configurera  <em>Username</em>  = “token” et  <em>Password</em>  = le token API Cloudflare  .</p>
+</li>
+<li>
+<p><strong>Domaine et hôtes</strong> : Cloudflare permet d’utiliser  <strong>son propre domaine</strong>  (ex.  <em>monserveur.maison.com</em>). On peut mettre à jour un ou plusieurs enregistrements (sous-domaines) de ce domaine. Il n’y a pas de limite stricte sur le nombre d’hôtes gérés dynamiquement (en pratique, on peut avoir de multiples sous-domaines). On peut aussi tirer parti de plusieurs domaines si on en possède, le tout via le même compte Cloudflare.</p>
+</li>
+<li>
+<p><strong>Propagation &amp; TTL</strong> : Les enregistrements DNS chez Cloudflare peuvent avoir un TTL très bas (jusqu’à  <strong>60 secondes</strong>  sur les enregistrements non-proxy  ). Cela signifie qu’en cas de changement d’IP, la nouvelle IP se propage rapidement.  <em>Note:</em>  Si l’enregistrement est passé en mode proxy (CDN Cloudflare activé, « orange cloud »), le TTL est géré différemment car les clients voient l’IP du proxy Cloudflare.</p>
+</li>
+<li>
+<p><strong>Avantages</strong> : mise à jour rapide, usage de son propre nom de domaine (plus professionnel), aucun besoin de confirmer périodiquement l’activité (pas d’expiration tant que le domaine est valide), intégration possible avec d’autres fonctionnalités Cloudflare (proxy web, pare-feu applicatif, certificats SSL gratuits, DNSSEC, etc.). De plus, Cloudflare étant un DNS anycast mondial, la  <strong>fiabilité et rapidité de résolution</strong>  sont excellentes.</p>
+</li>
+<li>
+<p><strong>Inconvénients</strong> : nécessite de gérer un nom de domaine (coût annuel du domaine, configuration des serveurs NS vers Cloudflare). L’intégration n’est pas « plug-and-play » sur tous les équipements : peu de routeurs grand public proposent Cloudflare en option DDNS, il faudra souvent recourir à un script ou à la fonction « Custom DDNS ». La sécurité doit être bien configurée (utilisation d’un token limité) car une compromission du token pourrait permettre de détourner votre DNS. Enfin, Cloudflare n’offre pas d’option simple de sous-domaine gratuit générique (contrairement à DuckDNS, No-IP…), il faut utiliser un domaine à soi.</p>
+</li>
+</ul>
+<h3 id="duckdns-service-ddns-gratuit"><strong>DuckDNS (service DDNS gratuit)</strong><a class="headerlink" href="#duckdns-service-ddns-gratuit" title="Permanent link">&para;</a></h3>
+<p><strong>DuckDNS</strong>  est un service de DNS dynamique entièrement gratuit, opéré de manière communautaire (soutenu par des dons), très apprécié pour sa simplicité. Il fournit des sous-domaines sous la forme  *.duckdns.org. Quelques points clés :</p>
+<ul>
+<li>
+<p><strong>Coût et limites</strong> : DuckDNS est 100 % gratuit, sans offre payante. Chaque compte peut créer  <strong>jusqu’à 5 sous-domaines</strong>  DuckDNS (on peut en obtenir davantage sur demande dans certains cas)  . Cette limite de 5 est généralement suffisante pour un usage personnel (ex.  <em>maison.duckdns.org</em>,  <em>cloud.duckdns.org</em>, etc.).</p>
+</li>
+<li>
+<p><strong>Mise à jour</strong> : L’API DuckDNS est extrêmement simple : la mise à jour se fait via une requête HTTP (ou HTTPS) contenant un  <strong>token d’authentification unique</strong>  et le nom de domaine. Par exemple :  https://www.duckdns.org/update?domains=monhote&amp;token=abcdef123456&amp;ip=1.2.3.4. De nombreux scripts tout prêts existent. DuckDNS fournit d’ailleurs des instructions pour divers OS (Windows, Linux, macOS) et peut être intégré dans des scripts shell, cron, containers Docker, etc. Par exemple, pour Docker, on trouve des images légères qui appellent périodiquement l’URL DuckDNS. Sur Home Assistant, une extension DuckDNS facilite l’intégration (y compris l’obtention d’un certificat SSL via Let’s Encrypt).</p>
+</li>
+<li>
+<p><strong>Avantages</strong> : extrême simplicité et légèreté. Pas de création de compte complexe : on s’authentifie via un compte GitHub, Google ou autre provider OAuth pour obtenir son token.  <strong>Aucune confirmation mensuelle</strong>  n’est requise : une fois configuré, le sous-domaine reste actif tant qu’il est régulièrement mis à jour. Le service supporte IPv6 également. DuckDNS n’impose pas de fréquence minimale ou maximale de mise à jour, mais typiquement un cron toutes les 5 minutes ou à chaque changement d’IP suffit. La communauté Homelab/auto-hébergement le recommande souvent pour sa fiabilité globale et son  <strong>intégration facile à des projets DIY</strong>  (automatisation, scripts).</p>
+</li>
+<li>
+<p><strong>Inconvénients</strong> : dépendance à un service gratuit géré par une petite équipe (disponibilité généralement bonne mais il y a eu de rares interruptions rapportées  ). Le choix du domaine est limité à  duckdns.org  (pas d’autres suffixes), ce qui peut faire moins « professionnel » ou être plus facile à deviner. DuckDNS n’offre pas de fonctionnalités annexes (pas de gestion de DNS complexes, pas de support client dédié – juste une FAQ et forum). Néanmoins, pour un usage personnel, ces limites sont très acceptables.</p>
+</li>
+</ul>
+<h3 id="no-ip-service-freemium-historique"><strong>No-IP (service freemium, historique)</strong><a class="headerlink" href="#no-ip-service-freemium-historique" title="Permanent link">&para;</a></h3>
+<p><strong>No-IP</strong>  est l’un des plus anciens services de DNS dynamique (concurrent de DynDNS à l’époque). Il fonctionne sur un modèle freemium : il existe un niveau gratuit limité, et des offres payantes avec plus de fonctionnalités. Caractéristiques :</p>
+<ul>
+<li>
+<p><strong>Offre gratuite</strong> : Permet aujourd’hui  <strong>1 hostname actif</strong>  (sous-domaine) sur un compte gratuit  . Historiquement, No-IP offrait 3 hôtes gratuits, mais les conditions ont changé ces dernières années. Le sous-domaine peut être choisi parmi une  <strong>trentaine de noms de domaine proposés</strong>  par No-IP (ex.  <em>ddns.net</em>,  <em>hopto.org</em>,  <em>zapto.org</em>, etc.). Cela donne un peu de diversité (si par exemple  <em>monserveur.hopto.org</em>  est pris, on peut essayer  <em>monserveur.ddns.net</em>, etc.).</p>
+</li>
+<li>
+<p><strong>Expiration/confirmation</strong> : La contrainte majeure de l’offre gratuite est la nécessité de  <strong>confirmer périodiquement</strong>que le hostname est toujours utilisé. Concrètement,  <strong>tous les 30 jours</strong>  No-IP envoie un email de confirmation à l’utilisateur, qui doit cliquer un lien pour éviter la désactivation de son DNS  . Si on ne confirme pas, l’hôte passe en état « Expired » puis « Redemption » et finit par être supprimé  . Cette politique vise à libérer les noms non utilisés, mais c’est une contrainte à ne pas négliger (ou bien il faut passer en offre payante pour s’en affranchir).</p>
+</li>
+<li>
+<p><strong>Offre Enhanced/Premium</strong> : No-IP propose des abonnements payants relativement abordables supprimant la confirmation mensuelle et autorisant plus d’hôtes (par ex. l’offre Enhanced ~5$/mois pour 5 hostnames, l’offre  <strong>Plus</strong>ou  <strong>Professional</strong>  pour davantage d’hôtes et son propre domaine, etc.  ). Les offres payantes permettent aussi d’utiliser des enregistrements DNS avancés (MX, TXT), un support client, etc.</p>
+</li>
+<li>
+<p><strong>Clients et intégration</strong> : No-IP étant ancien et répandu,  <strong>de nombreux routeurs et NAS intègrent nativement un client No-IP</strong>. Il suffit souvent d’entrer son username, mot de passe et nom d’hôte dans l’interface du routeur pour que celui-ci mette à jour l’IP automatiquement. No-IP fournit aussi son application de mise à jour (<strong>DUC – Dynamic Update Client</strong>) sur Windows/Linux, ainsi qu’un client en ligne de commande. L’API simple (protocole proche de DynDNS v2) permet d’utiliser des clients génériques (ddclient, inadyn, etc.).</p>
+</li>
+<li>
+<p><strong>Avantages</strong> : Fiabilité d’une société établie (No-IP revendique 100% de disponibilité DNS).  <strong>Large choix de domaines</strong>  gratuits qui peuvent être plus mémorables que les concurrents. Intégration plug-and-play sur beaucoup d’équipements. Possibilité d’évolution vers des offres avancées (par exemple, utiliser votre propre nom de domaine avec No-IP comme gestionnaire DNS dynamique : leur offre Plus gère jusqu’à 50 hôtes sur votre domaine personnalisé  ).</p>
+</li>
+<li>
+<p><strong>Inconvénients</strong> : La confirmation mensuelle est souvent vue comme une corvée (il ne faut pas oublier de cliquer sous peine de coupure). Un seul hôte gratuit limite l’utilisation multi-services (mais on peut contourner partiellement avec un wildcard, voir plus bas). Le service gratuit comporte de la publicité (emails de rappel, et auparavant les redirections web affichaient des bannières, bien que ce soit moins un problème pour un simple enregistrement A). Enfin, No-IP a pu être ciblé par certains blocages ou abus dans le passé (des malware utilisaient des hôtes No-IP, entraînant parfois des blocages temporaires de certains domaines No-IP par des FAI ou entreprises). Ce n’est pas commun, mais à savoir.</p>
+</li>
+</ul>
+<h3 id="autres-alternatives-notables"><strong>Autres alternatives notables</strong><a class="headerlink" href="#autres-alternatives-notables" title="Permanent link">&para;</a></h3>
+<p>En dehors de Cloudflare, DuckDNS et No-IP, il existe d’autres services DynDNS, chacun avec ses particularités :</p>
+<ul>
+<li>
+<p><strong>FreeDNS (Afraid.org)</strong> : Service gratuit ancien et fiable, qui offre jusqu’à  <strong>5 sous-domaines gratuits</strong>  . Son point fort est le grand choix de domaines publics partagés (plus de 50) parmi lesquels choisir son sous-domaine. Par exemple  <em>.mooo.com  (très utilisé),  </em>.afraid.org, etc. L’interface est un peu rustique, mais c’est efficace. FreeDNS propose aussi une formule payante augmentant le nombre de sous-domaines (50 à 500) et offrant des options comme les wildcards et un branding sans référence à Afraid.org  .</p>
+</li>
+<li>
+<p><strong>Dynu</strong> : Un fournisseur moderne qui offre un service gratuit de DNS dynamique  <strong>sans expiration</strong>. D’après certaines ressources, la version gratuite de Dynu permettrait plusieurs hostnames (jusqu’à 30) mais avec certaines limitations  . Cependant, il semble qu’il faille créer un compte et que les fonctionnalités complètes (DNSSEC, plus de domaines, etc.) nécessitent un abonnement modique. À vérifier, car le comparatif IONOS mentionne une période d’essai de 7 jours pour la version gratuite  – ce point peut prêter à confusion. Néanmoins, Dynu est souvent cité comme alternative, avec client dédié et API.</p>
+</li>
+<li>
+<p><strong>Securepoint DynDNS</strong> : Service gratuit proposé par une entreprise allemande, limité à  <strong>5 hôtes</strong>  mais offrant un  <strong>choix de 100 domaines</strong>  différents  . Nécessite une inscription. Supporte IPv6 et fournit un “token” de mise à jour unique pour usage dans les clients. Plutôt destiné aux utilisateurs européens (site en allemand/anglais).</p>
+</li>
+<li>
+<p><strong>YDNS</strong> : Service gratuit (géré par une association allemande) offrant des domaines sous  ydns.eu  ou la possibilité d’utiliser son propre domaine. Avantage :  <strong>supporte DNSSEC</strong>  pour les domaines personnalisés. Nombre d’hôtes illimité annoncé  . Interface minimaliste, API possible.</p>
+</li>
+<li>
+<p><strong>deSEC (dedyn.io)</strong> : Solution  <strong>non-profit basée en Allemagne</strong>, orientée sécurité. deSEC offre gratuitement de gérer vos domaines avec DNSSEC et API, ainsi que des sous-domaines sous  dedyn.io. On peut y voir un  <strong>véritable gestionnaire de DNS dynamique moderne</strong>. Limite : ~15 domaines par compte (mais extensible sur demande)  . Pas de pub, pas d’offre payante, tout est financé par dons/recherche. Compatible directement avec les clients ACME (Let’s Encrypt) pour la validation DNS. C’est une alternative robuste et ouverte à DuckDNS/no-ip, pour utilisateurs avancés  .</p>
+</li>
+<li>
+<p><strong>Dyn.com (Oracle DynDNS)</strong> : Historiquement  <em>LE</em>  service DynDNS, très connu il y a 15 ans, mais il n’est plus disponible gratuitement depuis longtemps. Oracle (qui a racheté Dyn) a même annoncé l’arrêt complet du service grand public en 2022. Il n’est donc plus à considérer pour un nouvel usage.</p>
+</li>
+<li>
+<p><strong>Autres</strong> : citons encore  <strong>Google Domains</strong>  qui offrait un DDNS pour les domaines enregistrés chez eux (mais Google Domains est en cours de reprise par Squarespace en 2023-2024),  <strong>OVH DynHost</strong>  (pour les domaines chez OVH),  <strong>Namecheap Dynamic DNS</strong>  (pour domaines chez Namecheap) – ces services attachés aux registrars peuvent être utiles si vous avez acheté le domaine chez eux. Enfin, il existe la possibilité d’<strong>auto-héberger son propre service DDNS</strong>  (par exemple via un script PHP ou un petit serveur DNS avec mise à jour par requête HTTP), mais ceci dépasse le cadre de la comparaison – c’est faisable pour les makers cherchant un contrôle total.</p>
+</li>
+</ul>
+<p><strong>Wildcards et cas multi-sous-domaines</strong> : Une question fréquente est la prise en charge des  <strong>wildcards DNS</strong>  (par exemple  <em>.maison.ddns.net). La plupart des services gratuits  </em><em>n’autorisent pas de wildcard sur un domaine gratuit</em><em>, ou seulement avec une offre payante (No-IP le permet en payant). Cloudflare permet des wildcards sur votre domaine, mais Let’s Encrypt par exemple nécessite un défi DNS pour obtenir un certificat wildcard. En pratique, si on veut exposer plusieurs services derrière une IP dynamique, deux approches : 1) mettre à jour  </em><em>plusieurs enregistrements A</em><em>  (ex:  <em>service1.mondomaine.com</em>,  <em>service2.mondomaine.com</em>  – Cloudflare API ou le client peut gérer plusieurs hostnames), ou 2) utiliser un nom d’hôte dynamique principal et faire des  </em><em>CNAME</em>*  pour les autres. Par exemple, avec DuckDNS on a  maison.duckdns.org  mis à jour; on peut pointer  <em>nextcloud.mondomaineperso.com CNAME maison.duckdns.org</em>  – ainsi ce CNAME suivra l’IP dynamique indirectement. Cette méthode mixte est utile si on tient à utiliser un nom de domaine personnalisé sans gérer l’API soi-même.</p>
+<h2 id="scenarios-dusage-types-avec-le-dns-dynamique"><strong>Scénarios d’usage types avec le DNS dynamique</strong><a class="headerlink" href="#scenarios-dusage-types-avec-le-dns-dynamique" title="Permanent link">&para;</a></h2>
+<p>Dans quel contexte a-t-on besoin de DNS dynamique ? Voici trois scénarios courants de la vie d’un homelab ou réseau domestique, illustrant l’usage du DDNS et les considérations associées.</p>
+<h3 id="1-homelab-derriere-une-ip-dynamique-acces-distant-a-un-reseau-domestique"><strong>1. Homelab derrière une IP dynamique (accès distant à un réseau domestique)</strong><a class="headerlink" href="#1-homelab-derriere-une-ip-dynamique-acces-distant-a-un-reseau-domestique" title="Permanent link">&para;</a></h3>
+<p>Imaginons une personne qui héberge chez elle un  <strong>serveur NAS</strong>  ou des services web (site personnel, cloud privé type Nextcloud, caméra de surveillance, etc.). Son FAI lui attribue une IP publique dynamique qui change régulièrement (par exemple à chaque redémarrage de box, ou tous les X jours). Sans DNS dynamique, il faudrait connaître l’IP à jour et la communiquer à chaque fois – impraticable. Le DDNS résout ce problème : on configure un nom de domaine (par ex.  <em>mynas.duckdns.org</em>) et un client DDNS sur la box ou le NAS. Désormais, l’utilisateur peut accéder à son NAS en utilisant ce  <strong>nom de domaine fixe</strong>, que ce soit pour se connecter en SSH, en HTTP, ou pour toute autre application (ex: configurer un client de sauvegarde vers  mynas.duckdns.org). Le service DDNS garantit que ce nom pointe vers la bonne IP même après un changement.</p>
+<p>Dans ce scénario, on  <strong>configure le routeur pour rediriger les ports nécessaires</strong>  vers le serveur interne. Par exemple, on peut ouvrir le port 443 vers le NAS pour accéder à l’interface web.  <strong>Côté sécurité</strong>, il est recommandé d’utiliser des certificats SSL (ex: via Let’s Encrypt, qui accepte les noms de domaine DuckDNS ou autres) pour chiffrer les connexions externes. Le nom de domaine dynamique permet justement d’obtenir et renouveler ces certificats automatiquement.</p>
+<p>Si l’on souhaite un accès plus sécurisé, on pourrait n’exposer aucun port et passer par un VPN ou un tunnel. Par exemple, Tailscale (VPN maillé) ou Cloudflare Tunnel (agent qui sortant qui enregistre le service chez Cloudflare) sont des alternatives pour éviter des ouvertures de ports. Ces solutions utilisent aussi DNS (Cloudflare Tunnel fournit un nom en  <em>tunnels.dev</em>, Tailscale peut gérer des MagicDNS internes), mais elles sortent du cadre du DDNS classique. Retenons qu’un homelab accessible via DDNS doit être  <strong>protégé comme un serveur en ligne</strong> : mises à jour, pare-feu, mots de passe forts, etc., car il devient joignable depuis Internet par son nom.</p>
+<h3 id="2-integration-avec-un-reverse-proxy-pour-multi-services"><strong>2. Intégration avec un reverse proxy pour multi-services</strong><a class="headerlink" href="#2-integration-avec-un-reverse-proxy-pour-multi-services" title="Permanent link">&para;</a></h3>
+<p>Beaucoup d’auto-hébergeurs déploient plusieurs services web sur la même IP (ex: serveur web, interface domotique, caméra IP, etc.). Grâce au DNS dynamique, on peut utiliser  <strong>plusieurs sous-domaines</strong>  qui pointent tous vers la même IP publique. Ensuite, un  <strong>reverse proxy</strong>  local (Nginx, Traefik, Caddy…) se charge de distribuer le trafic entrant vers le bon service en fonction du nom de domaine requis.</p>
+<p>Concrètement, on peut avoir par exemple un nom de domaine dynamique principal  ma-maison.fr  (géré via Cloudflare ou autre). On crée des enregistrements pour  <em>nextcloud.ma-maison.fr</em>,  <em>camera.ma-maison.fr</em>,  <em>homeassistant.ma-maison.fr</em>  – tous pointent à l’adresse IP de la box. Sur le routeur, on a une redirection du port 443 vers la machine hébergeant le reverse proxy (ex: un Raspberry Pi). Ce reverse proxy voit la requête arrivée et, grâce au SNI du TLS ou à l’Host HTTP, fait suivre aux bons serveurs internes.</p>
+<p><strong>Exemple illustratif</strong> :  <em>« Supposons que vous ayez le domaine</em> <em>dandreyd.com__. Vous pouvez créer des sous-domaines :</em> <em>service1.dandreyd.com__,</em> <em>service2.dandreyd.com__, etc., qui pointent tous vers l’IP publique (1.2.3.4) de votre serveur. Votre reverse proxy écoute sur cette IP et, lorsqu’une connexion arrive sur</em> <em>service1.dandreyd.com__, il la route vers le service interne correspondant (par ex. 192.168.2.19) »</em>  . De cette façon,  <strong>un seul point d’entrée</strong>  (IP + port 443) peut desservir de multiples applications. Le DNS dynamique s’assure que  *.dandreyd.com  est toujours à jour vers l’IP du jour.</p>
+<p>Avec Cloudflare DNS par exemple, on peut même activer le  <strong>proxy Cloudflare (orange cloud)</strong>  sur certains sous-domaines, ce qui ajoute une couche de cache/WAF (utile pour un site web public) et masque l’IP originelle. Cependant, pour des services personnels non web (Nextcloud privé, etc.), on utilise généralement le DNS de Cloudflare en mode DNS seulement (pas de proxy) pour éviter des complexités sur les flux non-HTTP.</p>
+<p><strong>Certificats SSL</strong> : Dans un tel setup, on obtient des certificats multi-domaines (ou wildcard) pour couvrir tous les sous-domaines. Let’s Encrypt via un challenge DNS (facile si on a Cloudflare) ou via challenge HTTP (possible en exposant temporairement chaque service ou via le proxy) peut automatiser cela. Par exemple, l’add-on DuckDNS de Home Assistant automatise la création d’un certificat pour le nom DuckDNS + un accès sécurisé.</p>
+<p>En termes de sécurité, ce scénario profite du fait que  <strong>chaque service n’est pas exposé sur un port distinct</strong>  (on n’ouvre que 443, et éventuellement 80 pour les challenges, bien que avec le DNS challenge ce ne soit pas nécessaire). Le reverse proxy peut gérer l’authentification, forcer HTTPS, et appliquer des règles (rate limiting, firewall d’app, intégration fail2ban, etc.). On conseille de  <strong>désactiver l’accès HTTP</strong>  (redirection vers HTTPS) et de n’autoriser que TLS moderne sur le proxy.</p>
+<h3 id="3-considerations-de-securite-et-bonnes-pratiques"><strong>3. Considérations de sécurité et bonnes pratiques</strong><a class="headerlink" href="#3-considerations-de-securite-et-bonnes-pratiques" title="Permanent link">&para;</a></h3>
+<p>Exposer son réseau domestique via un nom de domaine public nécessite quelques précautions :</p>
+<ul>
+<li>
+<p><strong>Mises à jour DNS sécurisées</strong> : Toujours utiliser le  <strong>chiffrement</strong>  pour les requêtes de mise à jour DDNS. La plupart des services imposent HTTPS, mais si ce n’est pas le cas, préférez un client qui le supporte ou un tunnel. Par exemple, ddclient en mode Cloudflare utilise HTTPS par défaut  . Ceci évite qu’un attaquant sur le même réseau puisse intercepter votre token.</p>
+</li>
+<li>
+<p><strong>Protection des identifiants</strong> : Les services comme Cloudflare utilisent des API tokens – stockez-les en lieu sûr (fichier de config en permissions restreintes, etc.). De même pour les logins/mots de passe No-IP ou autres. Ne les mettez pas en dur dans un script public.</p>
+</li>
+<li>
+<p><strong>Ports exposés minimalement</strong> : N’exposez que le nécessaire. Par exemple, inutile d’ouvrir Telnet ou SSH au monde entier. Privilégiez un VPN pour l’administration distante. Si un service n’a pas vocation à être accédé publiquement, ne le mappez pas sur le reverse proxy.</p>
+</li>
+<li>
+<p><strong>Utilisez HTTPS</strong> : Grâce au DNS dynamique, vous avez un nom de domaine – profitez-en pour déployer du HTTPS via Let’s Encrypt ou un autre CA. De nombreux tutos existent pour coupler Let’s Encrypt avec DuckDNS (le DNS-01 challenge via DuckDNS est une possibilité, ou plus simplement le HTTP-01 si le service est accessible). Un navigateur ou une API appellera ainsi  https://monservice.maison:443  en toute confiance.</p>
+</li>
+<li>
+<p><strong>Cloudflare en proxy</strong> : Si vous utilisez Cloudflare DNS, évaluer l’option proxy (mode “orange”). Pour un blog personnel ou un petit site, cela peut apporter une couche de protection (Cloudflare filtre les attaques DDoS, offre un pare-feu applicatif de base). Par contre, pour accéder à un service non-HTTP (SSH, MQTT…), le proxy Cloudflare ne convient pas, on restera en connexion directe (ou on utilisera Cloudflare Tunnel spécifiquement pour certaines applications web).</p>
+</li>
+<li>
+<p><strong>Mises à jour et monitoring</strong> : Tenez à jour vos services exposés (un Nextcloud obsolète ou une caméra IP non patchée peuvent être compromis). Surveillez les logs, et éventuellement utilisez des outils comme Fail2Ban pour bannir les IP en cas de brute-force. Le DNS dynamique ne rend pas l’attaque plus facile en soi, mais il rend votre service plus  <strong>visible sur Internet</strong>  via un nom de domaine. D’ailleurs, attention, certains robots scannent les domaines *.duckdns.org ou  <em>.no-ip.</em>  connus – vous pourriez voir du trafic malveillant générique. D’où l’importance des précautions classiques.</p>
+</li>
+</ul>
+<p>En résumé, un usage typique du DNS dynamique dans un cadre homelab implique une configuration combinant  <strong>DDNS + redirections NAT + (optionnellement) reverse proxy + certificats SSL</strong>. Cette combinaison permet de reproduire à l’échelle domestique ce qu’un hébergeur professionnel ferait, tout en contournant la limitation d’IP non fixe.</p>
+<h2 id="serveurs-dns-locaux-unbound-dnsmasq-et-leur-role-en-reseau-domestique"><strong>Serveurs DNS locaux (Unbound, Dnsmasq) et leur rôle en réseau domestique</strong><a class="headerlink" href="#serveurs-dns-locaux-unbound-dnsmasq-et-leur-role-en-reseau-domestique" title="Permanent link">&para;</a></h2>
+<p>Abordons maintenant la question des  <strong>DNS locaux</strong> : au sein de votre réseau local, vous pouvez déployer un serveur DNS maison (par exemple avec  <strong>Unbound</strong>  ou  <strong>Dnsmasq</strong>). Quel est l’intérêt, et comment cela s’articule-t-il avec le DNS dynamique vu plus haut ?</p>
+<h3 id="role-dun-dns-local-dans-une-architecture-domestique"><strong>Rôle d’un DNS local dans une architecture domestique</strong><a class="headerlink" href="#role-dun-dns-local-dans-une-architecture-domestique" title="Permanent link">&para;</a></h3>
+<p>Dans un réseau domestique typique, vos PC, smartphones et objets utilisent le DNS de l’opérateur ou un DNS public (Google, Cloudflare…) pour résoudre les noms de domaine externes. Installer un serveur DNS local (sur le routeur ou un Raspberry Pi) peut apporter plusieurs bénéfices :</p>
+<ul>
+<li>
+<p><strong>Cache DNS partagé</strong> : Le serveur DNS local sert de  <strong>cache</strong>  pour toutes les requêtes des appareils. Les résolutions répétées (par ex.  www.google.com) seront accélérées car la réponse sera servie localement sans requêter à chaque fois un DNS externe. Cela  <strong>améliore la latence</strong>  perçue et réduit un peu la consommation de bande passante  .</p>
+</li>
+<li>
+<p><strong>Résolution des noms locaux</strong> : Un DNS local peut connaître les noms de vos machines internes (par exemple  <em>monpc.lan</em>  qui pointe vers 192.168.1.10). Sans DNS local, on se rabat sur des solutions comme mDNS (.local) ou WINS, pas toujours fiables ou universelles. Avec Dnsmasq ou Unbound configuré, on peut automatiquement enregistrer les baux DHCP dans le DNS : ainsi, toute machine du LAN peut pinguer  monpc.lan  et ça résout. Unbound sur OPNsense/pfSense, par exemple, a une option  <em>Register DHCP leases</em>  qui ajoute les machines DHCP au DNS  . Cela  <strong>simplifie grandement l’administration</strong> : plus besoin d’éditer les fichiers hosts de chaque PC.</p>
+</li>
+<li>
+<p><strong>Override / Split-horizon DNS</strong> : On peut définir des entrées DNS spécifiques pour certains noms. Très utile dans le cas du  <strong>DNS dynamique</strong>  justement. Supposons que depuis l’extérieur on accède à  <em>monnas.duckdns.org</em>  (résolu vers l’IP publique). Depuis l’intérieur du LAN, si on utilise ce même nom, on va sortir vers Internet pour revenir vers la box (hairpin NAT). Cela peut être inefficace, voire bloqué par certains routeurs. Avec un DNS local, on peut configurer une règle override disant :  <em>“monnas.duckdns.org = 192.168.1.50”</em>  (IP locale du NAS). Ainsi les clients internes accèdent directement, sans passer par la boucle externe. Unbound et Dnsmasq permettent ces  <strong>overrides locaux</strong>  facilement (sur OPNsense GUI, via “Host Overrides” ou “Domain Overrides”)  . On parle de DNS « split-horizon » lorsque l’interne et l’externe renvoient des IP différentes pour un même nom, optimisant l’accès selon la provenance.</p>
+</li>
+<li>
+<p><strong>Filtrage et sécurité</strong> : Un DNS local peut incorporer des  <strong>listes de blocage</strong>  (pour bloquer des domaines publicitaires, malveillants, etc.). Par exemple, Pi-hole (très populaire sur Raspberry Pi) utilise en interne Dnsmasq (ou son fork FTL) pour filtrer des domaines. Unbound peut aussi faire du filtrage via des zones nulles. Cela procure un  <strong>bloqueur de pub/malware réseau</strong>  centralisé. De plus, un serveur DNS local bien configuré peut activer  <strong>DNSSEC</strong>  pour vérifier l’authenticité des réponses DNS externes, et même chiffrer les requêtes sortantes via  <strong>DNS over TLS (DoT)</strong>si on le configure en forwarder TLS. Unbound supporte nativement DNSSEC et DoT  , ce qui permet d’éviter les attaques de cache poisoning et d’améliorer la confidentialité des requêtes (en empêchant un espion local ou FAI de voir toutes les requêtes en clair).</p>
+</li>
+<li>
+<p><strong>Haute disponibilité locale</strong> : Si votre accès Internet tombe, un DNS local garde en cache un certain nombre de domaines récemment résolus, permettant aux machines de continuer à se résoudre localement et parfois d’accéder à des ressources en cache (si par exemple un serveur local sert du contenu, etc.). Bon, ça reste un cas limité, mais disons que l’infrastructure locale ne dépend plus entièrement des DNS extérieurs.</p>
+</li>
+</ul>
+<h3 id="unbound-vs-dnsmasq-differences-et-complementarite"><strong>Unbound vs. Dnsmasq : différences et complémentarité</strong><a class="headerlink" href="#unbound-vs-dnsmasq-differences-et-complementarite" title="Permanent link">&para;</a></h3>
+<p><strong>Dnsmasq</strong>  et  <strong>Unbound</strong>  sont deux solutions courantes pour le DNS local, souvent utilisées dans les firmwares routeurs et homelabs. Leurs rôles se recoupent partiellement, mais ils ont des philosophies différentes  :</p>
+<ul>
+<li>
+<p><strong>Dnsmasq</strong>  est un  <strong>DNS forwarder/cache léger</strong>  qui fait aussi serveur DHCP. Il ne résout pas les requêtes récursives lui-même : il  <strong>transmet les requêtes à un ou plusieurs DNS upstream</strong>  (par exemple les DNS de l’opérateur ou de Cloudflare)  . Il se veut très léger en mémoire et conçu pour les routeurs/embarqués. Il excelle à distribuer les baux DHCP et à enregistrer automatiquement ces hôtes en DNS. En revanche, il ne valide pas DNSSEC tout seul, et ne chiffre pas les requêtes (il peut néanmoins être pointé vers un résolveur tiers qui fait DNSSEC). Son empreinte est minimale, ce qui le rend idéal pour de petits environnements ou équipements modestes.</p>
+</li>
+<li>
+<p><strong>Unbound</strong>  est un  <strong>résolveur DNS récursif complet</strong>  (comme BIND dans sa fonction récursive) qui peut interroger directement les serveurs racine, domaines de premier niveau, etc. Il  <strong>n’a pas besoin de serveur DNS upstream</strong>(sauf si on le configure en mode forwarder). Unbound fait de la  <strong>validation DNSSEC</strong>  en local et supporte les protocoles modernes (DNS over TLS, DNS64 pour IPv6, etc.)  . Il maintient un cache efficace et robuste. Depuis quelques années, il a été adopté par défaut sur OPNsense/pfSense car jugé plus sécurisé et respectueux de la vie privée (plus besoin de faire confiance à un DNS tiers)  . Unbound ne fait pas DHCP, mais il peut parfaitement récupérer les infos du serveur DHCP du système (voir plus haut) pour la résolution locale.</p>
+</li>
+</ul>
+<p>En termes de  <strong>performances</strong> : un résolveur complet comme Unbound peut être très rapide après le premier remplissage de cache, et évite des dépendances. Cependant, la première requête à un domaine peut être un peu plus longue (le temps de contacter les racines et autorités). Sur un réseau domestique, la différence est négligeable, d’autant qu’Unbound optimise et pipeline les requêtes. Dnsmasq, lui, dépend totalement de la latence vers le DNS amont (par ex. 20ms vers 1.1.1.1). Donc après cache, ils se valent, mais Unbound offre plus de contrôle et potentiellement une résolution plus directe  .</p>
+<p><strong>Sécurité et fiabilité</strong> : Comme mentionné, Dnsmasq fait confiance aux réponses de l’upstream – si votre FAI vous redirige certaines requêtes (portails captifs, censures, etc.), Dnsmasq s’y pliera. Unbound, en résolvant lui-même et en validant DNSSEC, garantit d’avoir les  <strong>données officielles de la zone DNS</strong>  . Il peut détecter une altération (via DNSSEC) ou éviter certaines censures (sauf si l’accès à certains serveurs DNS est bloqué, auquel cas on peut configurer Unbound pour passer par un tunnel ou DoT).</p>
+<p><strong>Utilisation conjointe</strong> : Il est possible d’utiliser  <strong>les deux de concert</strong>. Par exemple, Pi-hole v5 combine Dnsmasq (FTL) pour le filtrage + Unbound en arrière-plan comme résolveur, configuré de sorte que Dnsmasq forward tout à Unbound localement. Cependant, dans la plupart des déploiements routeur, on choisit l’un ou l’autre. pfSense/OPNsense proposent soit Unbound (DNS Resolver) soit Dnsmasq (DNS Forwarder) – mais pas les deux en même temps pour le même port. Étant donné les avantages,  <strong>Unbound est généralement recommandé par défaut</strong>  pour les réseaux modernes, sauf cas d’usage spécifique  . Dnsmasq reste utile si on a très peu de ressources ou si on veut une config ultra-simple.</p>
+<p>En résumé  :</p>
+<blockquote>
+<p><em>Unbound</em> : résolveur récursif complet, rapide (direct, cache efficace), supporte DNSSEC/DoT, gestion avancée des overrides et blocages, idéal pour sécurité et performance.</p>
+<p><em>Dnsmasq</em> : forwarder DNS + DHCP, très léger, configuration simple, convient aux petits équipements ou si on veut simplement relayer vers un DNS public.</p>
+</blockquote>
+<h3 id="mise-en-place-dans-un-reseau-domestique"><strong>Mise en place dans un réseau domestique</strong><a class="headerlink" href="#mise-en-place-dans-un-reseau-domestique" title="Permanent link">&para;</a></h3>
+<p>Dans la pratique, de nombreuses  <strong>distributions routeur</strong>  embarquent déjà ces services. Par exemple :</p>
+<ul>
+<li>
+<p><strong>OPNsense/pfSense</strong> : utilisent Unbound par défaut comme DNS Resolver local (avec possibilité de switcher vers Dnsmasq si désiré). L’interface permet de définir des  <em>Host Overrides</em>  pour les noms locaux, activer l’enregistrement des baux DHCP  , etc. Si vous utilisez l’un de ces firewalls, vos clients DHCP reçoivent l’adresse du firewall comme DNS, profitant ainsi du cache local et des résolutions internes. Ces systèmes facilitent aussi la configuration de DNS over TLS (ex: forwarder vers Cloudflare chiffré) ou l’ajout de listes de blocage via des plugins.</p>
+</li>
+<li>
+<p><strong>Routeurs grand public/firmware open-source</strong> : Un routeur sous  <strong>OpenWrt</strong>  utilise Dnsmasq par défaut pour DNS+DHCP. Là aussi, les machines du LAN utilisent le routeur comme DNS. On peut configurer des noms locaux via /etc/hosts ou le DHCP statique. OpenWrt permet aussi d’ajouter Unbound en complément pour avoir DNSSEC (via le package  <em>unbound-host</em>). D’autres firmware comme ASUSWRT intègrent souvent une option DNSSEC ou DoT en forwarder, parfois en gardant dnsmasq pour le cache.</p>
+</li>
+<li>
+<p><strong>Raspberry Pi / Pi-hole</strong> : Installer Pi-hole donne un DNS local filtrant (basé sur Dnsmasq). Il suffit de pointer les DNS des postes vers l’IP du Pi-hole (ou configurer le DHCP pour qu’il annonce le Pi comme DNS). Ajoutez Unbound sur le Pi et vous avez un résolveur local complet sans dépendance externe, améliorant la confidentialité (c’est une configuration très prisée des bidouilleurs pour bloquer pubs et trackers sur tout le réseau).</p>
+</li>
+<li>
+<p><strong>NAS Synology/QNAP</strong> : Certains NAS offrent un package “DNS Server” (ex: Synology DNS Server) qui est souvent basé sur BIND ou dnsmasq, permettant de créer votre zone locale maison (par ex.  <em>maison.lan</em>  avec vos enregistrements) et de faire forward des requêtes externes. C’est une option pour centraliser le DNS si le routeur ne le fait pas bien.</p>
+</li>
+</ul>
+<p>Il est important de veiller à  <strong>éviter les conflits</strong> : ne pas avoir deux serveurs DNS sur le réseau prétendant gérer la même chose pour les clients. Généralement on en choisit un comme primaire (souvent le routeur). On peut en avoir un second en secours (par ex. un Pi-hole en secondaire), auquel cas il faut bien configurer pour qu’ils aient des vues cohérentes (surtout pour les noms locaux).</p>
+<p>Enfin,  <strong>DNS local et DNS dynamique</strong>  peuvent se compléter : On a vu l’exemple du split-horizon pour le nom dynamique. On pourrait par exemple automatiser l’ajout dans Unbound de l’enregistrement correspondant au DDNS. Sur pfSense, ceci peut être fait via un script ou en utilisant l’option RFC 2136 (mise à jour DNS vers un serveur DNS interne). Cependant, le plus simple est souvent de configurer manuellement un override statique si l’IP locale est fixe. Autre intégration : si votre DNS local est configuré pour forwarder vers un DNS public, vous pouvez paramétrer un forward conditionnel pour votre domaine dynamique vers un serveur spécifique. Mais cela devient complexe inutilement pour un usage maison. Dans la plupart des cas, une entrée statique locale suffira pour que  <em>monserveur.domaine.com</em>  résolve différemment en LAN et en WAN.</p>
+<h2 id="guide-de-configuration-clients-ddns-et-integration-routeur"><strong>Guide de configuration : clients DDNS et intégration routeur</strong><a class="headerlink" href="#guide-de-configuration-clients-ddns-et-integration-routeur" title="Permanent link">&para;</a></h2>
+<p>Pour terminer, voici quelques conseils et options pour  <strong>mettre en œuvre concrètement le DNS dynamique</strong>  et les DNS locaux dans votre réseau.</p>
+<h3 id="clients-et-scripts-pour-le-dns-dynamique"><strong>Clients et scripts pour le DNS dynamique</strong><a class="headerlink" href="#clients-et-scripts-pour-le-dns-dynamique" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Via le routeur/Firewall</strong> : Si vous possédez un routeur type  <strong>pfSense, OPNsense, OpenWrt</strong>, utilisez sa fonctionnalité DDNS intégrée. Sur pfSense, rendez-vous dans  <em>Services &gt; Dynamic DNS</em>  et ajoutez une entrée en choisissant votre fournisseur (Cloudflare, DuckDNS, No-IP, etc. sont proposés). Entrez les identifiants requis (par ex. pour Cloudflare,  <em>Email</em>  +  <em>Global API Key</em>  ou  <em>Token</em>  selon versions). Le routeur se chargera de détecter les changements d’IP (via l’interface WAN ou un service web) et de mettre à jour le DNS  . Sur OPNsense, après avoir installé le plugin os-ddclient, la configuration est similaire : vous pouvez définir l’intervalle de vérification (par ex. toutes les 5 minutes) et le service (Cloudflare, DuckDNS…). Par exemple, pour DuckDNS, vous sélectionnez  <em>DuckDNS</em>, en  <em>Hostname</em>  mettez  monhote.duckdns.org, et en mot de passe le token fourni par DuckDNS (le champ  <em>Username</em>  pouvant rester vide si non requis). Le routeur étant toujours allumé et conscient de son IP WAN, c’est souvent la solution la plus robuste.</p>
+</li>
+<li>
+<p><strong>Via un NAS ou serveur Linux</strong> : Si vous avez une machine toujours allumée, installer un client comme  <strong>ddclient</strong>  est recommandé. ddclient est un démon Perl très flexible qui supporte la plupart des fournisseurs (No-IP, Cloudflare, DuckDNS, Dyn, etc.)  . On le configure via  /etc/ddclient.conf. Par exemple, pour Cloudflare : préciser le protocol=cloudflare, le token API en password, le nom de zone et le record à mettre à jour  . Une fois configuré, ddclient tourne en tâche de fond et fait les updates. Sur Docker, on peut utiliser l’image  <em>linuxserver/ddclient</em>  qui simplifie le déploiement  . Pour DuckDNS, un script shell simple lancé par cron fait très bien l’affaire (appel wget/curl de l’URL duckdns toutes les 5 minutes).</p>
+</li>
+<li>
+<p><strong>Clients propriétaires</strong> : No-IP propose son utilitaire  <em>No-IP DUC</em>. Il suffit de l’exécuter et de fournir ses identifiants No-IP – il va tourner en background. D’autres services ont des clients dédiés (Dyn avait  <em>inadyn</em>, etc.). À noter : inadyn existe toujours en open-source et peut servir de client universel, mais ddclient est plus répandu désormais.</p>
+</li>
+<li>
+<p><strong>Automatisation logicielle</strong> : Certains logiciels embarquent des fonctions DDNS. Par exemple,  <strong>Home Assistant</strong>  a un add-on DuckDNS qui non seulement met à jour l’IP mais configure aussi le certificat Let’s Encrypt – pratique pour un accès à l’interface HA depuis l’extérieur.  <strong>Ubiquiti Unifi</strong>  routeurs/UDM ont une section DDNS (ils supportent No-IP, DuckDNS, DynDNS, etc.). Même Windows Server a un client DynDNS intégré si besoin. Pensez à vérifier si l’un de vos équipements actuels ne pourrait pas faire le job avant d’ajouter un énième script.</p>
+</li>
+</ul>
+<h3 id="exemples-de-configuration-rapides"><strong>Exemples de configuration rapides</strong><a class="headerlink" href="#exemples-de-configuration-rapides" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>DuckDNS + script shell (Linux)</strong> : créez un script  /usr/local/bin/duckdns.sh  contenant par ex.:</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;Votre-Token-DuckDNS&quot;</span>
+<span class="nv">DOMAINS</span><span class="o">=</span><span class="s2">&quot;monhote&quot;</span>
+<span class="nv">IP</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>https://api.ipify.org<span class="k">)</span><span class="w">  </span>
+curl<span class="w"> </span><span class="s2">&quot;https://www.duckdns.org/update?domains=</span><span class="nv">$DOMAINS</span><span class="s2">&amp;token=</span><span class="nv">$TOKEN</span><span class="s2">&amp;ip=</span><span class="nv">$IP</span><span class="s2">&quot;</span>
+</code></pre></div>
+-   Ajoutez une tâche cron (*/5 * * * * /usr/local/bin/duckdns.sh &gt;/dev/null 2&gt;&amp;1). Ceci va mettre à jour toutes les 5 min. (DuckDNS renvoie “OK” ou “KO” selon succès).</p>
+<ul>
+<li><strong>Cloudflare + curl</strong> : une commande curl pour mettre à jour Cloudflare (via API v4) ressemble à :</li>
+</ul>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://api.cloudflare.com/client/v4/zones/&lt;ZONE_ID&gt;/dns_records/&lt;RECORD_ID&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;API_TOKEN&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>--data<span class="w"> </span><span class="s1">&#39;{&quot;type&quot;:&quot;A&quot;,&quot;name&quot;:&quot;sub.mondomaine.com&quot;,&quot;content&quot;:&quot;&lt;new_ip&gt;&quot;,&quot;ttl&quot;:120}&#39;</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Où  <ZONE_ID>  et  <RECORD_ID>  sont des identifiants que vous obtenez via l’API ou l’interface (une fois pour config). C’est un peu lourd à trouver manuellement, d’où l’intérêt d’outils comme ddclient qui le font automatiquement à partir du nom de domaine.</p>
+</li>
+<li>
+<p><strong>OPNsense + Cloudflare (exemple)</strong> : Installer le plugin os-ddclient. Dans  <em>Services &gt; Dynamic DNS</em>, ajouter une entrée : Service = Cloudflare. Remplir  <em>Zone</em>  =  mondomaine.com  (domaine géré),  <em>Hostname(s)</em>  = le(s) sous-domaine(s) à mettre à jour (ex:  maison,minecraft  pour  maison.mondomaine.com  et  minecraft.mondomaine.com),  <em>Username</em>  =  token,  <em>Password</em>  = le token API Cloudflare. Choisir  <em>Check IP Method</em>  = “Interface” (ou un service web) et l’interface WAN. Sauvegarder, activer. Le log permettra de vérifier la bonne mise à jour  .</p>
+</li>
+<li>
+<p><strong>pfSense + DuckDNS (exemple)</strong> : Dans  <em>Services &gt; Dynamic DNS</em>, ajouter : Service = Custom (car pfSense peut ne pas avoir DuckDNS nativement selon version). Fournir l’URL de mise à jour DuckDNS contenant  %IP%  et les paramètres. Heureusement, des tutoriels existent et pfSense 2.5+ intègre DuckDNS dans la liste déroulante (ce qui simplifie : on entre juste le domaine et le token en guise de mot de passe). On valide et on observe le statut.</p>
+</li>
+</ul>
+<h3 id="mise-en-place-dun-dns-local"><strong>Mise en place d’un DNS local</strong><a class="headerlink" href="#mise-en-place-dun-dns-local" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>OPNsense/pfSense</strong> : Le DNS Resolver (Unbound) est probablement déjà actif. Vérifiez dans  <em>Services &gt; Unbound DNS &gt; General</em>  que  <em>Enable</em>  est coché. Activez  <em>DHCP Registration</em>  si vous voulez que les clients DHCP soient résolus  . Vous pouvez aussi définir un  <em>Domain Override</em>  si, par exemple, vous avez un domaine local spécifique ou si vous voulez que les requêtes vers  .local  ou autre aillent vers un autre serveur. Dans  <em>Access Lists</em>, assurez-vous que le réseau LAN est autorisé (par défaut oui). Résultat : toutes les machines qui utilisent l’IP du routeur comme DNS profiteront du cache et des noms locaux.</p>
+<p>Pour tester, faites un  nslookup monpc.lan 192.168.1.1  (si 192.168.1.1 est pfSense) – cela doit renvoyer l’IP de monpc si ce dernier a communiqué son nom via DHCP.</p>
+</li>
+<li>
+<p><strong>Configurer DNSSEC/DoT</strong> : Sur Unbound (OPNsense), DNSSEC est activé d’un clic  . Pour DNS over TLS, soit on utilise Unbound en mode resolver pur (pas besoin, il interroge les racines en clair mais on a DNSSEC), soit en mode forwarder chiffré : dans  <em>Query Forwarding</em>, on peut activer Forwarding et spécifier des serveurs TLS comme 1.1.1.1@853 avec validation. Cela chiffre les requêtes vers l’extérieur, au prix de repasser par un resolver tiers. C’est un choix. Pour Dnsmasq, on ne peut pas faire DoT nativement, il faudrait passer par un stub comme  stubby  ou utiliser le DNS over HTTPS du routeur (certains firmwares ASUS le font).</p>
+</li>
+<li>
+<p><strong>Intégration Pi-hole + Unbound</strong> : Installer Pi-hole (qui remplace votre DNS du routeur auprès des clients) puis suivre la doc pour ajouter Unbound. En gros, Unbound écoute sur 127.0.0.1:5335 et Pi-hole forwarde tout vers lui. On obtient un DNS local, filtrant et totalement récursif. C’est excellent pour la vie privée et le confort (plus de pubs, etc.).</p>
+</li>
+<li>
+<p><strong>Accès aux services locaux par nom</strong> : Si vous n’avez pas de DNS local mais que vous le souhaitez sans trop d’effort, vous pouvez par exemple  <strong>utiliser Dnsmasq sur votre PC</strong>  (utile si vous voulez juste quelques noms sans configurer tout le réseau). Mais le mieux reste de faire gérer cela par le routeur ou un petit serveur central comme décrit ci-dessus.</p>
+</li>
+</ul>
+<p>En conclusion, un  <strong>serveur DNS local</strong>  bien configuré complète idéalement l’utilisation d’un  <strong>DNS dynamique</strong>. Le DDNS vous donne une porte d’entrée fixe depuis Internet, tandis que le DNS local vous offre un contrôle et un confort à l’intérieur du réseau. En combinant les deux, vous pouvez par exemple taper  <em>cloud.maison.local</em>  depuis chez vous et  <em>cloud.mondynamique.net</em>  depuis l’extérieur, et atterrir sur le même service, de manière optimale dans chaque contexte.</p>
+<h2 id="conclusion"><strong>Conclusion</strong><a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Le DNS dynamique est une brique essentielle pour toute personne hébergeant des services sur une connexion à IP variable. Des services comme Cloudflare, DuckDNS ou No-IP offrent des solutions variées – du  <strong>DIY sur son propre domaine avec API</strong>  à la  <strong>solution prête à l’emploi totalement gratuite</strong>  – chacun ayant ses avantages. Il est important de choisir en fonction de ses besoins : Cloudflare conviendra à ceux qui ont un domaine et veulent une intégration poussée (par exemple coupler avec un CDN ou d’autres règles DNS), DuckDNS séduira par sa simplicité sans tracas, No-IP par son intégration universelle, etc. Les alternatives non-propriétaires comme deSEC, FreeDNS, YDNS montrent qu’il existe un écosystème ouvert pour le DDNS, ce qui est rassurant en termes de pérennité.</p>
+<p>En parallèle, soigner son  <strong>infrastructure DNS locale</strong>  apporte une meilleure expérience utilisateur et plus de maîtrise du réseau. Un  <strong>DNS resolver local (Unbound)</strong>  apportera sécurité (DNSSEC, pas de tracking FAI) et indépendance, là où un  <strong>DNS forwarder (Dnsmasq)</strong>  apportera flexibilité et légèreté. Souvent, les deux ne sont pas en opposition stricte mais répondent à des usages légèrement différents – à vous de voir ce qui s’intègre le mieux dans votre architecture.</p>
+<p>Enfin, n’oublions pas que ces outils ne sont efficaces qu’accompagnés des bonnes pratiques de réseau : tenir ses services à jour, utiliser le chiffrement, segmenter les accès si nécessaire (un service critique n’a peut-être pas besoin d’être joignable par tout le monde), et surveiller son système. Avec un DDNS bien configuré, un reverse proxy, et un DNS local, votre homelab se comportera presque comme une infra professionnelle – en miniature – et vous donnera le contrôle total sur vos services,  <strong>à la maison comme à distance</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

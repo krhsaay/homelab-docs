@@ -1,0 +1,1774 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../vpn-remote-access/">
+      
+      
+        <link rel="next" href="../ddns/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Reverse Proxy - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#solutions-de-reverse-proxy-pour-un-homelab-de-cybersecurite" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Reverse Proxy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#comparaison-technique-nginx-proxy-manager-traefik-et-authelia" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparaison technique : Nginx Proxy Manager, Traefik et Authelia
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparaison technique : Nginx Proxy Manager, Traefik et Authelia">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#principales-differences-nginx-proxy-manager-vs-traefik" class="md-nav__link">
+    <span class="md-ellipsis">
+      Principales différences Nginx Proxy Manager vs Traefik
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemples-de-configurations-typiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemples de configurations typiques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exemples de configurations typiques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reverse-proxy-avec-authentification-des-acces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reverse proxy avec authentification des accès
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acces-securise-aux-services-internes-depuis-lexterieur" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accès sécurisé aux services internes depuis l’extérieur
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#separation-des-zones-reseau-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Séparation des zones réseau (segmentation)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtrage-et-supervision-des-requetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Filtrage et supervision des requêtes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fonctionnalites-de-securite-avancees-ldap-oauth2-sso-2fa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fonctionnalités de sécurité avancées (LDAP, OAuth2, SSO, 2FA)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fonctionnalités de sécurité avancées (LDAP, OAuth2, SSO, 2FA)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#integration-ldapoauth2-pour-lauthentification-centralisee" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration LDAP/OAuth2 pour l’authentification centralisée
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protection-contre-les-attaques-par-force-brute" class="md-nav__link">
+    <span class="md-ellipsis">
+      Protection contre les attaques par force brute
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentification-unifiee-et-multi-facteurs-sso-mfa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentification unifiée et multi-facteurs (SSO &amp; MFA)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="solutions-de-reverse-proxy-pour-un-homelab-de-cybersecurite"><strong>Solutions de Reverse Proxy pour un Homelab de Cybersécurité</strong><a class="headerlink" href="#solutions-de-reverse-proxy-pour-un-homelab-de-cybersecurite" title="Permanent link">&para;</a></h1>
+<p>Dans un homelab orienté cybersécurité, les reverse proxies jouent un rôle crucial pour exposer en toute sécurité des services internes vers l’extérieur. Ils permettent de centraliser la gestion des accès, d’appliquer des règles de sécurité (authentification, filtrage) et de segmenter le réseau. Nous allons comparer techniquement  <strong>Nginx Proxy Manager</strong>,  <strong>Traefik</strong>  et  <strong>Authelia</strong>, et examiner des exemples de configuration typiques ainsi que des cas d’usage et fonctionnalités de sécurité avancées adaptés à un homelab.</p>
+<h2 id="comparaison-technique-nginx-proxy-manager-traefik-et-authelia"><strong>Comparaison technique : Nginx Proxy Manager, Traefik et Authelia</strong><a class="headerlink" href="#comparaison-technique-nginx-proxy-manager-traefik-et-authelia" title="Permanent link">&para;</a></h2>
+<p><strong>Nginx Proxy Manager (NPM)</strong>  est une interface web conviviale permettant de piloter un serveur Nginx (basé sur OpenResty) en arrière-plan. Il offre une gestion simplifiée des hôtes proxy avec une GUI intuitive : on peut facilement ajouter un  <strong>hôte proxy</strong>  (domaine, adresse cible et port) via une interface web, gérer les certificats SSL Let’s Encrypt en un clic, définir des accès restreints, etc. Par défaut, NPM prend en charge les fonctionnalités de base communes à Traefik, comme la gestion automatique des certificats SSL/TLS (via Let’s Encrypt et divers fournisseurs DNS) et le proxying de multiples protocoles (HTTP, HTTPS, mais aussi TCP/UDP via les streams Nginx)  . Son atout principal est la simplicité : tout se fait via l’UI, sans nécessiter d’éditer des fichiers de configuration. NPM gère les utilisateurs multiples avec rôles et journalisation des modifications (audit logs) intégrés, ce qui permet une administration partagée et tracée – une fonctionnalité que Traefik n’a pas nativement  . Techniquement, NPM stocke sa configuration (hôtes, utilisateurs, certificats…) dans une base de données (SQLite ou MariaDB/MySQL)  . Cela signifie que la configuration persiste et peut être sauvegardée, mais introduit aussi un point d’échec potentiel (corruption de DB). NPM étant un frontal à Nginx, il bénéficie des performances reconnues de Nginx (écrites en C, très optimisées) – on observe en effet que Traefik est  <strong>un peu moins rapide</strong>  que Nginx/OpenResty en proxy HTTP, même si l’écart est mineur dans le contexte d’un homelab  . En contrepartie, NPM est moins flexible sur certains points avancés : par exemple, l’interface ne permet de définir qu’un seul serveur de destination par host (pas de load-balancing multiple en GUI)  , et une erreur de configuration peut rendre Nginx indisponible (toute la configuration Nginx échoue si un host est mal défini), interrompant  <strong>tous</strong>  les sites jusqu’à correction  . NPM convient bien aux débutants ou à ceux qui privilégient la rapidité de mise en place via une interface graphique  .</p>
+<p><strong>Traefik</strong>  est un reverse proxy moderne, pensé pour les environnements dynamiques (Docker, Kubernetes). Contrairement à NPM, Traefik privilégie la configuration  <strong>“as code”</strong>  : pas de véritable GUI d’administration (son tableau de bord web est  <strong>en lecture seule</strong>, servant à visualiser la config active)  . La configuration s’effectue via des fichiers YAML statiques/dynamiques ou via des  <strong>labels Docker</strong>  attachés aux conteneurs – ce qui permet une  <strong>découverte automatique</strong>  des services. En effet, Traefik peut surveiller l’API Docker ou Kubernetes et créer les routes proxy correspondantes à la volée en fonction des labels, sans redémarrage du conteneur Traefik  . Cette capacité d’<strong>auto-discovery</strong>  est un avantage dans un homelab très containerisé : déployer un nouveau service Docker avec les bons labels suffit pour l’exposer sur le domaine voulu, Traefik configurant automatiquement le routage  . Traefik intègre nativement le support de Let’s Encrypt (ACME) : il peut générer et renouveler automatiquement les certificats SSL, y compris via des challenges DNS (il suffit de fournir les tokens API des DNS providers dans la configuration)  . Il supporte pleinement le  <strong>load balancing</strong>  entre plusieurs instances d’un service (round-robin, etc.) et des  <strong>middlewares</strong>  puissants pour modifier ou filtrer les requêtes (réécritures d’URL, redirections, rate limiting, IP whitelisting, authentification basique, injection de headers de sécurité, etc.)  . Traefik ne nécessite pas de base de données – sa configuration vit en mémoire et se met à jour dynamiquement – ce qui le rend moins sujet à des corruptions et permet des changements à chaud sans interruption  . En cas de configuration invalide, seul l’élément concerné échouera tandis que le reste du proxy continue de fonctionner, ce qui améliore la  <strong>robustesse</strong>  de l’ensemble par rapport à Nginx (où une erreur peut bloquer tout le service)  . Côté performances, Traefik (écrit en Go) est légèrement moins performant que Nginx en termes de latence pure ou de débit, mais pour un usage homelab les différences sont généralement négligeables  . Traefik s’adresse plutôt aux utilisateurs avancés ou aux environnements nécessitant une forte automatisation et intégration CI/CD, au prix d’une  <strong>courbe d’apprentissage</strong>  plus élevée (compréhension des routers, services, middlewares, labels)  . En résumé,  <em>Traefik excelle en environnement containerisé dynamique</em>, tandis que  <em>Nginx Proxy Manager brille par sa simplicité et son interface utilisateur</em>.</p>
+<p><strong>Authelia</strong>, quant à lui, n’est pas un reverse proxy mais un service  <strong>d’authentification et d’autorisation</strong>  open-source conçu pour se  <strong>coupler aux reverse proxies</strong>  existants (Nginx, Traefik, Caddy, HAProxy, etc.)  . Authelia agit comme un  <strong>portail d’authentification</strong>  à facteurs multiples (MFA) fournissant du  <strong>Single Sign-On (SSO)</strong>  pour vos applications web auto-hébergées  . En pratique, il s’intègre via le mécanisme de  <strong>“forward authentication”</strong>  : le reverse proxy est configuré pour interroger Authelia à chaque requête entrante non authentifiée. Authelia valide si l’utilisateur a une session active (cookie SSO) ou demande à ce qu’il se connecte via son  <strong>portail web sécurisé</strong>. Une fois l’authentification effectuée (avec mot de passe + second facteur possible), Authelia informe le proxy que la requête peut passer, et l’utilisateur accède alors au service cible  . Authelia dispose d’une interface web pour le login des utilisateurs (portal web) mais pas d’une interface “admin” équivalente à NPM/Traefik – sa configuration se fait via un fichier YAML. Il supporte en backend les utilisateurs définis dans un fichier YAML ou dans un annuaire  <strong>LDAP/Active Directory</strong>, ainsi que la possibilité d’être  <strong>fournisseur OpenID Connect (OIDC)</strong>  . Ce dernier point signifie qu’Authelia peut s’intégrer dans un écosystème OAuth2/OIDC : par exemple, des applications supportant OIDC peuvent déleguer l’authentification à Authelia, ou Authelia peut utiliser des  <strong>en-têtes “trusted”</strong>  pour propager l’identité de l’utilisateur aux applications web  . Authelia se déploie facilement en Docker (image &lt;20 Mo) et consomme peu de ressources (quelques dizaines de Mo de RAM)  – intéressant pour un homelab où on cherche à minimiser l’empreinte. Il nécessite généralement un  <strong>stockage</strong>  pour les données de session (Redis par exemple pour la haute dispo, sinon en mémoire ou SQLite) et peut utiliser une base (SQLite, MySQL…) pour stocker son état (sessions, préférences) si on le souhaite  . Authelia complète donc Traefik ou Nginx Proxy en ajoutant une couche d’authentification forte centralisée.  <strong>À noter</strong>  : Nginx Proxy Manager ne propose pas nativement l’intégration d’Authelia dans son interface, contrairement à Traefik où la documentation officielle fournit des exemples de configuration pour Authelia  . Il est tout de même possible d’utiliser Authelia avec Nginx Proxy Manager en ajoutant des directives personnalisées dans la configuration Nginx (voir plus loin).</p>
+<h3 id="principales-differences-nginx-proxy-manager-vs-traefik"><strong>Principales différences Nginx Proxy Manager vs Traefik</strong><a class="headerlink" href="#principales-differences-nginx-proxy-manager-vs-traefik" title="Permanent link">&para;</a></h3>
+<p>Pour synthétiser la comparaison NPM vs Traefik dans un contexte homelab :</p>
+<ul>
+<li>
+<p><strong>Interface &amp; configuration</strong> : NPM offre une  <strong>interface web complète</strong>  pour tout configurer (domaine, upstream, certificat, authentification…), conviviale pour les débutants. Traefik propose seulement un  <strong>tableau de bord</strong>  de visualisation, la configuration se fait par  <strong>fichiers</strong>  ou  <strong>labels</strong>  dans une approche Infrastructure-as-Code  . Modifier une config Traefik exige donc de connaître sa syntaxe (YAML/labels) mais permet une automatisation et une mise en version du code, là où NPM privilégie la simplicité point&amp;click.</p>
+</li>
+<li>
+<p><strong>Gestion des utilisateurs et des droits</strong> : NPM gère nativement des comptes multiples avec rôles (admin, viewer) et garde un  <strong>journal d’audit</strong>  des changements  . Traefik n’a pas d’utilisateurs multiples ni d’authentification sur son dashboard par défaut (il faut ajouter une auth basique manuellement si on veut protéger l’accès à l’UI)  . Dans un homelab à plusieurs administrateurs ou pour tracer les modifications, NPM marque donc un point.</p>
+</li>
+<li>
+<p><strong>Persistance de la configuration</strong> : NPM stocke sa configuration dans une base de données (fichiers SQLite ou serveur MariaDB)  , ce qui assure une persistance même après redémarrage du conteneur. Traefik n’a pas de DB – les configs statiques/dynamiques sont rechargées en mémoire à chaque démarrage et peuvent être mises à jour à chaud. Moins de risque de corruption mais il faut penser à sauvegarder manuellement les fichiers de configuration Traefik/les commandes de déploiement Docker-Compose (alors que NPM nécessite de sauvegarder son volume ou dump SQL).</p>
+</li>
+<li>
+<p><strong>Routing et découvertes de services</strong> : Traefik est conçu pour la  <strong>découverte automatique</strong>  des services dans Docker/K8s – tout conteneur lancé avec les bons labels est automatiquement pris en charge (sous réserve qu’il soit dans le réseau Docker de Traefik)  . NPM ne découvre rien automatiquement : il faut déclarer chaque host via l’UI (bien qu’il soit possible de scripter l’API ou d’utiliser Nginx Proxy  <em>Companion</em>  pour du Docker générique, ce n’est pas intégré dans NPM). Pour un homelab très dynamique (services éphémères, scaling), Traefik se montre plus pratique.</p>
+</li>
+<li>
+<p><strong>Flexibilité des fonctionnalités</strong> : Traefik embarque des  <strong>middlewares modulaires</strong>  activables facilement (ex :  traefik.http.middlewares.rateLimit,  ...redirectscheme,  ...auth  etc.), ainsi qu’un écosystème de  <strong>plugins</strong>  officiel pour étendre ses capacités (ex : plugin Fail2Ban,  <strong>CrowdSec</strong>, ModSecurity WAF, etc.)  . Nginx (et donc NPM) est très puissant aussi, mais ajouter par exemple un WAF ModSecurity ou un système de ban IP nécessite de modifier la configuration avancée ou d’utiliser des conteneurs complémentaires – ce n’est pas “plug and play” via l’interface. En contrepartie, Nginx permet un  <strong>contrôle très fin</strong>  de chaque détail (directives SSL/TLS, tuning performance, modules tiers) en éditant la config, tandis que Traefik fait plus de choses automatiquement mais offre moins de contrôle granulaire que du pur Nginx  .</p>
+</li>
+<li>
+<p><strong>Performances</strong> : Nginx/OpenResty offre en général un meilleur throughput et une latence un peu plus faible que Traefik dans les mêmes conditions  . Pour un homelab avec quelques services, cette différence est  <strong>peu perceptible</strong>  . Nginx excelle sous forte charge ou pour servir du contenu static/cache, tandis que Traefik consomme un peu plus de CPU/RAM pour son moteur Go mais reste tout à fait adapté à des charges modestes. On pourra retenir que si l’on cherche à optimiser chaque pourcent de performance, Nginx a l’avantage, mais Traefik apporte d’autres bénéfices (auto-config) qui peuvent primer en homelab.</p>
+</li>
+</ul>
+<p>En résumé,  <strong>NPM</strong>  est idéal pour démarrer rapidement et administrer simplement un reverse proxy multi-sites via une interface graphique, avec la robustesse éprouvée de Nginx.  <strong>Traefik</strong>  convient aux setups plus automatisés ou complexes, particulièrement si tout tourne en conteneurs, en offrant une intégration native avec Docker/K8s et des fonctionnalités avancées (middlewares, load balancing) au prix d’une configuration par code. Dans bien des cas, le choix dépendra donc de votre aisance technique et des besoins spécifiques du lab (simplicité vs. flexibilité)  . Notons qu’<strong>Authelia</strong>  n’est pas en concurrence directe avec ces proxies mais vient plutôt les compléter pour la couche authentification/SSO multi-facteurs.</p>
+<h2 id="exemples-de-configurations-typiques"><strong>Exemples de configurations typiques</strong><a class="headerlink" href="#exemples-de-configurations-typiques" title="Permanent link">&para;</a></h2>
+<p>Passons en revue quelques configurations typiques qu’on peut mettre en place avec ces outils, dans un homelab, pour renforcer la sécurité et le confort d’utilisation.</p>
+<h3 id="reverse-proxy-avec-authentification-des-acces"><strong>Reverse proxy avec authentification des accès</strong><a class="headerlink" href="#reverse-proxy-avec-authentification-des-acces" title="Permanent link">&para;</a></h3>
+<p>Un usage courant en homelab est de  <strong>protéger l’accès aux services internes par une authentification</strong>. Plusieurs approches existent :</p>
+<ul>
+<li>
+<p><strong>Authentification basique (Basic Auth)</strong>  : C’est la méthode la plus simple, intégrée nativement.  <strong>Nginx Proxy Manager</strong>  permet de créer des  <em>Access Lists</em>  contenant des utilisateurs (login/mot de passe HTTP Basic) et de les associer à un host. Par exemple, on peut définir une liste “Admin seulement” avec utilisateur  admin  et mot de passe, puis la lier à l’hôte proxy d’une application sensible – NPM forcera alors la saisie de ce login/mot de passe pour accéder au service.  <strong>Traefik</strong>  offre un middleware de basic auth équivalent : on peut définir dans les labels Docker  traefik.http.middlewares.monauth.basicauth.users=utilisateur:motdepasse_hashé  et attacher ce middleware à un router  . Dans le fichier Compose présenté plus haut, on voit un exemple protégeant le dashboard Traefik par basic auth (utilisateur  <em>admin</em>, mot de passe  <em>password</em>) via ces labels  . Cette méthode a l’avantage d’être simple mais n’offre pas de SSO (chaque service a ses propres identifiants) ni de second facteur.</p>
+</li>
+<li>
+<p><strong>Authentification avancée avec Authelia (SSO)</strong>  : Pour un homelab cybersécurité, mettre en place Authelia apporte une couche  <strong>SSO à double facteur</strong>  pour tous les services web. La configuration consiste à déployer le service Authelia (Docker) et à le  <strong>déclarer dans le reverse proxy</strong>  en tant que provider d’authentification. Concrètement, avec  <strong>Nginx (Proxy Manager)</strong>  cela se fait en ajoutant des directives custom Nginx dans l’onglet “Advanced” de chaque host à protéger. Par exemple, on insérera dans la config du host :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">auth_request</span><span class="w"> </span><span class="s">/authelia</span><span class="p">;</span>
+<span class="k">auth_request_set</span><span class="w">  </span><span class="nv">$target_url</span><span class="w">  </span><span class="nv">$scheme://$http_host$request_uri</span><span class="p">;</span>
+<span class="k">error_page</span><span class="w">  </span><span class="mi">401</span><span class="w">  </span><span class="p">=</span><span class="mi">302</span><span class="w">  </span><span class="s">https://auth.mondomaine.com/?rd=</span><span class="nv">$target_url</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>
+<p><em>(ainsi que d’autres directives pour passer les en-têtes d’utilisateur)</em>  . Ces instructions signifient : “pour chaque requête sur ce host, interroger l’URL  /authelia  (endpoint interne qui pointe vers Authelia) – si Authelia renvoie 401 non autorisé, alors rediriger (302) le client vers la page de login Authelia  auth.mondomaine.com  en lui passant l’URL cible dans  rd  (redirect)”. Authelia, une fois l’utilisateur authentifié, redirigera celui-ci vers l’URL initiale, qui cette fois sera acceptée (car munie du cookie de session). Ce mécanisme utilise le  <strong>directive auth_request de Nginx</strong>pour interroger un serveur d’auth externe  .</p>
+<p>Du côté  <strong>Traefik</strong>, l’intégration est tout aussi simple via un  <strong>middleware de type ForwardAuth</strong>. On peut déclarer, par exemple dans un fichier dynamique ou via labels, un middleware pointant vers Authelia :</p>
+</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="k">traefik.http.middlewares.authelia.forwardAuth.address:</span><span class="w"> </span><span class="s">&quot;http://authelia:9091/api/authz/forward-auth&quot;</span>
+<span class="s">traefik.http.middlewares.authelia.forwardAuth.trustForwardHeader:</span><span class="w"> </span><span class="s">&quot;true&quot;</span>
+<span class="s">traefik.http.middlewares.authelia.forwardAuth.authResponseHeaders:</span><span class="w"> </span><span class="s">&quot;Remote-User,Remote-Groups,Remote-Email&quot;</span>
+</code></pre></div>
+-   Ensuite, pour chaque service à protéger, on attache ce middleware  <em>authelia</em>  au router Traefik concerné (par ex. label  traefik.http.routers.monservice.middlewares=authelia@docker)  . Ainsi, toute requête passera par Authelia qui décidera de la laisser passer ou non. Authelia fournit en plus des en-têtes (Remote-User, Remote-Groups, etc.) que le proxy peut forwarder à l’application cible si besoin  (utile si l’application veut connaître l’utilisateur loggé).</p>
+<div class="codehilite"><pre><span></span><code><span class="nx">_Dans</span><span class="w"> </span><span class="nx">la</span><span class="w"> </span><span class="nx">pratique_</span><span class="p">,</span><span class="w"> </span><span class="nx">une</span><span class="w"> </span><span class="nx">configuration</span><span class="w"> </span><span class="nx">complète</span><span class="w"> </span><span class="nx">implique</span><span class="w"> </span><span class="nx">aussi</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nx">la</span><span class="w"> </span><span class="nx">définition</span><span class="w"> </span><span class="nx">des</span><span class="w"> </span><span class="nx">règles</span><span class="w"> </span><span class="nx">d</span><span class="err">’</span><span class="nx">accès</span><span class="w"> </span><span class="nx">dans</span><span class="w"> </span><span class="nx">Authelia</span><span class="w"> </span><span class="p">(</span><span class="nx">fichier</span><span class="w"> </span><span class="nx">YAML</span><span class="w">  </span><span class="nx">_access_control_</span><span class="p">:</span><span class="w"> </span><span class="nx">quels</span><span class="w"> </span><span class="nx">domaines</span><span class="w"> </span><span class="nx">exigent</span><span class="w"> </span><span class="mi">2</span><span class="nx">FA</span><span class="p">,</span><span class="w"> </span><span class="nx">lesquels</span><span class="w"> </span><span class="nx">sont</span><span class="w"> </span><span class="nx">en</span><span class="w"> </span><span class="nx">accès</span><span class="w"> </span><span class="nx">libre</span><span class="w"> </span><span class="nx">ou</span><span class="w"> </span><span class="mi">1</span><span class="nx">FA</span><span class="p">)</span><span class="w">  </span><span class="p">,</span><span class="w"> </span><span class="nx">la</span><span class="w"> </span><span class="nx">création</span><span class="w"> </span><span class="nx">des</span><span class="w"> </span><span class="nx">utilisateurs</span><span class="w"> </span><span class="p">(</span><span class="nx">fichier</span><span class="w"> </span><span class="nx">ou</span><span class="w"> </span><span class="nx">connexion</span><span class="w"> </span><span class="nx">à</span><span class="w"> </span><span class="nx">un</span><span class="w"> </span><span class="nx">LDAP</span><span class="p">),</span><span class="w"> </span><span class="nx">et</span><span class="w"> </span><span class="nx">la</span><span class="w"> </span><span class="nx">sécurisation</span><span class="w"> </span><span class="nx">du</span><span class="w"> </span><span class="nx">portail</span><span class="w"> </span><span class="nx">Authelia</span><span class="w"> </span><span class="nx">lui</span><span class="o">-</span><span class="nx">même</span><span class="w"> </span><span class="nx">via</span><span class="w"> </span><span class="nx">HTTPS</span><span class="p">.</span><span class="w"> </span><span class="nx">Une</span><span class="w"> </span><span class="nx">fois</span><span class="w"> </span><span class="nx">en</span><span class="w"> </span><span class="nx">place</span><span class="p">,</span><span class="w"> </span><span class="nx">ce</span><span class="w"> </span><span class="nx">setup</span><span class="w"> </span><span class="nx">offre</span><span class="w"> </span><span class="nx">une</span><span class="w">  </span><span class="o">**</span><span class="nx">authentification</span><span class="w"> </span><span class="nx">unifiée</span><span class="o">**</span><span class="w">  </span><span class="p">:</span><span class="w"> </span><span class="nx">l</span><span class="err">’</span><span class="nx">utilisateur</span><span class="w"> </span><span class="nx">se</span><span class="w"> </span><span class="nx">connecte</span><span class="w"> </span><span class="nx">une</span><span class="w"> </span><span class="nx">fois</span><span class="w"> </span><span class="nx">sur</span><span class="w"> </span><span class="nx">Authelia</span><span class="w"> </span><span class="nx">et</span><span class="w"> </span><span class="nx">accède</span><span class="w"> </span><span class="nx">ensuite</span><span class="w"> </span><span class="nx">à</span><span class="w"> </span><span class="nx">plusieurs</span><span class="w"> </span><span class="nx">services</span><span class="w"> </span><span class="nx">sans</span><span class="w"> </span><span class="nx">se</span><span class="w"> </span><span class="nx">reconnecter</span><span class="w"> </span><span class="p">(</span><span class="nx">SSO</span><span class="p">)</span><span class="w"> </span><span class="nx">tant</span><span class="w"> </span><span class="nx">que</span><span class="w"> </span><span class="nx">sa</span><span class="w"> </span><span class="nx">session</span><span class="w"> </span><span class="nx">est</span><span class="w"> </span><span class="nx">valide</span><span class="w">  </span><span class="p">.</span><span class="w"> </span><span class="nx">On</span><span class="w"> </span><span class="nx">bénéficie</span><span class="w"> </span><span class="nx">aussi</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">fonctionnalités</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">sécurité</span><span class="w"> </span><span class="nx">comme</span><span class="w"> </span><span class="nx">le</span><span class="w"> </span><span class="nx">deuxième</span><span class="w"> </span><span class="nx">facteur</span><span class="w"> </span><span class="p">(</span><span class="nx">TOTP</span><span class="p">,</span><span class="w"> </span><span class="nx">Webauthn</span><span class="err">…</span><span class="p">)</span><span class="w"> </span><span class="nx">et</span><span class="w"> </span><span class="nx">la</span><span class="w"> </span><span class="nx">protection</span><span class="w"> </span><span class="nx">anti</span><span class="o">-</span><span class="nx">brute</span><span class="o">-</span><span class="nx">force</span><span class="w"> </span><span class="nx">fournie</span><span class="w"> </span><span class="nx">par</span><span class="w"> </span><span class="nx">Authelia</span><span class="w"> </span><span class="p">(</span><span class="nx">voir</span><span class="w"> </span><span class="nx">section</span><span class="w"> </span><span class="nx">Sécurité</span><span class="p">).</span>
+</code></pre></div>
+
+<ul>
+<li><strong>Restriction par adresse IP (IP whitelisting)</strong>  : Une méthode plus simple, qui peut compléter les précédentes, est de  <strong>limiter l’accès à certains services par IP source</strong>  (par exemple, accessibles uniquement depuis le LAN du homelab ou via VPN). Nginx Proxy Manager permet de définir dans les Access Lists des plages IP autorisées ou refusées. Traefik propose un middleware  IPWhiteList  où l’on spécifie des subnets autorisés. Dans l’extrait de configuration Traefik précédent, on voit par exemple un middleware  local-ipwhitelist@file  pouvant être appliqué à un router pour  <strong>n’accepter que les IP privées</strong>  . Ce type de filtrage est très utile pour, par exemple, exposer l’interface d’administration d’un NAS ou d’une VM uniquement aux IP locales, tout en ayant d’autres services du proxy accessibles depuis Internet. Cela segmente l’accès sans nécessiter d’authentification pour les services purement internes.</li>
+</ul>
+<p>En combinant ces méthodes, on peut obtenir un niveau de sécurité granulaire adapté à chaque service du homelab. Par exemple, un wiki personnel pourrait être accessible uniquement depuis le LAN (filtrage IP), tandis qu’une application plus critique (ex: interface domotique) serait exposée sur Internet mais protégée par Authelia (login + 2FA), et un service moins sensible pourrait se contenter d’une auth basique.</p>
+<h3 id="acces-securise-aux-services-internes-depuis-lexterieur"><strong>Accès sécurisé aux services internes depuis l’extérieur</strong><a class="headerlink" href="#acces-securise-aux-services-internes-depuis-lexterieur" title="Permanent link">&para;</a></h3>
+<p>L’un des buts du reverse proxy dans un homelab est de  <strong>rendre accessibles depuis l’extérieur</strong>  (Internet) certaines applications internes, de manière sécurisée. Voici les bonnes pratiques de configuration pour cet usage :</p>
+<ul>
+<li>
+<p><strong>Placer le proxy en “frontale” sécurisée</strong>  : Le reverse proxy sert de  <strong>point d’entrée unique</strong>. On configure le routeur/pare-feu de la box internet pour ne forward que les ports 80/443 vers la machine hébergeant le proxy (idéalement uniquement 443, voir HTTPS ci-dessous). Ainsi,  <em>aucun service interne n’est exposé en direct</em>  – ils sont tous sur des IP privées non routables, seul le proxy (dans une DMZ ou VLAN dédié de préférence) est joignable depuis Internet. Cette configuration limite la surface d’attaque : un attaquant ne peut cibler que le proxy lui-même, et non chaque service individuellement.</p>
+</li>
+<li>
+<p><strong>Noms de domaine et DNS</strong>  : On utilise un (sous-)domaine pour chaque service, géré via un DNS public (par ex. un domaine personnalisé, ou des sous-domaines d’un DDNS). Par exemple,  nextcloud.monlab.fr,  wiki.monlab.fr, etc. Le reverse proxy est configuré pour écouter sur ces noms et acheminer vers le bon service interne. Cela permet de virtualiser sur une seule IP publique plusieurs services web. Nginx Proxy Manager et Traefik gèrent très bien le routage par nom de host, et Traefik peut même définir une règle par wildcard ou par motif d’URL si nécessaire. Veillez à configurer des  <strong>entrées DNS</strong>  pointant vers votre IP publique (et à mettre à jour si IP dynamique, via un service DDNS ou l’API du registrar).</p>
+</li>
+<li>
+<p><strong>HTTPS obligatoire</strong>  :  <strong>Chiffrer les communications</strong>  est indispensable. Le proxy doit présenter des certificats SSL valides pour vos domaines. Heureusement, NPM comme Traefik automatisent Let’s Encrypt : il suffit d’activer l’option (et d’avoir son domaine correctement pointé DNS). Dans NPM, on coche “Request a new SSL Certificate” et “Force SSL”. Dans Traefik, on configure un resolver ACME (email, méthode http-01 ou dns-01) – par exemple via la section  certificatesResolvers  du fichier Traefik  . Une fois les certificats en place, on doit  <strong>rediriger tout le trafic HTTP vers HTTPS</strong>  pour éviter toute fuite en clair. NPM propose le bouton  <strong>Force SSL</strong>  qui fait ajouter une règle de redirection 301 automatique. Avec Traefik, on définit soit un middleware  redirectScheme  global, soit on utilise la directive d’entryPoint : par exemple le fichier de config peut contenir:</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">entryPoints</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;:80&quot;</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">redirections</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">entryPoint</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
+<span class="w">          </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
+<span class="w">  </span><span class="nt">https</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">address</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;:443&quot;</span>
+<span class="w">    </span><span class="c1"># ...</span>
+</code></pre></div>
+<ul>
+<li>
+<p>qui signifie qu’on redirige toute connexion HTTP vers l’entrée HTTPS correspondante  . Après ce réglage, toute tentative en  http://  sera automatiquement renvoyée en  https://, garantissant que même les utilisateurs ou liens non sécurisés finissent chiffrés.</p>
+</li>
+<li>
+<p><strong>Authentification et autorisation</strong>  : Comme discuté plus haut, il est fortement recommandé de protéger par un mécanisme d’authentification tout service ouvert sur Internet (à moins que le service ait déjà sa propre auth robuste). Ainsi, on évite qu’une application vulnérable soit accessible publiquement sans contrôle. Typiquement, on utilisera Authelia ou au moins une authentification basique pour les applications sensibles. Authelia permet en plus de définir des  <strong>règles d’autorisation</strong>  fines (par groupe d’utilisateurs, par adresse IP source, etc.)  , ce qui peut servir à n’autoriser que certains utilisateurs à accéder à une ressource donnée.</p>
+</li>
+<li>
+<p><strong>Durcissement et filtres</strong>  : Le proxy peut également servir de  <strong>première ligne de défense applicative</strong>. On peut activer des  <strong>headers de sécurité</strong>  globaux (HSTS, XSS-Protection, Content-Security-Policy, etc.) sur le proxy. Par exemple, Nginx Proxy Manager permet d’ajouter des custom headers, et Traefik propose un middleware  headers(souvent un preset de “Secure Headers”) qu’on peut appliquer sur toutes les routes  . De même, on peut filtrer ou bloquer certains patterns de requêtes connus comme malveillants (<em>Block Common Exploits</em>  est une option de NPM qui ajoute quelques règles Nginx de base). Pour aller plus loin, on pourrait intégrer un WAF (pare-feu applicatif) : Traefik, via un plugin comme  <strong>Traefik Pilot</strong>  (ou en le chaînant avec un conteneur ModSecurity), et Nginx via le module ModSecurity ou en plaçant Cloudflare en proxy en amont par exemple. Dans un homelab, une approche populaire est d’utiliser  <strong>CrowdSec</strong>  couplé au reverse proxy : CrowdSec analyse les logs (par ex. les accès Nginx ou Traefik) et bannit automatiquement les IP malveillantes (scans, brute-force) via un bouncer. Traefik possède un middleware CrowdSec natif en plugin, ce qui facilite l’intégration  .</p>
+</li>
+</ul>
+<p>En somme, exposer un service interne via un reverse proxy nécessite de  <strong>tout ramener à un point d’entrée sécurisé unique</strong>  (le proxy), d’y appliquer  <strong>chiffrement et authentification</strong>, et de segmenter ce qui est accessible de ce qui ne l’est pas. Un homelab de cybersécurité tirera profit de cette configuration pour simuler une architecture proche d’une DMZ d’entreprise, où l’on peut pratiquer la gestion des accès externes de manière sécurisée.</p>
+<h3 id="separation-des-zones-reseau-segmentation"><strong>Séparation des zones réseau (segmentation)</strong><a class="headerlink" href="#separation-des-zones-reseau-segmentation" title="Permanent link">&para;</a></h3>
+<p>Dans un contexte cybersécurité, il est judicieux de  <strong>segmenter le réseau du homelab</strong>  en zones de confiance (par exemple : réseau  <em>DMZ</em>  pour les services exposés, réseau  <em>interne</em>  pour les données sensibles, réseau  <em>management</em>  pour l’administration, etc.). Le reverse proxy peut jouer un rôle central dans cette séparation :</p>
+<ul>
+<li>
+<p>On peut placer le serveur qui héberge Traefik/Nginx Proxy Manager dans une  <strong>zone DMZ</strong>  (réseau isolé ne contenant que les machines “frontales”). Ce proxy DMZ a des accès filtrés vers la zone interne pour joindre les services, tandis que le trafic entrant depuis Internet est limité à aller vers le proxy uniquement. Ainsi, si un service interne est compromis, l’attaquant doit encore traverser le proxy pour en sortir. Et si le proxy lui-même est compromis, il est dans une DMZ qui limite les dégâts sur le reste du réseau.</p>
+</li>
+<li>
+<p>Grâce au reverse proxy, on peut garder  <strong>fermés tous les ports</strong>  des services internes (ils écoutent seulement en local ou sur le LAN interne). Par exemple, une appli web sur un serveur interne n’écoute que sur son port 8080 en interne ; seul le proxy y accède pour relayer les requêtes externes. Cela réduit la surface d’attaque réseau. On autorisera dans le firewall interne uniquement l’IP du proxy DMZ à contacter l’IP du service sur le port requis.</p>
+</li>
+<li>
+<p>Le proxy peut également faire office de  <strong>passerelle entre VLAN</strong>  : s’il a des interfaces (ou VLAN) sur plusieurs réseaux, il peut accepter des requêtes d’un réseau A et aller chercher la ressource sur un réseau B. Cependant, il faut être prudent : le proxy ne doit pas devenir une porte dérobée entre réseaux segmentés. Il convient de n’autoriser que les flux nécessaires (typiquement HTTP/HTTPS du proxy DMZ vers le backend interne sur le port du service web).</p>
+</li>
+<li>
+<p>Authelia, dans une optique Zero Trust, peut renforcer la séparation : on peut exiger une authentification forte même pour accéder à certains services depuis la zone  <em>interne</em>. Par exemple, si le homelab a un réseau WiFi “IoT” moins sûr, on peut exiger que les utilisateurs de ce réseau s’authentifient via Authelia pour accéder à l’interface d’administration d’un serveur, même si c’est techniquement en interne.</p>
+</li>
+</ul>
+<p>En termes de configuration, la séparation des zones se fait hors du reverse proxy (c’est une architecture réseau), mais le proxy doit être configuré en conséquence : bonnes adresses IP, règles firewall appropriées, etc. Traefik ou Nginx peuvent écouter sur plusieurs interfaces si nécessaire, ou on peut déployer deux instances de proxy (un dans la DMZ externe, un interne) cascade si on veut complexifier l’architecture. Pour un homelab néanmoins, une instance dans la zone exposée suffit généralement, parlant aux services en interne.</p>
+<h3 id="filtrage-et-supervision-des-requetes"><strong>Filtrage et supervision des requêtes</strong><a class="headerlink" href="#filtrage-et-supervision-des-requetes" title="Permanent link">&para;</a></h3>
+<p>Un homelab de cybersécurité sert souvent à expérimenter avec des outils de détection et de protection. Le reverse proxy est un endroit stratégique pour implémenter du  <strong>filtrage de requêtes</strong>  et de la  <strong>supervision</strong>  :</p>
+<ul>
+<li>
+<p><strong>Journaux d’accès centralisés</strong>  : Le proxy enregistre toutes les requêtes entrantes (domaines, URL, IP source, réponse…). Ceci offre une visibilité globale sur qui accède à quoi. On peut connecter ces logs à des outils SIEM ou de monitoring (par ex. Grafana/Loki pour Traefik, ou un ELK/Graylog) afin de détecter des anomalies. Traefik fournit un log d’accès détaillé (format JSON possible) configurable dans traefik.yml  . Nginx Proxy Manager logge via Nginx (format combiné classique) et on peut ajuster la verbosité.  <strong>Analyser ces logs</strong>  permet de repérer des scans, des tentatives d’exploitation (URL étranges), etc.</p>
+</li>
+<li>
+<p><strong>Blocage automatique d’IP malveillantes</strong>  : Couplé aux logs, on peut intégrer des solutions comme  <strong>Fail2Ban</strong>  ou  <strong>CrowdSec</strong>. Fail2Ban peut surveiller les logs Nginx pour des motifs (codes 401 répétitifs, 404 suspectes) et insérer des règles firewall pour bannir l’IP temporairement. CrowdSec, plus évolué, utilise des  <em>scenarios</em>  pour détecter comportements malveillants (brute-force, scan, etc.) et peut agir au niveau du proxy (bouncer Traefik) ou du firewall système. Traefik, grâce à son plugin CrowdSec ou fail2ban, facilite cette automatisation  . Pour NPM, on peut déployer CrowdSec sur la machine et le configurer pour parser les logs Nginx.</p>
+</li>
+<li>
+<p><strong>Web Application Firewall (WAF)</strong>  : L’ajout d’un WAF permet de filtrer des requêtes en fonction de leur contenu (payload) pour bloquer des attaques web connues (injections SQL, XSS, etc.). Nginx peut intégrer ModSecurity v3 en tant que module (certaines images Docker custom de NPM existent incluant ModSec). Traefik, lui, n’intègre pas nativement de WAF complet, mais on peut mettre Traefik derrière un conteneur SWAG/NGINX+ModSecurity, ou utiliser le plugin  <em>OHWF</em>  (Open Hybrid WAF) expérimental. Une alternative courante en homelab est d’utiliser Cloudflare en proxy inverse en amont du homelab : Cloudflare fournit un WAF géré qui stoppe déjà beaucoup d’attaques avant même qu’elles n’atteignent votre reverse proxy. Cependant, cela signifie confier le trafic à un tiers, ce qui sort un peu du cadre purement auto-hébergé.</p>
+</li>
+<li>
+<p><strong>Headers et CSP</strong>  : Outre bloquer ce qui est mauvais, on peut ajouter ce qui est bon. Par exemple, ajouter des  <strong>headers de sécurité</strong>  comme HSTS (Strict-Transport-Security), X-Content-Type-Options, X-Frame-Options, Content-Security-Policy, etc., pour réduire la surface aux attaques client. Traefik a un middleware  secureHeaders(configurable via fichier dynamique) qui fournit un ensemble de ces headers recommandés  . Nginx permet de les ajouter via  add_header. Dans un homelab, c’est un bon exercice de configurer ces en-têtes correctement pour apprendre le hardening web.</p>
+</li>
+</ul>
+<p>En combinant ces mesures de filtrage et de supervision, le homelab peut simuler un environnement  <strong>sous surveillance</strong>, comme en entreprise, où chaque requête est loggée, analysée, et potentiellement bloquée si suspecte. Cela permet de tester des scénarios d’attaque en conditions réalistes et de valider l’efficacité des contre-mesures (par exemple, lancer un scan depuis l’extérieur et voir CrowdSec bannir l’IP dans Traefik, etc.).</p>
+<h2 id="fonctionnalites-de-securite-avancees-ldap-oauth2-sso-2fa"><strong>Fonctionnalités de sécurité avancées (LDAP, OAuth2, SSO, 2FA)</strong><a class="headerlink" href="#fonctionnalites-de-securite-avancees-ldap-oauth2-sso-2fa" title="Permanent link">&para;</a></h2>
+<p>Au-delà des configurations de base, un homelab de sécurité peut tirer profit de fonctionnalités avancées offertes par nos outils :</p>
+<h3 id="integration-ldapoauth2-pour-lauthentification-centralisee"><strong>Intégration LDAP/OAuth2 pour l’authentification centralisée</strong><a class="headerlink" href="#integration-ldapoauth2-pour-lauthentification-centralisee" title="Permanent link">&para;</a></h3>
+<p>Dans un contexte professionnel, l’authentification des utilisateurs se fait souvent via un  <strong>annuaire central</strong>  (LDAP/Active Directory) ou un  <strong>fédération d’identité</strong>  (SSO OAuth2/OIDC, SAML…). Il est intéressant de reproduire cela en homelab. Ni Nginx Proxy Manager ni Traefik n’intègrent à eux seuls un serveur LDAP ou OAuth2, mais  <strong>Authelia</strong>  peut servir d’interface :</p>
+<ul>
+<li>
+<p><strong>Authelia + LDAP</strong>  : Authelia peut être configuré pour utiliser un  <strong>backend LDAP/AD</strong>  comme source des utilisateurs et groupes. Par exemple, on peut déployer une petite instance OpenLDAP ou FreeIPA dans le homelab, y gérer quelques comptes, et configurer Authelia en  <em>authentication_backend: ldap</em>  (plutôt que  <em>file</em>). Ainsi, lorsqu’un utilisateur se connecte via Authelia, ses identifiants sont vérifiés auprès de l’annuaire LDAP. Cela permet de centraliser l’authentification de tout le homelab sur un référentiel unique (comme ce serait le cas avec un Active Directory en entreprise). Authelia supporte les opérations LDAP usuelles et même la réinitialisation de mot de passe LDAP via un lien mail  . De plus, en se basant sur les  <em>groups</em>  LDAP, on peut définir des politiques d’accès dans Authelia (par exemple, seul le groupe “admins” a accès à l’interface de gestion proxmox). Cette intégration est un excellent exercice pour un homelab car elle touche aux notions d’annuaire, de schéma utilisateur et de synchronisation.</p>
+</li>
+<li>
+<p><strong>SSO OAuth2/OIDC</strong>  : Authelia se positionne comme un  <strong>fournisseur OpenID Connect 1.0 certifié</strong>  . Cela signifie qu’il parle le protocole moderne d’authentification (OIDC est une surcouche d’OAuth2) utilisé par de nombreuses applications web. On peut donc, d’une part, intégrer des applications tierces qui supportent l’OIDC pour déléguer leur login à Authelia. D’autre part, Authelia peut lui-même consommer des identités d’un fournisseur externe OAuth2 ? – Ce cas d’usage est moins courant car Authelia est plutôt fait pour être  <strong>le</strong>  fournisseur. Si l’on souhaitait “Login with Google” par exemple sur nos services, on utiliserait plutôt un outil comme  <strong>OAuth2 Proxy</strong>  ou  <strong>Authentik</strong>  qui ferait office d’intermédiaire avec Google. Nginx et Traefik peuvent s’intégrer avec OAuth2 Proxy de façon semblable à Authelia (via  auth_request  ou forwardAuth).  <strong>Authentik</strong>  et  <strong>Keycloak</strong>  sont deux alternatives populaires à Authelia pour le SSO avancé : Authentik est open-source (Django) et offre plus de connecteurs (par ex. login Google, SAML, etc.), Keycloak est une solution robuste utilisée en entreprise. Cependant, leur mise en œuvre est plus lourde. Dans un homelab cyber, mettre en place Authentik ou Keycloak pour comparer avec Authelia peut être instructif, mais Authelia a l’avantage de la légèreté et de la simplicité pour débuter le SSO.</p>
+</li>
+<li>
+<p><strong>OAuth2 access control</strong>  : Traefik Enterprise (version payante) intègre nativement l’OIDC/OAuth2 et le SSO d’entreprise (avec support JWT, etc.), mais avec Traefik open-source on s’appuie sur les solutions externes citées. Nginx (open-source) peut utiliser des modules Lua ou des modules tiers pour valider des JWT ou interroger un IdP OAuth2, mais cela sort du scope standard de NPM.</p>
+</li>
+</ul>
+<p>En résumé, l’intégration LDAP/OAuth2 dans le homelab se fait via un composant dédié (Authelia, Keycloak, etc.) couplé au reverse proxy. Cela permet de reproduire une  <strong>authentification centralisée</strong>  comme on en trouve en milieu professionnel, et d’expérimenter avec des protocoles standards (LDAP, OAuth2/OIDC). Pour un ingénieur sécu, c’est l’occasion de se familiariser avec la gestion des identités, la délégation d’authentification, et de comprendre les défis de l’intégration SSO.</p>
+<h3 id="protection-contre-les-attaques-par-force-brute"><strong>Protection contre les attaques par force brute</strong><a class="headerlink" href="#protection-contre-les-attaques-par-force-brute" title="Permanent link">&para;</a></h3>
+<p>Les attaques par  <strong>brute-force</strong>  (essais répétés de mots de passe) sont une menace classique dès qu’un service est accessible sur Internet. Dans un homelab exposé, on veillera à mettre en place des mécanismes de protection :</p>
+<ul>
+<li>
+<p><strong>Authelia – Regulation</strong>  : Authelia intègre nativement un module de limitation des tentatives de login. On peut configurer des paramètres comme  max_retries  (nombre de tentatives avant blocage),  find_time  (intervalle de temps de comptabilisation) et  ban_time  (durée du bannissement)  . Par exemple, on pourrait autoriser 5 essais en 2 minutes avant de bloquer l’utilisateur pendant 10 minutes. Ce mécanisme de  <strong>Login Regulation</strong>  empêche un attaquant d’essayer une infinité de mots de passe sur un compte  . Le bannissement est généralement appliqué par identifiant (et potentiellement par IP). Authelia journalise ces événements, ce qui permet de détecter une attaque en cours.</p>
+</li>
+<li>
+<p><strong>Fail2Ban</strong>  : Pour les services non protégés par Authelia (ou même en complément), Fail2Ban reste un allié précieux. En homelab, on peut configurer Fail2Ban pour surveiller les logs Nginx Proxy Manager. Par exemple, repérer 401 Unauthorized répétés sur une URL d’auth -&gt; ban de l’IP au niveau iptables. Sur Traefik, on peut envisager de le faire aussi via les logs d’accès (moins trivial car Traefik n’a pas de log “erreur 401” distinct, mais c’est faisable). L’avantage de Fail2Ban est sa simplicité et son efficacité pour bannir au niveau réseau, empêchant l’attaquant d’envoyer la suite des requêtes.</p>
+</li>
+<li>
+<p><strong>Traefik plugins</strong>  : Comme mentionné précédemment, Traefik dispose d’un plugin  <strong>Fail2Ban</strong>  officiel qui reproduit ce comportement directement dans le proxy. Il peut suivre les 401 sur un middleware d’authentification par exemple et couper l’accès. Aussi, l’utilisation de  <strong>CrowdSec</strong>  apporte une dimension communautaire : si une IP est connue pour attaquer d’autres membres de la communauté, elle peut être pré-bannie (système de blocklist collaborative). On peut configurer le bouncer CrowdSec pour qu’il renvoie directement une page de blocage depuis le proxy si l’IP est bannie, avant même d’arriver aux services.</p>
+</li>
+<li>
+<p><strong>Complexité des mots de passe &amp; 2FA</strong>  : La meilleure défense anti brute-force reste d’exiger des  <strong>mots de passe forts</strong>  et idéalement un  <strong>second facteur</strong>. Authelia impose par exemple une politique de mot de passe (paramétrable via l’option zxcvbn pour exiger une certaine robustesse du mot de passe)  . Et bien sûr, avec le 2FA activé, un mot de passe compromis ne suffit plus, ce qui décourage fortement le brute-force. Dans un homelab, on peut tester différentes méthodes de second facteur : TOTP (Google Authenticator, etc.),  <strong>WebAuthn</strong>  (clé U2F type YubiKey), ou  <strong>Duo push</strong>  . Authelia supporte ces méthodes multiples – par exemple WebAuthn permet d’apprendre à intégrer l’authentification par clé physique ou empreinte digitale, ce qui est très intéressant en cybersécurité moderne.</p>
+</li>
+</ul>
+<p>En conclusion sur la brute-force, combiner un  <strong>verrou logiciel</strong>  (Authelia ou Fail2Ban qui bloque après X essais) avec une  <strong>authentification forte</strong>  (mots de passe solides + second facteur) offre une défense efficace. Un homelab bien configuré doit ainsi résister aux bots qui tentent des attaques automatisées sur les pages de login. N’oublions pas la surveillance : il est formateur de constater dans les logs ces tentatives et de vérifier que les contre-mesures réagissent (ex: voir l’IP passer en bannie après trop d’échecs).</p>
+<h3 id="authentification-unifiee-et-multi-facteurs-sso-mfa"><strong>Authentification unifiée et multi-facteurs (SSO &amp; MFA)</strong><a class="headerlink" href="#authentification-unifiee-et-multi-facteurs-sso-mfa" title="Permanent link">&para;</a></h3>
+<p>Nous avons déjà évoqué plusieurs fois le SSO et le MFA, que propose notamment Authelia. Regroupons ici ces notions pour bien comprendre leur apport dans le homelab :</p>
+<ul>
+<li>
+<p><strong>Single Sign-On (SSO)</strong>  : Le SSO vise à permettre à un utilisateur de s’authentifier  <strong>une seule fois</strong>  pour accéder à plusieurs applications différentes, sans avoir à re-saisir ses identifiants pour chaque service. Dans notre stack, Authelia réalise cela en émettant un  <strong>cookie de session</strong>  après login, valable pour l’ensemble des sous-domaines protégés (on définit un domaine racine commun, par ex.  *.monlab.fr)  . Ainsi, l’utilisateur qui se connecte sur  service1.monlab.fr  via Authelia obtient un cookie de session (sur  .monlab.fr), et lorsqu’il ira sur  service2.monlab.fr, le reverse proxy présentera ce cookie à Authelia qui verra que la session est valide et laissera passer automatiquement  . L’expérience est transparente : une seule page de login, puis navigation fluide entre services. C’est très confortable pour l’utilisateur et plus sécurisé (on évite d’avoir des mots de passe multiples circulant). Pour le mettre en œuvre en homelab, on s’assure que  session.domain  est bien réglé dans Authelia (par ex.  monlab.fr) et on protège tous les services via Authelia. On peut tester le SSO en ouvrant différents navigateurs ou en invalidant le cookie pour voir comment la session se propage.</p>
+</li>
+<li>
+<p><strong>Multi-Factor Authentication (MFA)</strong>  : C’est un pilier de la sécurité moderne. Authelia permet d’activer le  <strong>2FA</strong>  (ou même 3FA) pour les domaines qu’on veut. Dans la config  <em>access_control</em>, on peut définir  policy: two_factor  pour certaines ressources sensibles  . Au login, après le mot de passe, Authelia va alors demander le code TOTP (ou une validation via l’appli Duo, ou une authentification WebAuthn/Passkey) avant de valider la session. L’intégration de MFA dans un homelab est un excellent moyen de se familiariser avec ces technologies. Par exemple, on peut enregistrer une clé U2F sur Authelia et ainsi utiliser une clé physique pour se logguer – ce qui ajoute une couche “quelque chose que l’on possède” en plus du mot de passe. Authelia supporte également les  <strong>Passkeys</strong>  (technologie plus récente visant à remplacer les mots de passe)  , ce qui permet d’expérimenter les futures tendances de l’authentification passwordless.</p>
+</li>
+<li>
+<p><strong>Granularité et exceptions</strong>  : On peut vouloir SSO + MFA pour la plupart des services, mais peut-être pas pour tous. Authelia offre une granularité par règle : on peut mettre certaines applications en  one_factor  (juste mot de passe) et d’autres en  two_factor  . On peut même combiner avec des conditions réseau – par exemple, exiger 2FA seulement quand on est en dehors du LAN, mais en one_factor sur le LAN (via la directive  networks  dans les règles). Cela permet de reproduire une politique de confiance conditionnelle (un peu comme du MFA contextuel en entreprise). C’est à l’appréciation de chacun en homelab ; du point de vue sécurité pure, il est recommandé d’activer le MFA pour les accès externes au minimum.</p>
+</li>
+</ul>
+<p>En mettant en place le SSO et MFA dans le homelab, on se rapproche des standards d’infrastructure sécurisée d’une entreprise. C’est très formateur pour un ingénieur sécurité de comprendre les mécanismes sous-jacents : cookies de session, jetons JWT éventuellement (Authelia peut émettre des JWT OIDC), protocole WebAuthn, algorithme TOTP, etc. De plus, cela améliore nettement la  <strong>sécurité</strong>  de votre homelab réel, ce qui n’est pas négligeable si vous exposez des services personnels.</p>
+<h2 id="conclusion"><strong>Conclusion</strong><a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>Mettre en œuvre un reverse proxy dans un homelab est quasiment un passage obligé pour qui veut exposer des services de manière maîtrisée.  <strong>Nginx Proxy Manager</strong>  et  <strong>Traefik</strong>  sont deux excellentes options qui répondent à des profils différents : NPM offre la simplicité d’une interface graphique et la robustesse de Nginx – idéale pour débuter ou pour un lab à configuration ponctuelle –, tandis que Traefik apporte l’automatisation et la souplesse pour un lab très containerisé ou évolutif, avec des fonctionnalités avancées intégrées (découverte, middlewares). Dans un contexte de cybersécurité, Traefik se montre très adapté grâce à ses plugins de sécurité et son intégration documentée avec des outils comme Authelia  , mais NPM peut tout à fait être utilisé de manière sécurisée également (en y ajoutant manuellement les mêmes composants).</p>
+<p>L’outil  <strong>Authelia</strong>, en particulier, s’avère un complément précieux pour un homelab sécurisé. En déployant Authelia aux côtés du reverse proxy, on dote son lab d’un véritable  <strong>système d’authentification unifiée à double facteur</strong>, comparable à ce qu’on trouve en production dans les entreprises, le tout avec des solutions open-source. Ceci transforme le homelab en terrain d’entraînement pour implémenter et tester des politiques de sécurité (SSO, MFA, restrictions granulaires) sur ses propres services auto-hébergés.</p>
+<p>En fin de compte, le choix précis de la stack (Nginx vs Traefik, avec ou sans Authelia) dépendra de vos objectifs d’apprentissage et de vos contraintes. Un  <strong>ingénieur en cybersécurité</strong>  apprendra beaucoup en expérimentant les deux approches : commencer par Nginx Proxy Manager pour appréhender les concepts de base (reverse proxy, certificats, DNS, redirections), puis monter en puissance avec Traefik pour l’aspect “Infra as Code” et intégration continue, tout en ajoutant Authelia pour la couche IAM (Identity and Access Management). Le homelab ainsi constitué permettra de simuler bon nombre de scénarios de sécurité (attaques web, tests d’intrusion depuis l’extérieur, mise en place de défenses actives) dans un environnement contrôlé et modulable.</p>
+<p>En somme, Nginx Proxy Manager, Traefik et Authelia forment un trio complémentaire pour construire un homelab à la fois  <strong>fonctionnel</strong>  (multi-services exposés proprement) et  <strong>sécurisé</strong>  (contrôle fin des accès, surveillance, résilience). À vous de jouer pour les configurer selon vos besoins, et n’oubliez pas : la documentation officielle et la communauté sont d’une grande aide pour approfondir chaque composant et résoudre les éventuels écueils techniques rencontrés en chemin.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

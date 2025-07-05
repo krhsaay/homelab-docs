@@ -1,0 +1,1795 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../../monitoring/netalert/">
+      
+      
+        <link rel="next" href="../authentification/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Vaultwarden - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gestionnaires-de-mots-de-passe-self-hosted-pour-homelab" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Vaultwarden
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#vaultwarden-bitwarden_rs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vaultwarden (Bitwarden_RS)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vaultwarden (Bitwarden_RS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#securite-et-authentification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité et authentification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-et-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation et maintenance
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passbolt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Passbolt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passbolt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fonctions-cles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fonctions clés
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentification-et-securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Authentification et sécurité
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keepassxc-avec-synchronisation-via-syncthing" class="md-nav__link">
+    <span class="md-ellipsis">
+      KeePassXC (avec synchronisation via Syncthing)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="KeePassXC (avec synchronisation via Syncthing)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage-en-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage en homelab
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#securite-et-authentification_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité et authentification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bitwarden-serveur-officiel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bitwarden (serveur officiel)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bitwarden (serveur officiel)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#points-forts-et-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Points forts et limites
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#psono" class="md-nav__link">
+    <span class="md-ellipsis">
+      Psono
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Psono">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fonctionnalites-et-securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fonctionnalités et sécurité
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Déploiement
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autres-options-pertinentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Autres options pertinentes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparatif-technique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparatif technique
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securite-et-bonnes-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité et bonnes pratiques
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenarios-dusage-typiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scénarios d’usage typiques
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploiement-et-exemples-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Déploiement et exemples pratiques
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gestionnaires-de-mots-de-passe-self-hosted-pour-homelab"><strong>Gestionnaires de mots de passe self-hosted pour homelab</strong><a class="headerlink" href="#gestionnaires-de-mots-de-passe-self-hosted-pour-homelab" title="Permanent link">&para;</a></h1>
+<h2 id="vaultwarden-bitwarden_rs"><strong>Vaultwarden (Bitwarden_RS)</strong><a class="headerlink" href="#vaultwarden-bitwarden_rs" title="Permanent link">&para;</a></h2>
+<p>Vaultwarden (anciennement  <em>bitwarden_rs</em>) est une implémentation en Rust du serveur Bitwarden, allégée et optimisée pour l’auto-hébergement  . Elle reproduit l’essentiel des fonctionnalités de Bitwarden (mots de passe, cartes, notes sécurisées) avec une empreinte mémoire minimale. Vaultwarden propose notamment la gestion multi-utilisateurs via des organisations et collections partagées, la génération et sauvegarde de mots de passe, ainsi que des clients officiels Bitwarden (extensions de navigateur et applications mobiles) compatibles  . L’installation se fait typiquement avec Docker, par exemple :</p>
+<p><div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>vaultwarden<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-e<span class="w"> </span><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;https://vault.mondomaine.tld&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-v<span class="w"> </span>/srv/vaultwarden-data:/data/<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-p<span class="w"> </span><span class="m">80</span>:80<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>vaultwarden/server:latest
+</code></pre></div>
+Ce conteneur utilise SQLite par défaut, mais peut aussi se connecter à une base MariaDB/MySQL pour de meilleures performances. La documentation recommande d’utiliser un proxy HTTPS (par exemple NGINX Proxy Manager) car les navigateurs n’autorisent pas le chiffrement  <em>Web Crypto</em>  hors contexte sécurisé  .</p>
+<h3 id="securite-et-authentification"><strong>Sécurité et authentification</strong><a class="headerlink" href="#securite-et-authentification" title="Permanent link">&para;</a></h3>
+<p>Vaultwarden offre du chiffrement de bout en bout (E2E) comme Bitwarden : les données sont chiffrées côté client avec AES-256 avant d’être envoyées au serveur (modèle  <em>zero-knowledge</em>)  . Les options d’authentification à deux facteurs sont riches : codes OTP via une application (Google Authenticator, Authy), clé de sécurité FIDO2/WebAuthn (YubiKey), authentification par email et Duo MFA  . La politique de mots de passe est gérée côté client (génération aléatoire et longueur minimale dans les paramètres utilisateur). Vaultwarden ne supporte pas nativement LDAP/SAML ; c’est une solution plutôt autonome. Comme tous les gestionnaires, il est vivement recommandé de faire des sauvegardes régulières de la base et des fichiers joints – la documentation met en garde contre les pertes de données en cas de défaillance  .</p>
+<h3 id="installation-et-maintenance"><strong>Installation et maintenance</strong><a class="headerlink" href="#installation-et-maintenance" title="Permanent link">&para;</a></h3>
+<p>Vaultwarden se déploie facilement via Docker ou Podman  . Un reverse-proxy (Traefik, NGINX Proxy Manager, Caddy…) est conseillé pour fournir un certificat SSL/TLS (Let’s Encrypt, mkcert, etc.) et exposer le service sur un nom de domaine  . La maintenance se limite à mettre à jour l’image Docker (et migrer la base de données si besoin). L’interface web est simple et fonctionnelle, et l’application Android/iOS de Bitwarden fonctionne sans modification. La communauté est active, mais contrairement au serveur officiel Bitwarden, Vaultwarden n’a pas de bilan public d’audit tiers  . Toutefois, le code est open source (AGPL v3  ) et régulièrement mis à jour.</p>
+<h2 id="passbolt"><strong>Passbolt</strong><a class="headerlink" href="#passbolt" title="Permanent link">&para;</a></h2>
+<p>Passbolt est un gestionnaire de mots de passe libre conçu pour les équipes et organisations. Il utilise un modèle de chiffrement  <em>end-to-end</em>  avec clés publiques-privées : chaque utilisateur génère une paire de clés, et seule la clé privée (protégée par passphrase) reste sur son appareil  . Cette architecture garantit que seul le destinataire peut déchiffrer les mots de passe partagés. Passbolt Community Edition (CE) est entièrement open source (AGPL v3  ) et auto-hébergeable. Il dispose d’une interface web conviviale, d’extensions navigateur (Chrome/Firefox/Edge) et d’applications mobiles hybrides (iOS/Android) et desktop  .</p>
+<h3 id="fonctions-cles"><strong>Fonctions clés</strong><a class="headerlink" href="#fonctions-cles" title="Permanent link">&para;</a></h3>
+<p>Passbolt se distingue par son focus sur la collaboration : gestion de groupes, dossiers partagés, permissions fines et audit des actions. Toutes les fonctionnalités de partage de mots de passe sont disponibles dans la version gratuite (CE) pour un nombre d’utilisateurs illimité, contrairement à Bitwarden où le partage avancé est réservé aux éditions payantes  . L’interface permet d’organiser des collections hiérarchiques et de partager un mot de passe unique ou tout un dossier vers un autre utilisateur ou une équipe, avec héritage de permissions  . La génération de mots de passe se fait depuis l’extension ou le site, et Passbolt prend en charge la complétion automatique.</p>
+<h3 id="authentification-et-securite"><strong>Authentification et sécurité</strong><a class="headerlink" href="#authentification-et-securite" title="Permanent link">&para;</a></h3>
+<p>Passbolt renforce la sécurité par une authentification forte. Les utilisateurs peuvent activer une deuxième couche MFA (généralement un code TOTP) pour se connecter  . Il existe aussi une option LDAP/AD en version Pro : la documentation montre comment configurer LDAPS pour synchroniser les comptes d’entreprise  . Passbolt est audité régulièrement et rend publiques ses conclusions : c’est une application  <em>security-first</em>  (modèle Cllé Privée+Chiffrage par mot de passe maître)  . La politique de mots de passe peut être imposée par l’administrateur (longueur, complexité) et les journaux d’audit détaillent toutes les connexions et modifications. Des sauvegardes automatiques de la base (PostgreSQL ou MySQL) sont possibles via des scripts.</p>
+<h3 id="installation"><strong>Installation</strong><a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
+<p>Passbolt peut être installé via Docker ou directement sur un serveur Linux (packages Debian/CentOS). Un  <em>docker-compose</em>  simple ou un script dédié (disponible sur leur site) installe le serveur API, la base de données et l’interface web en une seule commande. Par exemple, leur image Docker regroupe le serveur, le webclient et l’interface d’admin  . Il faut configurer un nom de domaine et fournir un certificat TLS (Let’s Encrypt ou autre). Passbolt propose aussi un connecteur LDAP (cronjob) pour importer les utilisateurs depuis un annuaire d’entreprise.</p>
+<h2 id="keepassxc-avec-synchronisation-via-syncthing"><strong>KeePassXC (avec synchronisation via Syncthing)</strong><a class="headerlink" href="#keepassxc-avec-synchronisation-via-syncthing" title="Permanent link">&para;</a></h2>
+<p>KeePassXC est un gestionnaire de mots de passe multiplateforme (Windows/Mac/Linux) fonctionnant hors ligne. Les mots de passe sont stockés dans un fichier local chiffré (format KDBX, AES-256)  . Son code source est libre (GPLv3  ) et  <em>on-premise</em>  : aucun service distant n’est requis  . KeePassXC inclut un générateur de mots de passe et une intégration de navigateur via une application compagnon.</p>
+<h3 id="usage-en-homelab"><strong>Usage en homelab</strong><a class="headerlink" href="#usage-en-homelab" title="Permanent link">&para;</a></h3>
+<p>Par défaut, KeePassXC ne gère pas le multi-utilisateur. Pour partager le même fichier de mots de passe entre plusieurs machines (ou utilisateurs), on utilise un outil de synchronisation de fichiers tel que  <strong>Syncthing</strong>. On place le fichier KDBX dans un dossier surveillé par Syncthing sur deux ordinateurs ou plus. Chaque modification est ainsi répliquée cryptée vers les autres appareils. Cette approche élimine le serveur central : tout reste chiffré localement, et vous contrôlez entièrement les sauvegardes. Cependant, il faut veiller à éviter les conflits d’édition simultanée (pas de verrouillage de fichier intégré).</p>
+<h3 id="securite-et-authentification_1"><strong>Sécurité et authentification</strong><a class="headerlink" href="#securite-et-authentification_1" title="Permanent link">&para;</a></h3>
+<p>KeePassXC offre un chiffrement robuste :  <em>“Votre base reste toujours chiffrée et aucun serveur distant n’est utilisé”</em>  . On peut protéger la base par un mot de passe principal seul ou combiné à un fichier-clé ou une clé de sécurité (YubiKey en mode challenge-réponse), apportant une forme de MFA matérielle. KeePassXC ne propose pas d’authentification réseau (pas de SSO ni LDAP) car il est conçu pour une utilisation locale. Les sauvegardes ne sont rien de plus que des copies du fichier KDBX ou des dumps d’urgence exportés dans un fichier chiffré hors ligne. Dans un homelab personnel, c’est idéal : simple à déployer (installez l’Appli ou le paquet depuis votre distribution), 100% privé et auditée (le code est ouvert). En revanche, il n’existe pas d’app mobile officielle KeePassXC – on utilise alors KeePassDX (Android) ou Strongbox (iOS) pour accéder au fichier synchronisé.</p>
+<h2 id="bitwarden-serveur-officiel"><strong>Bitwarden (serveur officiel)</strong><a class="headerlink" href="#bitwarden-serveur-officiel" title="Permanent link">&para;</a></h2>
+<p>Bitwarden est le projet d’origine, dont Vaultwarden est un clone léger. Le serveur Bitwarden officiel (techniquement open source AGPL v3) est écrit en .NET Core et déployé via plusieurs conteneurs Docker  . Il fournit les mêmes clients (web, mobile, extensions) et fonctionnalités de base, mais exige un déploiement plus complexe (script  bitwarden.sh  ou  <em>docker-compose</em>  orchestrant plusieurs services)  . Bitwarden Cloud propose en plus des éditions Enterprise avec annuaire (LDAP/AD via Directory Connector), SSO (SAML), rapports d’audit avancés et politique organisationnelle.</p>
+<h3 id="points-forts-et-limites"><strong>Points forts et limites</strong><a class="headerlink" href="#points-forts-et-limites" title="Permanent link">&para;</a></h3>
+<p>Bitwarden bénéficie d’une longue trajectoire et d’un suivi professionnel : le code est vérifié publiquement, et des audits par Cure53 sont régulièrement publiés  . Il prend en charge l’authentification à deux facteurs (OTPs, YubiKey, WebAuthn) et la récupération/prise de contrôle (Emergency Access). Les fonctionnalités communautaires gratuites incluent le chiffrement E2E AES-256 “zero-knowledge” et un stockage illimité d’éléments  . En revanche, le partage d’éléments en mode équipe est limité en version libre (plan free n’autorise pas le partage détaillé)  , et l’installation auto-hébergée demande des ressources (RAM, CPU) et une gestion d’infrastructure Docker/SSL plus conséquentes.</p>
+<h2 id="psono"><strong>Psono</strong><a class="headerlink" href="#psono" title="Permanent link">&para;</a></h2>
+<p>Psono est un gestionnaire de mots de passe pensé pour les entreprises et équipes, open source et auto-hébergeable. Son architecture combine chiffrement côté client et multiples couches de sécurité  . Les mots de passe sont chiffrés localement avant envoi (« multi encryption » : chiffrement client, TLS, chiffrement de stockage)  . Le système de partage s’effectue via des organisations et groupes, et il existe un tableau de bord administrateur pour gérer les licences et les utilisateurs (en version Enterprise).</p>
+<h3 id="fonctionnalites-et-securite"><strong>Fonctionnalités et sécurité</strong><a class="headerlink" href="#fonctionnalites-et-securite" title="Permanent link">&para;</a></h3>
+<p>Psono propose une interface web, des extensions navigateur (Chrome/Firefox/Edge) et des applications mobiles natives iOS/Android  . Il se veut  <em>“responsable de la protection des données”</em>  :  <strong>« il chiffe localement sur le device avant envoi, et ne stocke que les données déjà chiffrées »</strong>  . Les clés privées restent sur l’appareil client et ne passent jamais sur le serveur. Psono supporte le partage de mots de passe au sein d’équipes, avec gestion de droits et répertoire d’utilisateurs. On peut importer des comptes depuis un annuaire ou SSO via des modules (LDAP/SAML sont possibles en entreprise). Il n’est pas clair si la version gratuite supporte LDAP, mais la documentation mentionne l’utilisation de Docker pour déployer facilement le serveur et l’interface  . Des audits externes ont déjà été effectués sur Psono, ce qui renforce la confiance dans son modèle cryptographique.</p>
+<h3 id="deploiement"><strong>Déploiement</strong><a class="headerlink" href="#deploiement" title="Permanent link">&para;</a></h3>
+<p>Psono propose une image Docker unique (entreprise ou communautaire) qui embarque le serveur, le client web et la console d’administration  . Le déploiement type utilise Docker Compose ou Kubernetes. Pour un homelab, on peut simplement lancer ce conteneur derrière un reverse-proxy avec TLS, puis se connecter via l’interface web. La maintenance implique de faire tourner le conteneur à jour et de sauvegarder la base de données (PostgreSQL) ainsi que les clés de chiffrement. Psono possède aussi une couche de  <em>fileserver</em>  pour stocker des fichiers joints aux mots de passe (ex : licences, QR codes).</p>
+<h2 id="autres-options-pertinentes"><strong>Autres options pertinentes</strong><a class="headerlink" href="#autres-options-pertinentes" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>KeePass (Windows)</strong>  – ancêtre de KeePassXC. Fonctionne localement sur Windows (non multiplateformes). On peut aussi utiliser la version Mono sur Linux. Partage via Syncthing similaire à KeePassXC.</p>
+</li>
+<li>
+<p><strong>Pass (cli)</strong>  – gestionnaire Unix en ligne de commande (GNU Pass, format gpg), adapté aux utilisateurs avancés. Sans interface web ni mobile natif, mais très léger et scriptable.</p>
+</li>
+<li>
+<p><strong>Buttercup</strong>  – gestionnaire simple open source (Electron) avec vaults chiffrés. Possède des applications desktop/mobile et un mode auto-hébergé via Caddy, mais moins de fonctionnalités d’équipe.</p>
+</li>
+<li>
+<p><strong>Teampass</strong>  – gestionnaire PHP/MySQL pour équipes (GPL v3  ). Offre dossiers, 2FA (Google Auth), rôles, mais l’interface est plus complexe et le projet moins actif récemment. Installation via paquet ou Docker.</p>
+</li>
+<li>
+<p><strong>HashiCorp Vault</strong>  – plutôt orienté secrets (devops) qu’accès utilisateur classique. Très robuste (authentification LDAP, Cloud IAM, etc.), mais moins convivial pour un usage métier de mots de passe de sites web.</p>
+</li>
+<li>
+<p><strong>Padloc</strong>,  <strong>Passky</strong>,  <strong>Padloc</strong>, etc. – quelques autres outils open source existent, mais ils sont souvent plus expérimentaux ou limités (par ex. pas d’app mobile).</p>
+</li>
+</ul>
+<h2 id="comparatif-technique"><strong>Comparatif technique</strong><a class="headerlink" href="#comparatif-technique" title="Permanent link">&para;</a></h2>
+<p>TABLEAU</p>
+<ul>
+<li>La licence exacte de Psono n’est pas précisée sur leur site, mais le code est en grande partie ouvert.</li>
+</ul>
+<h2 id="securite-et-bonnes-pratiques"><strong>Sécurité et bonnes pratiques</strong><a class="headerlink" href="#securite-et-bonnes-pratiques" title="Permanent link">&para;</a></h2>
+<p>Quel que soit le choix, l’élément clé est le chiffrement de bout en bout : la plupart des solutions citées (Vaultwarden/Bitwarden, Passbolt, Psono) chiffrent localement les données avant envoi  . Ainsi, le serveur ne voit jamais les mots de passe en clair. Par ailleurs, vérifiez que votre instance est protégée par HTTPS et que vous appliquez un fort mot de passe maître initial. Les fonctionnalités MFA (OTP TOTP, clés U2F/WebAuthn) ajoutent une barrière supplémentaire : Vaultwarden/Bitwarden supportent un large panel d’options  , Passbolt est conçu pour l’authentification double-facteur et l’impose aux utilisateurs professionnels  , et même Teampass intègre des 2FA comme Google Authenticator  .</p>
+<p>Pour les entreprises ou environnements multifamille, l’intégration à un annuaire est aussi importante. Bitwarden Enterprise offre un  <em>Directory Connector</em>  pour LDAP/AD (au niveau payant), Passbolt Pro permet de synchroniser via LDAPS  , et Teampass/Psono peuvent être connectés à un LDAP. En auto-hébergement pur, on mettra souvent en place Authelia ou Keycloak en frontal pour un SSO global.</p>
+<p>Enfin, la gestion des sauvegardes est cruciale : sauvegardez la base de données (SQL ou SQLite) et les fichiers (PJ) régulièrement. Les fournisseurs comme Vaultwarden rappellent qu’ils ne sont pas responsables des pertes de données et conseillent les backups fréquents  . Utilisez aussi un gestionnaire de configuration (Ansible, etc.) pour déployer et restaurer votre service au besoin.</p>
+<h2 id="scenarios-dusage-typiques"><strong>Scénarios d’usage typiques</strong><a class="headerlink" href="#scenarios-dusage-typiques" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Homelab personnel/familial</strong>  – Une solution légère comme Vaultwarden ou KeePassXC convient souvent. Par exemple, Vaultwarden peut être déployé dans un conteneur Docker derrière NGINX Proxy Manager avec un domaine personnel (ex:  vault.mondomaine.fr) et Let’s Encrypt. Chaque membre de la famille crée un compte utilisateur et partage des dossiers communs (wifi, routeur, etc.) via les organisations Bitwarden. KeePassXC reste utile pour un utilisateur unique : sa base locale stockée sur Syncthing entre PC et smartphone permet d’accéder aux mots de passe même sans connexion internet.</p>
+</li>
+<li>
+<p><strong>Environnement de test/sécurisé</strong>  – Pour un labo dédié (VM/containers), Passbolt ou Psono offrent un cadre de tests multi-utilisateurs. Par exemple, on peut lancer Passbolt sur une VM et créer des utilisateurs « test » pour valider l’intégration SSO (LDAP) ou l’API CLI. Grâce à Docker, on peut détruire/réinstaller facilement en cas d’erreur.</p>
+</li>
+<li>
+<p><strong>Intégration à un parc existant</strong>  – Dans une infrastructure où l’authentification unique est déjà en place, choisissez un gestionnaire offrant la compatibilité (Bitwarden Enterprise pour SAML, Passbolt LDAP, ou configurer Authelia devant Vaultwarden). Par exemple, en plaçant Vaultwarden derrière Authelia/NGINX Proxy Manager, on force une authentification centrale (par OAuth/LDAP) avant d’atteindre le coffre. L’intégration via reverse proxy permet aussi de simplifier l’accès : NGINX Proxy Manager automatisera la génération des certificats HTTPS pour chaque service web de l’homelab.</p>
+</li>
+</ul>
+<h2 id="deploiement-et-exemples-pratiques"><strong>Déploiement et exemples pratiques</strong><a class="headerlink" href="#deploiement-et-exemples-pratiques" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Docker Compose (Vaultwarden)</strong>  – Un fichier  docker-compose.yml  minimal pour Vaultwarden est :</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">vaultwarden</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vaultwarden/server:latest</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vaultwarden</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOMAIN=https://vault.mondomaine.fr</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./vw-data/:/data/</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;80:80&quot;</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Ce conteneur stocke les données sur  ./vw-data/. On crée ensuite un proxy (Traefik, NPM) pointant sur  vault.mondomaine.fr.</p>
+</li>
+<li>
+<p><strong>Docker Compose (Passbolt)</strong>  – Passbolt propose un  <em>docker-compose</em>  complet (base de données + serveur) dans sa documentation. Il suffit de cloner leur repo et d’éditer l’.env  pour indiquer le domaine et le mot de passe GPG serveur. Par exemple :
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://gitlab.com/passbolt/passbolt_docker.git
+<span class="nb">cd</span><span class="w"> </span>passbolt_docker
+cp<span class="w"> </span>envvars.example<span class="w"> </span>.env
+<span class="c1"># modifier .env (DOMAIN, GPG keys, etc.)</span>
+docker-compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div></p>
+</li>
+<li>
+<p>L’interface web de Passbolt sera accessible sur  https://passbolt.mondomaine.fr.</p>
+</li>
+<li>
+<p><strong>LXC / VM</strong>  – On peut déployer ces services dans des conteneurs LXC (Proxmox) ou des VM légères. Par exemple, créer un LXC Debian, installer Docker (apt install docker.io docker-compose), puis suivre les mêmes commandes Docker. Des images prêtes à l’emploi existent souvent pour Bitwarden et Vaultwarden sur Docker Hub. L’avantage du LXC est l’isolation réseau et système tout en économisant des ressources comparé à une VM pleine.</p>
+</li>
+<li>
+<p><strong>NGINX Proxy Manager</strong>  – Intégrez chaque service au NPM en créant une entrée de proxy pour son nom de domaine, en validant le certificat Let’s Encrypt. Par exemple, pointez  vault.mondomaine.fr  vers l’IP du conteneur Vaultwarden (port 80). Répétez pour  passbolt.mondomaine.fr  et d’autres. NPM gère l’HTTPS automatiquement. Un firewall (iptables, UFW) peut limiter l’accès aux seuls ports 80/443 pour ces conteneurs.</p>
+</li>
+<li>
+<p><strong>Intégration Reverse Proxy / SSO</strong>  – Pour un accès unifié, on peut associer Vaultwarden à un serveur SSO (ex : Authelia) monté en frontal. Dans NPM, on configurerait un  <em>proxy host</em>  sur  vault.mondomaine.fr  qui redirige vers Authelia pour authentifier l’utilisateur via LDAP, puis vers Vaultwarden. Ainsi, on dispose d’un accès centralisé et authentifié unique à tous les services (Mastodon, Nextcloud, Vaultwarden…).</p>
+</li>
+</ul>
+<p>En résumé, de nombreuses solutions self-hosted existent pour un homelab.  <strong>Vaultwarden</strong>  et  <strong>KeePassXC</strong>  couvrent le cas des utilisateurs techniques cherchant la simplicité,  <strong>Passbolt</strong>  et  <strong>Psono</strong>  s’adressent aux environnements collaboratifs, tandis que  <strong>Bitwarden (officiel)</strong>  et  <strong>Teampass</strong>  conviennent aux déploiements plus formels. Le choix dépendra de la taille de votre organisation, de la nécessité de gestion multi-utilisateurs et du niveau de sécurité exigé. Quel que soit votre choix, privilégiez toujours le chiffrement end-to-end, les sauvegardes régulières et la mise à jour du système.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

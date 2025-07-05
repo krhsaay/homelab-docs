@@ -1,0 +1,1692 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../dashboard/">
+      
+      
+        <link rel="next" href="../vpn-remote-access/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>DNS (Pi-hole, AdGuard...) - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pi-hole-adguard-home-et-technitium-dns-comparatif-et-configurations-en-homelab" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DNS (Pi-hole, AdGuard...)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#comparatif-technique-detaille" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparatif technique détaillé
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemples-de-configurations-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemples de configurations types
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exemples de configurations types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-dns-primairesecondaire-pour-resilience" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration “DNS primaire/secondaire” pour résilience
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-avec-chiffrement-dohdot-en-amont-et-en-interne" class="md-nav__link">
+    <span class="md-ellipsis">
+      DNS avec chiffrement (DoH/DoT) en amont et en interne
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mode-proxy-dns-vs-mode-resolveur-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mode « proxy DNS » vs mode résolveur local
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serveur-dns-par-vlan-segmentation-du-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Serveur DNS par VLAN / segmentation du DNS
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenarios-specifiques-dusage-en-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scénarios spécifiques d’usage en homelab
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scénarios spécifiques d’usage en homelab">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blocage-des-publicites-et-du-tracking-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      Blocage des publicités et du tracking internet
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-reseau-par-le-dns-iot-et-environnements-sensibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation réseau par le DNS (IoT et environnements sensibles)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-split-pour-lab-interne-dns-interne-vs-externe" class="md-nav__link">
+    <span class="md-ellipsis">
+      DNS « split » pour lab interne (DNS interne vs externe)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securite-mises-a-jour-et-resilience-du-service-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité, mises à jour et résilience du service DNS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sécurité, mises à jour et résilience du service DNS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#securite-de-linstance-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité de l’instance DNS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#journalisation-et-respect-de-la-vie-privee" class="md-nav__link">
+    <span class="md-ellipsis">
+      Journalisation et respect de la vie privée
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resilience-du-service-dns-et-optimisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Résilience du service DNS et optimisation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="pi-hole-adguard-home-et-technitium-dns-comparatif-et-configurations-en-homelab"><strong>Pi-hole, AdGuard Home et Technitium DNS : comparatif et configurations en homelab</strong><a class="headerlink" href="#pi-hole-adguard-home-et-technitium-dns-comparatif-et-configurations-en-homelab" title="Permanent link">&para;</a></h1>
+<h2 id="comparatif-technique-detaille"><strong>Comparatif technique détaillé</strong><a class="headerlink" href="#comparatif-technique-detaille" title="Permanent link">&para;</a></h2>
+<p><strong>Présentation générale :</strong>  Pi-hole, AdGuard Home et Technitium DNS Server sont trois solutions populaires de DNS filtrant pour bloquer les publicités et protéger un réseau domestique. Toutes trois fonctionnent comme des serveurs DNS locaux capables de  <strong>bloquer les domaines indésirables</strong>  (publicité, trackers, malwares, sites adultes) à l’aide de listes noires. Elles disposent également de fonctionnalités communes telles que la journalisation des requêtes DNS et une interface d’administration web  . Cependant, elles diffèrent sur leur  <strong>architecture technique et fonctionnalités avancées</strong>. Le tableau ci-dessous résume certaines capacités :</p>
+<ul>
+<li>
+<p><strong>Blocage de domaines indésirables :</strong>  <strong>Pi-hole</strong>,  <strong>AdGuard Home</strong>  et  <strong>Technitium DNS</strong>  assurent tous un DNS sinkhole efficace. Ils peuvent charger des listes de domaines à bloquer (ads, malwares, etc.), appliquer le Safe Search et utiliser des listes personnalisées  . Le blocage par expressions régulières est aussi supporté par Pi-hole et AdGuard.  <strong>En pratique, l’efficacité de filtrage par défaut est similaire</strong>  – tous deux utilisent des listes de blocage comparables et bloquent un nombre proche de publicités dès l’installation, même s’il est conseillé d’ajouter d’autres listes pour améliorer la couverture  . Technitium intègre également ces fonctionnalités de base de blocage DNS.</p>
+</li>
+<li>
+<p><strong>Performance et ressources :</strong>  Les différences de performance entre Pi-hole et AdGuard Home sont  <strong>minimes</strong>. Des tests montrent que les temps de réponse DNS sont équivalents (18ms pour Pi-hole vs 21ms pour AdGuard dans un exemple, écart négligeable)  . Côté empreinte système, AdGuard Home est écrit en Go tandis que Pi-hole s’appuie sur dnsmasq et une interface PHP, ce qui fait souvent dire que Pi-hole consomme un peu plus de RAM. En réalité, avec une configuration de base, Pi-hole utilise environ  <strong>30 Mo de RAM de plus</strong>  qu’AdGuard Home, différence imperceptible sur du matériel moderne  .  <strong>Avec de très grandes listes de blocage</strong>, Pi-hole a été mesuré autour de ~100 Mo de RAM contre ~250 Mo pour AdGuard dans un test sur Portainer  – mais d’autres retours signalent l’inverse ou un écart moindre, selon l’environnement.  <strong>Globalement, les trois solutions restent légères</strong>  et tournent sans problème sur un Raspberry Pi ou un petit NAS  . Le  <strong>CPU</strong>  n’est généralement pas un facteur limitant (quelques % d’utilisation au plus). Les trois chargent les listes de blocage en mémoire pour une résolution rapide, il faut donc prévoir suffisamment de RAM si vous importez des listes massives  .</p>
+</li>
+<li>
+<ul>
+<li><strong>Mécanisme DNS :</strong>  Pi-hole et AdGuard Home agissent principalement comme  <strong>serveurs DNS cache/forward</strong>  : ils reçoivent les requêtes des clients, bloquent celles correspondant aux domaines filtrés, et transfèrent les autres à un serveur DNS amont (par exemple Cloudflare, Quad9, ou un résolveur local). Pi-hole n’embarque pas de résolveur récursif complet par défaut, mais il est courant de l’associer à  <em>Unbound</em>  pour résoudre directement depuis la racine. AdGuard Home, lui, peut également fonctionner en mode récursif (il dispose d’une option pour activer un résolveur DNS complet en interne) ou en mode  <strong>forwarder</strong>  vers des serveurs chiffrés (DoH/DoT) grâce à sa prise en charge native de DNS-over-HTTPS, DNS-over-TLS et même DNS-over-QUIC  .  <strong>Technitium DNS</strong>  se distingue ici car c’est un  <strong>serveur DNS complet (récursif et faisant autorité)</strong>  : il intègre nativement la résolution récursive  <em>et</em>  peut héberger des zones DNS locales autoritaires  . En clair, Technitium offre d’emblée ce que Pi-hole/AdGuard font plus un résolveur interne (plus besoin d’installer Unbound) et un serveur faisant autorité sur vos domaines locaux. Il supporte aussi directement DoH/DoT en sortie  <strong>et en entrée</strong>, ce qui permet de servir vos clients via DNS chiffré si souhaité (AdGuard Home peut aussi servir en DoH/DoQ en configurant les fonctionnalités avancées).</li>
+</ul>
+</li>
+<li>
+<p><strong>Interface et gestion :</strong>  <strong>Pi-hole</strong>  offre une interface web simple et épurée pour configurer les listes noires/blanches, voir les journaux de requêtes et quelques réglages réseau de base. Son interface, bien que moins « moderne », reste fonctionnelle et soutenue par une  <strong>forte communauté</strong>  (nombreux tutoriels, support, etc.)  .  <strong>AdGuard Home</strong>  dispose d’une interface plus moderne et conviviale, avec des tableaux de bord colorés et des menus bien organisés. La configuration initiale est facilitée (tout en un seul binaire), et de nombreuses options (DNS chiffré, contrôle parental, filtres personnalisés) sont activables en quelques clics  . En revanche, certains réglages avancés de DNS local sur AdGuard sont un peu cachés (il faut ajouter des enregistrements DNS locaux via les  _“Custom Rules”_manuellement)  , alors que Pi-hole propose une section dédiée “DNS Local” plus intuitive pour ajouter des noms locaux  .  <strong>Technitium DNS</strong>, malgré son ampleur fonctionnelle, fournit également une interface web complète. Les retours d’expérience notent qu’elle est  <strong>très riche en options tout en restant user-friendly</strong>, similaire à Pi-hole/AdGuard voire plus intuitive sur certains points  . On peut tout configurer depuis le GUI ou via une API HTTP, sans devoir éditer manuellement des fichiers de configuration  . L’interface de Technitium permet par exemple de créer des zones DNS, des règles de transfert conditionnel, de multiples portées DHCP, etc., directement via le web.</p>
+</li>
+<li>
+<p><strong>Intégration réseau et fonctionnalités :</strong>  Les trois solutions peuvent fonctionner sur la plupart des plateformes (Linux, Docker, Raspberry Pi, etc.)  .  <strong>Chacune peut servir de serveur DHCP</strong>  pour votre LAN, remplaçant le DHCP de votre box/routeur si nécessaire  . Pi-hole et AdGuard Home gèrent un seul domaine DHCP/local à la fois, tandis que  <strong>Technitium DNS peut définir plusieurs plages DHCP</strong>  pour couvrir plusieurs VLAN/réseaux isolés depuis une seule instance  . C’est un atout dans un homelab segmenté en multiples sous-réseaux : Technitium permet de  <strong>servir plusieurs VLAN</strong>  en DHCP/DNS distincts via une configuration centralisée. Côté DNS local, Pi-hole et AdGuard autorisent l’ajout de quelques enregistrements locaux ou la redirection conditionnelle (ex. transférer les requêtes d’un suffixe local vers un autre DNS) – fonctionnalité dite  <em>conditional forwarding</em>  pour résoudre les noms de votre LAN via le DNS de votre routeur.  <strong>Technitium</strong>  pousse plus loin en permettant de  <strong>créer des zones locales complètes</strong>  (par exemple une zone “lab.home.arpa” avec tous vos enregistrements) et d’activer des  <em>serveurs secondaires</em>  pour ces zones (transfert de zone possible)  . Il supporte aussi la notion de  <em>Conditional Forwarder</em>  plus avancée : pour un domaine donné, vous pouvez spécifier un serveur DNS différent, tout en pouvant  <strong>surcharger certains enregistrements</strong>  de ce domaine localement  . Enfin, en termes d’intégration, Pi-hole et AdGuard sont souvent utilisés en  <strong>complément du routeur/pare-feu</strong>  : il faut configurer votre DHCP (sur la box ou OPNsense par exemple) pour distribuer l’adresse IP du Pi-hole/AdGuard comme DNS aux clients du réseau. Technitium pourrait tout à fait être utilisé de la même manière, ou même installé directement sur la machine faisant routeur si on le souhaite (il remplace alors avantageusement le DNS de base du routeur). Notons qu’AdGuard Home existe aussi en  <strong>package sur certaines appliances</strong>  (par ex. sur OPNsense/pfSense via des plugins tiers), ce qui peut simplifier son déploiement dans un firewall existant.</p>
+</li>
+<li>
+<p><strong>Contrôle granulaire et profils :</strong>  Depuis la version 5,  <strong>Pi-hole</strong>  offre une gestion par groupes de clients : on peut assigner des appareils à des groupes et appliquer à chaque groupe des listes de blocage différentes (par exemple, ne pas bloquer les mêmes sites pour les enfants et les adultes). AdGuard Home permet également de créer des  <strong>règles par client</strong>  (basées sur l’IP ou le nom du client) et de filtrer différemment selon l’appareil  . La flexibilité de Technitium à ce sujet est encore en développement : il supporte bien les listes noires et blanches globales et la création de profils, mais  <strong>les règles fines par client/groupe sont plus limitées</strong>  pour l’instant  . En revanche, Technitium offre des fonctionnalités uniques comme la possibilité d’héberger un  <strong>cache DNS partagé entre réseaux</strong>  ou d’opérer un  <strong>serveur racine local</strong>  (il peut télécharger la zone racine ICANN et agir en résolveur totalement autonome hors-ligne si on le souhaite)  .</p>
+</li>
+</ul>
+<p><strong>En résumé</strong>, Pi-hole et AdGuard Home couvrent l’essentiel des besoins d’un homelab en blocage DNS, avec un avantage pour AdGuard sur les fonctionnalités intégrées (chiffrement DNS, contrôle parental) et pour Pi-hole sur la simplicité et la communauté. Technitium DNS va plus loin en combinant les fonctions de Pi-hole/AdGuard avec celles d’un serveur DNS professionnel (zones locales, résolveur intégré, etc.)  . Ce surplus de fonctionnalités peut sembler  <em>“overkill”</em>  pour un petit réseau, mais offre une  <strong>grande flexibilité pour un ingénieur sécurité</strong>  souhaitant un laboratoire évolutif. Le tableau de comparaison suivant (d’après Supernetworks) illustre que Technitium couvre la plupart des cases de Pi-hole/AdGuard, et apporte des plus comme le DNS récursif et la gestion multi-réseaux  . Le choix dépendra donc de vos  <strong>priorités</strong>  : légèreté et support communautaire (Pi-hole), interface moderne et tout-en-un (AdGuard Home), ou puissance DNS maximale (Technitium).</p>
+<h2 id="exemples-de-configurations-types"><strong>Exemples de configurations types</strong><a class="headerlink" href="#exemples-de-configurations-types" title="Permanent link">&para;</a></h2>
+<p>Pour exploiter ces outils DNS dans un homelab, voici quelques  <strong>architectures types</strong>  et configurations recommandées :</p>
+<h3 id="configuration-dns-primairesecondaire-pour-resilience"><strong>Configuration “DNS primaire/secondaire” pour résilience</strong><a class="headerlink" href="#configuration-dns-primairesecondaire-pour-resilience" title="Permanent link">&para;</a></h3>
+<p>Il est judicieux d’avoir  <strong>deux instances DNS filtrantes</strong>  pour éviter un point unique de défaillance. Par exemple, déployer  <strong>deux Pi-hole</strong>  (ou AdGuard) sur deux machines distinctes : l’un sera DNS primaire, le second en DNS secondaire. Via le DHCP, on distribue les deux adresses DNS aux clients. En fonctionnement normal, les clients interrogeront surtout le primaire, le secondaire prenant le relais si le premier est injoignable (timeout). Cette redondance assure que même pendant la maintenance ou la panne d’un serveur DNS, le réseau continue à résoudre les noms  . Il est possible d’utiliser  <strong>des solutions mixtes</strong> : par ex. un Pi-hole comme serveur principal et un AdGuard Home en secondaire, ce dernier configuré avec les mêmes listes de blocage pour un résultat similaire. Certains homelabs combinent aussi  <strong>Technitium et Pi-hole</strong>  : Technitium servant de résolveur DNS rapide en interne, et Pi-hole agissant en filtrage en amont pour certains clients spécifiques  . L’important est de conserver une cohérence (mêmes listes) ou de décider que le secondaire ne filtre pas (selon que l’on préfère la  <strong>disponibilité</strong>  ou le  <strong>filtrage strict</strong>). Dans tous les cas, réglez des  <strong>timeouts raisonnables</strong>  sur le primaire afin que le client bascule vite sur le secondaire en cas de souci (les OS utilisent généralement ~5 secondes par défaut).</p>
+<p>En environnement virtualisé, on peut également mettre en place un mécanisme de  <strong>failover</strong>  plus poussé : par exemple exécuter deux conteneurs Pi-hole en parallèle et utiliser keepalived pour partager une IP virtuelle flottante entre eux. Si le Pi-hole principal tombe, le secondaire annonce l’IP virtuelle et prend immédiatement le relais, évitant même le délai de bascule côté clients. Ce type de HA est plus complexe, mais peut se justifier dans un lab critique.</p>
+<h3 id="dns-avec-chiffrement-dohdot-en-amont-et-en-interne"><strong>DNS avec chiffrement (DoH/DoT) en amont et en interne</strong><a class="headerlink" href="#dns-avec-chiffrement-dohdot-en-amont-et-en-interne" title="Permanent link">&para;</a></h3>
+<p><strong>Chiffrer les requêtes DNS</strong>  peut être intéressant pour la confidentialité. Les trois solutions supportent le chiffrement DNS en  <strong>amont</strong>  (vers les serveurs publics) : Pi-hole peut être couplé à un client DoH/DoT (ex: Cloudflared, Stubby) ou à Unbound pour chiffrer entre Unbound et les serveurs racine. AdGuard Home et Technitium intègrent nativement le support des  <strong>DNS-over-HTTPS (DoH)</strong>  et  <strong>DNS-over-TLS (DoT)</strong>  pour les requêtes sortantes  . Il suffit de configurer dans l’UI l’adresse du resolver DoH de votre choix (ex :  <em>https://dns.quad9.net/dns-query</em>  pour Quad9).</p>
+<p>En  <strong>interne</strong>, AdGuard Home peut aussi se comporter en  <strong>serveur DoH/DoT</strong>  pour vos clients : on peut le configurer pour écouter en TLS (port 853) ou HTTPS (port 443/API DNS) afin que les postes clients puissent chiffrer leurs requêtes jusqu’au serveur DNS local  . Technitium également permet cette configuration (il peut écouter en DoH/DoT sur votre réseau local si vous activez HTTPS avec un certificat valide). Pi-hole n’a pas cette fonctionnalité intégrée, mais on peut la reproduire en plaçant un  <strong>proxy DoH</strong>  devant Pi-hole (par exemple, un conteneur  <em>cloudflared</em>  configuré en mode serveur DoH local). Ainsi, les PC/ smartphones du réseau peuvent être configurés pour utiliser l’URL DoH locale (ou le port TLS local) au lieu du port 53 classique, ajoutant une couche de chiffrement sur le segment local pour éviter qu’un intrus sur le WiFi ne voie les requêtes en clair.</p>
+<p>Pour un  <strong>homelab de sécu</strong>, cette configuration DoH interne peut être utile pour tester le comportement de machines dans un contexte où le DNS est chiffré de bout en bout. Cependant, notez que si vos clients utilisent DoH vers l’extérieur (par exemple navigateur configuré en DoH vers Cloudflare), cela  <strong>contourne</strong>  votre serveur DNS filtrant local. Une solution est justement d’héberger un serveur DoH local (avec AdGuard/Technitium) et de forcer via les politiques du navigateur ou de l’OS l’utilisation de celui-ci, afin de garder le contrôle sur les requêtes.</p>
+<h3 id="mode-proxy-dns-vs-mode-resolveur-local"><strong>Mode « proxy DNS » vs mode résolveur local</strong><a class="headerlink" href="#mode-proxy-dns-vs-mode-resolveur-local" title="Permanent link">&para;</a></h3>
+<p>On parle ici du  <strong>fonctionnement interne</strong>  du serveur DNS filtrant. En  <strong>mode proxy/forwarder</strong>, le serveur relaie la requête vers un ou plusieurs serveurs DNS externes (par ex. les DNS de FAI, Cloudflare, etc.) après avoir filtré. Ce mode est le plus simple :  <strong>Pi-hole</strong>  et  <strong>AdGuard Home</strong>  l’utilisent par défaut (on configure une liste de serveurs DNS en amont, et le logiciel fait du caching + filtrage).  <strong>Technitium DNS</strong>  peut aussi opérer ainsi, mais offre en plus le  <strong>mode résolveur récursif</strong>  complet : dans ce mode, il va interroger directement la racine internet, puis chaque TLD, etc., sans dépendre d’un serveur tiers.  <strong>Pi-hole</strong>  peut être converti en résolveur local en l’associant à  <em>Unbound</em>  (Unbound fait la récursion, Pi-hole filtre le résultat)  .  <strong>AdGuard Home</strong>  a une option expérimentale pour la récursion, mais elle n’est pas aussi aboutie qu’Unbound ou Technitium en termes de fonctionnalités DNSSEC par exemple.</p>
+<p><strong>Quel mode choisir ?</strong>  En homelab, le mode forwarder sur DNS publics (Cloudflare/Quad9) avec DoH/DoT est souvent suffisant et facile à mettre en place. Le  <strong>mode résolveur local</strong>  apporte une indépendance totale vis-à-vis des DNS tiers et évite de partager vos requêtes à un service externe, au prix d’un léger surcroît de trafic (il doit revalider toutes les DNSSEC signatures lui-même, etc.). Un ingénieur cybersécurité appréciera le résolveur local pour supprimer une dépendance externe et contrôler entièrement la chaîne (ex: pas de risque d’une réponse altérée par un FAI malveillant). Technitium étant  <em>“tout-en-un”</em>, il est idéal pour tester ce scénario : vous pouvez désactiver toutes les forwarders et le laisser gérer la résolution récursive  <strong>en interne</strong>  facilement. Pi-hole + Unbound offre le même bénéfice avec un peu plus de configuration manuelle  . Dans tous les cas, vérifiez que DNSSEC est bien activé sur votre résolveur (toutes ces solutions le supportent soit nativement soit via leur upstream) pour garantir l’authenticité des réponses DNS.</p>
+<h3 id="serveur-dns-par-vlan-segmentation-du-dns"><strong>Serveur DNS par VLAN / segmentation du DNS</strong><a class="headerlink" href="#serveur-dns-par-vlan-segmentation-du-dns" title="Permanent link">&para;</a></h3>
+<p>Dans un homelab segmenté en  <strong>plusieurs VLAN ou sous-réseaux</strong>, il faut décider comment déployer le DNS filtrant :  <strong>centralisé</strong>  (une instance dessert tous les réseaux) ou  <strong>distribué</strong>  (une instance par segment).</p>
+<ul>
+<li>
+<p><em>Option centralisée :</em>  Vous pouvez faire tourner une seule instance (ex: un Pi-hole sur le LAN principal) et permettre aux autres VLAN d’y accéder. Cela nécessite que les requêtes DNS des autres réseaux soient routées vers le Pi-hole (règles firewall autorisant l’UDP/TCP 53 depuis les VLAN IoT/Guest vers l’IP du Pi-hole). Sur OPNsense/pfSense, on peut par exemple ouvrir le DNS du Pi-hole à ces réseaux spécifiques. L’avantage : une seule config à gérer (toutes les listes au même endroit) et une vue globale de l’activité DNS. Inconvénient : moins d’isolement (les VLAN dépendent d’un service commun) et complexité de routage. Il faut aussi que le  <strong>DHCP de chaque VLAN pointe vers le Pi-hole central</strong>  comme DNS.</p>
+</li>
+<li>
+<p><em>Option distribuée :</em>  Installer une instance par VLAN. Par ex, un Pi-hole dans le VLAN Perso, un AdGuard Home dans le VLAN IoT. Chaque réseau utilise son serveur local (fourni via DHCP). Cela renforce l’isolation (pas de traversée inter-VLAN pour le DNS) et permet de  <strong>personnaliser les filtres par réseau</strong>  (ex: VLAN enfants avec filtrage strict via AdGuard Home + SafeSearch activé  , VLAN lab sans filtrage ou avec des réglages différents). Technitium facilite aussi une approche intermédiaire :  <strong>une seule instance multi-VLAN</strong>. En effet il supporte plusieurs adresses d’écoute et plusieurs scopes DHCP, on peut donc déployer Technitium sur un serveur ayant accès à tous les VLAN (ex: une VM multi-hommes ou directement sur OPNsense) et configurer un  <strong>scope DHCP par VLAN</strong>  ainsi que des règles de filtrage par groupe d’adresses IP. C’est une architecture puissante mais attention à la haute dispo : si cette unique instance tombe, tous les VLAN perdent le DNS. On revient alors à l’option primaire/secondaire pour chaque VLAN ou à un serveur redondant central.</p>
+</li>
+</ul>
+<p>En pratique, une approche hybride convient souvent : par exemple un Pi-hole principal sur le LAN Perso, accessible aussi par le VLAN invité mais avec une règle firewall qui redirige toute requête DNS émise depuis le VLAN invité vers le Pi-hole (on peut même forcer via une redirection NAT DNS). En parallèle, on peut déployer un second DNS (AdGuard) dédié aux VLAN sensibles (IoT, etc.) pour bien cloisonner.  <strong>Le choix dépend de la taille du lab et des exigences de sécurité</strong>  : plus on centralise, plus c’est facile à administrer mais plus impactant en cas de panne ; plus on distribue, plus on segmente les risques mais plus il y a d’instances à maintenir.</p>
+<h2 id="scenarios-specifiques-dusage-en-homelab"><strong>Scénarios spécifiques d’usage en homelab</strong><a class="headerlink" href="#scenarios-specifiques-dusage-en-homelab" title="Permanent link">&para;</a></h2>
+<p>Après la technique, voici quelques  <strong>cas d’usage concrets</strong>  de ces solutions DNS dans un homelab orienté cybersécurité :</p>
+<h3 id="blocage-des-publicites-et-du-tracking-internet"><strong>Blocage des publicités et du tracking internet</strong><a class="headerlink" href="#blocage-des-publicites-et-du-tracking-internet" title="Permanent link">&para;</a></h3>
+<p>Le cas d’usage numéro un de Pi-hole/AdGuard est le  <strong>blocage des pubs et trackers</strong>  au niveau réseau. En configurant l’un de ces serveurs comme DNS principal du réseau,  <em>toutes</em>  les requêtes vers des domaines publicitaires connus sont résolues vers une adresse inexistante (0.0.0.0) ou simplement non résolues, ce qui empêche l’affichage des pubs sur les appareils (TV connectées, smartphones, etc.) sans avoir à configurer chaque appareil individuellement  . Dans un homelab, cela permet non seulement d’accélérer la navigation (moins de contenu chargé) mais aussi de réduire les vecteurs de suivi invisibles.  <strong>AdGuard Home</strong>  et  <strong>Pi-hole</strong>  disposent tous deux de listes de filtres maintenues par la communauté pour bloquer pub, trackers de télémétrie Windows, bannières cookies, etc. Par défaut, leurs listes basiques bloquent une bonne partie des pubs courantes, mais on peut les enrichir (EasyList, listes spécifiques locales, etc.)  .  <strong>Technitium</strong>  utilisera les mêmes listes (format hosts, DOM blocklist) – il suffit d’importer les URLs des listes dans son interface. Un avantage du DNS centralisé : on peut bloquer la pub  <strong>même sur les appareils qui n’acceptent pas d’extensions</strong>  (TV, consoles, IoT).</p>
+<p>Pour un lab de sécu, on peut aussi se servir de ces blocages DNS comme première barrière contre certaines menaces : par exemple, en chargeant des listes de domaines de malware connus (EmergingThreats, etc.), on empêche des malwares  <em>éventuellement exécutés dans le lab</em>  de contacter leur serveur de commande via DNS. Bien sûr, ce n’est pas infaillible (un malware peut contacter directement une IP), mais cela couvre les  <strong>C&amp;C basés sur domaine</strong>  et le tracking de certaines applications indiscrètes  . On peut pousser plus loin le principe en activant sur AdGuard des listes de type  <em>“Safe Browsing”</em>  ou contrôle parental (bloquer les domaines adultes, jeux d’argent, etc.)  – utile si le homelab sert de réseau familial également.</p>
+<p>Un scénario fréquent en homelab est de  <strong>mesurer l’efficacité de ces listes</strong>  : Pi-hole et AdGuard fournissent des statistiques (pourcentage de requêtes bloquées, domaines les plus bloqués, etc.)  . Cela permet à un passionné de cybersécurité d’analyser quel trafic sort de son réseau. Par exemple, on peut découvrir qu’une Smart TV tente de contacter  <em>dozens</em>  de domaines de tracking différents – et ajuster les règles en conséquence. On pourra aussi tester différentes approches : par exemple comparer  <strong>Pi-hole vs NextDNS</strong>  (service cloud) sur le blocage de pubs, ou combiner Pi-hole avec un  <strong>bloqueur de contenu local</strong>  sur le navigateur et voir la différence. Ce type d’expérimentation est courant en homelab pour évaluer la meilleure protection multicouche.</p>
+<h3 id="isolation-reseau-par-le-dns-iot-et-environnements-sensibles"><strong>Isolation réseau par le DNS (IoT et environnements sensibles)</strong><a class="headerlink" href="#isolation-reseau-par-le-dns-iot-et-environnements-sensibles" title="Permanent link">&para;</a></h3>
+<p>Dans une architecture de sécurité, le DNS peut servir à  <strong>isoler ou contrôler les communications</strong>  d’un segment donné. Prenons le VLAN IoT : on souhaite qu’il n’ait accès qu’à Internet de manière très limitée, pour éviter qu’un objet compromis n’attaque d’autres machines. En plus des règles firewall restreignant les destinations IP, on peut utiliser un serveur DNS filtrant dédié à ce VLAN avec une politique très stricte. Par exemple, déployer AdGuard Home pour le VLAN IoT avec  <em>uniquement</em>  une whitelist de domaines autorisés (les serveurs officiels des appareils connus) et bloquer  <strong>tout le reste</strong>. AdGuard Home permet de créer des règles globales ou par client, donc on pourrait dire “autoriser seulement ces domaines pour les IP des caméras, etc.”. Technitium, via des zones de transfert conditionnel et surcharges, peut même renvoyer un nom de domaine vers une IP locale factice pour piéger l’appareil ou empêcher la résolution.</p>
+<p>Un autre scénario d’isolation DNS est d’empêcher qu’un service en  <strong>zone DMZ compromise ne puisse appeler l’intérieur</strong>  : on pourrait configurer le DNS de la DMZ pour qu’il  <em>ne résolve pas</em>  les noms internes du LAN. Par exemple, Technitium hébergeant la zone “lab.internal” pour le LAN, mais n’autorisant pas les requêtes venant de la DMZ à y accéder (via un contrôle d’accès sur la zone ou en n’exposant pas ce serveur DNS à la DMZ). Ou plus simplement, avoir des DNS séparés physiquement : le DNS du LAN connaît les noms du LAN, celui de la DMZ non. Ainsi, si un serveur DMZ est compromis, il ne pourra pas facilement découvrir ni contacter par nom les machines internes. On parle parfois de  <strong>DNS split-horizon</strong>  pour la sécurité : présenter une vue DNS différente selon l’origine de la requête. Technitium DNS peut gérer ce genre de choses en créant des  <strong>zones avec portée</strong>  (views) ou en combinant des zones locales et des forwarders conditionnels. Pi-hole et AdGuard ne gèrent pas des “views” multiples, mais on peut en déployer un par zone de sécurité pour obtenir un effet similaire.</p>
+<p>Enfin,  <em>isoler par DNS</em>  peut signifier  <strong>bloquer toute résolution externe non autorisée</strong>  : un principe de base est de forcer les clients à n’utiliser  <em>que le DNS filtrant</em>. Sur OPNsense/pfSense, on implémente une règle NAT qui intercepte toute requête DNS UDP/53 sortante et la redirige vers le serveur DNS local (Pi-hole) – on s’assure ainsi qu’aucun appareil ne tente de bypasser le filtre en utilisant 8.8.8.8. Cette technique combinée avec un Pi-hole/AdGuard renforce énormément le contrôle : même un appareil malveillant configuré avec un DNS dur en dur sera obligé de passer par le filtre.  <strong>Attention</strong>toutefois aux DNS over HTTPS des applications : ceux-ci ne passant pas par le port 53, il faut les bloquer au firewall (ex: bloquer les requêtes vers les domaines connus de DoH publics) ou mettre en place votre propre DoH interceptant comme évoqué plus haut.</p>
+<h3 id="dns-split-pour-lab-interne-dns-interne-vs-externe"><strong>DNS « split » pour lab interne (DNS interne vs externe)</strong><a class="headerlink" href="#dns-split-pour-lab-interne-dns-interne-vs-externe" title="Permanent link">&para;</a></h3>
+<p>Le concept de  <strong>split-horizon DNS</strong>  s’applique particulièrement dans un homelab où l’on peut avoir des services accessibles à la fois depuis l’intérieur et l’extérieur. Supposons que vous hébergez un site web  <em>monlab.fr</em>  qui a une IP publique (pour y accéder depuis Internet) et une IP privée (accès depuis le LAN sans sortir). Vous souhaitez que les machines internes utilisent l’IP privée quand elles résolvent  <em>monlab.fr</em>, tandis que le public doit voir l’IP publique. Ceci peut être réalisé avec nos serveurs DNS :</p>
+<ul>
+<li>
+<p>Avec  <strong>Pi-hole/AdGuard</strong>, la méthode courante est d’ajouter une entrée DNS locale pour  <em>monlab.fr</em>  pointant vers l’IP privée. Pi-hole offre l’ajout d’un enregistrement A manuel dans “DNS Local” et AdGuard via les  <em>custom rules</em>  . Ainsi, quand un client du LAN demande  <em>monlab.fr</em>, le serveur DNS local lui donne directement l’IP privée. Pour les clients externes (qui n’interrogent pas votre DNS local), ils continueront d’aller vers le DNS public et recevront l’IP publique – séparation de vue accomplie.</p>
+</li>
+<li>
+<p>Avec  <strong>Technitium</strong>, on peut aller plus loin en définissant  <em>monlab.fr</em>  comme zone locale faisant autorité dans le DNS interne. Vous créez la zone  <em>monlab.fr</em>  dans Technitium avec vos enregistrements privés. Ensuite, pour que les requêtes externes continuent de fonctionner, Technitium peut soit ne pas être exposé à l’extérieur, soit être configuré pour forwarder ce domaine vers le DNS public comme  <em>forwarder conditionnel</em>,  <strong>tout en ayant des overrides</strong>  : par exemple, vous pouvez définir dans la zone locale un enregistrement spécifique qui outrepasse la réponse publique (comme pointer  <em>monlab.fr</em>  vers privé) et laisser le reste passer. Technitium excelle dans ce rôle de DNS split-horizon grâce à sa capacité de gérer à la fois de l’autoritatif et du récursif dans une seule instance  .</p>
+</li>
+</ul>
+<p>Ce  <strong>DNS split</strong>  est très utile en homelab pour les VPN aussi : quand vous êtes connecté en VPN dans votre réseau, vous voulez peut-être que  <em>wiki.lan</em>  se résolve, mais pas quand vous êtes à l’extérieur. En configurant votre Pi-hole/AdGuard interne pour résoudre <em>.lan ou </em>.home.arpa, et en le combinant avec une configuration du client VPN pour utiliser ce DNS, vous obtenez une résolution locale des noms à travers le VPN. Technitium pourrait lui être le serveur central qui répond différemment selon l’IP source (par exemple, si requête vient d’une IP du VPN, autoriser certains noms).</p>
+<p>En résumé, ces scénarios montrent que  <strong>un serveur DNS homelab ne sert pas qu’à bloquer des pubs</strong>, mais peut être un élément central de la sécurité réseau : il contribue à la  <strong>détection</strong>  (en journalisant quelles adresses sont requêtées), à la  <strong>protection</strong>  (en bloquant ou redirigeant certaines requêtes) et à la  <strong>flexibilité</strong>  (en offrant des vues DNS différentes selon le contexte). Cela permet de  <strong>simuler des environnements pro</strong>  (DNS d’entreprise avec domaines internes, zones externes, etc.) à la maison.</p>
+<h2 id="securite-mises-a-jour-et-resilience-du-service-dns"><strong>Sécurité, mises à jour et résilience du service DNS</strong><a class="headerlink" href="#securite-mises-a-jour-et-resilience-du-service-dns" title="Permanent link">&para;</a></h2>
+<h3 id="securite-de-linstance-dns"><strong>Sécurité de l’instance DNS</strong><a class="headerlink" href="#securite-de-linstance-dns" title="Permanent link">&para;</a></h3>
+<p>Du point de vue sécuritaire, il faut considérer  <strong>la sécurité du logiciel DNS lui-même</strong>  et son  <strong>intégration sûre dans le réseau</strong>. Pi-hole et AdGuard Home sont écrits dans des langages robustes (C/PHP pour l’un, Go pour l’autre) et bénéficient de mises à jour régulières en cas de vulnérabilité. Jusqu’ici, aucune faille majeure publique n’a compromis ces outils de façon catastrophique, mais il est arrivé que Pi-hole corrige des bugs de corruption de mémoire ou XSS dans l’interface. Technitium DNS est relativement récent mais écrit en .NET (langage mémoire-safe)  , ce qui limite certaines catégories de vulnérabilités.  <strong>Le principal risque</strong>  est l’<strong>exposition involontaire</strong>  de l’interface web d’administration. Il est impératif de  <strong>la protéger</strong>  : par défaut Pi-hole n’a pas d’HTTPS sur son UI (on peut le mettre derrière un proxy HTTPS si besoin)  , AdGuard Home et Technitium peuvent activer HTTPS sur l’interface plus facilement (certificat à installer)  . Dans tous les cas, il faut restreindre l’accès de l’UI aux seules IP autorisées (via firewall ou en écoutant seulement sur l’IP locale). Évitez d’exposer l’interface de gestion sur Internet. Si vous devez accéder à distance, faites-le via VPN dans votre homelab ou SSH tunnel.</p>
+<p>Concernant la  <strong>séparation des rôles</strong>, veillez à ce que le serveur DNS n’ait pas plus de privilèges que nécessaire sur le système. Par exemple, en Docker il tourne généralement en utilisateur non-root. Sur une machine dédiée, ne pas l’exécuter en root (Pi-hole installe un utilisateur  pihole  pour FTL, etc.). Gardez également votre système à jour – surtout si c’est un Linux minimal type Raspberry Pi OS, pour bénéficier des patchs de sécurité du kernel, etc.</p>
+<p><strong>Mises à jour automatiques :</strong>  Par design, Pi-hole  <strong>n’auto-met pas à jour son core</strong>  tout seul (on utilise la commande  pihole -up  manuellement ou on met à jour le conteneur Docker). Idem pour Technitium et AdGuard – ces services ne se mettent pas à jour automatiquement comme pourraient le faire des applications cloud. Il faut donc un processus pour les maintenir (veillez aux annonces de nouvelles versions). En revanche,  <strong>les listes de blocage</strong>, elles, sont souvent  <strong>mises à jour automatiquement</strong>. Pi-hole programme un rafraîchissement hebdomadaire de Gravity (les listes) par défaut via cron. AdGuard Home, de son côté, vérifie et met à jour les filtres abonnés régulièrement (périodicité configurable, souvent quotidienne) – il a un avantage là-dessus en offrant une interface pour gérer la fréquence  . Technitium peut être configuré pour fetcher les listes à intervalle également (sinon on peut scripter un cron avec son API). Il est crucial de garder les listes à jour pour bénéficier des nouveaux domaines malveillants à bloquer. Pour le core, je vous conseille d’intégrer la vérification des updates de ces services dans votre routine (par exemple, check mensuel, ou s’abonner aux flux GitHub des projets). Sur la sécurité du code lui-même, Pi-hole a l’avantage d’une  <strong>très large communauté</strong>  qui audite et contribue, AdGuard Home a une équipe dédiée (société AdGuard) et Technitium est principalement maintenu par une petite équipe mais très réactive  .</p>
+<h3 id="journalisation-et-respect-de-la-vie-privee"><strong>Journalisation et respect de la vie privée</strong><a class="headerlink" href="#journalisation-et-respect-de-la-vie-privee" title="Permanent link">&para;</a></h3>
+<p>Un serveur DNS filtrant va naturellement  <strong>journaliser</strong>  beaucoup d’informations : chaque requête client, l’adresse qui l’a faite, la réponse retournée, etc. Cela peut poser question dans un contexte personnel (respect de la vie privée des usagers du réseau, par exemple votre famille) ou tout simplement encombrer le stockage à long terme.</p>
+<p><strong>Par défaut</strong>, Pi-hole et AdGuard loggent toutes les requêtes dans une base (FTL DB pour Pi-hole, fichiers log/DB pour AdGuard). On peut voir l’historique via l’interface (requêtes des dernières 24h, 7j, etc.).  <strong>Pi-hole propose un mode de confidentialité réglable</strong>  : du log complet à  <em>aucune journalisation</em>, en passant par des niveaux intermédiaires où il anonymise partiellement (par ex. ne pas stocker l’adresse IP du client, ou ne pas stocker les domaines consultés)  . Cela permet si on le souhaite de réduire la granularité des logs – utile si vous hébergez Pi-hole pour un tiers et que vous ne voulez pas conserver ses requêtes. AdGuard Home a également une option “Mode furtif” (<em>stealth mode</em>) qui peut limiter ce qui est consigné et même bloquer les requêtes aux domaines typiques de télémétrie. On peut aussi purger automatiquement les journaux au bout d’un certain temps dans AdGuard. Technitium DNS, au moins dans sa version actuelle, a une interface de log un peu moins développée  , mais les données sont bien là (fichiers logs et/ou base SQL). Rien ne vous empêche d’envoyer les logs DNS vers un SIEM local (Splunk, Elastic) pour analyser le trafic – c’est même un excellent exercice en homelab Blue Team. Cependant, faites attention :  <strong>ne pas logguer trop longtemps</strong>  sur SD card (si vous utilisez un Pi) pour éviter son usure, et filtrer ce qui est pertinent.</p>
+<p>Un aspect “vie privée” important :  <strong>aucune de ces solutions n’envoie vos données DNS à l’éditeur</strong>  (tout est self-hosted, local)  .  <em>Seul AdGuard Home utilisait par défaut les serveurs DNS d’AdGuard</em>  en upstream lors de l’installation (modifiable bien sûr)  . Donc par transparence, sachez qu’après installation, il vaut mieux configurer explicitement vos serveurs DNS préférés plutôt que de laisser ceux par défaut (si on veut éviter que AdGuard (la compagnie) connaisse vos requêtes). Pi-hole et Technitium n’ont pas ce genre de particularité : ils utilisent ce que vous leur indiquez (ou rien, dans le cas d’un résolveur pur).</p>
+<h3 id="resilience-du-service-dns-et-optimisation"><strong>Résilience du service DNS et optimisation</strong><a class="headerlink" href="#resilience-du-service-dns-et-optimisation" title="Permanent link">&para;</a></h3>
+<p>La  <strong>résilience</strong>  englobe la haute disponibilité (disponibilité du service) et la robustesse face aux lenteurs. Comme évoqué dans la section config, disposer de plusieurs DNS redondants est la meilleure parade contre une panne franche. Mais on peut aussi améliorer la  <strong>tolérance aux échecs</strong>  dans la configuration même d’une instance. Par exemple, dans Pi-hole/AdGuard, configurer  <em>plusieurs serveurs DNS upstream</em>  (DNS de secours) permet qu’en cas de silence d’un des serveurs (ex: Cloudflare ne répond plus), l’autre soit essayé. AdGuard Home offre même des stratégies (parallèle, priorité, etc.) pour interroger plusieurs upstreams en même temps et prendre le plus rapide ou éliminer celui qui ne répond pas.  <strong>Technitium DNS</strong>  étant un résolveur complet, il va gérer la redondance au niveau du protocole DNS lui-même (plusieurs serveurs racine, etc.), mais si vous configurez des forwarders manuels, pensez aussi à en mettre plusieurs.</p>
+<p>Le  <strong>timeout DNS</strong>  par défaut est de quelques secondes, mais vous pouvez l’ajuster si vous constatez des retards. Toutefois, attention à ne pas le rendre trop court et déclarer en échec trop vite des domaines pouvant nécessiter un peu plus de temps (DNSSEC validation par exemple).</p>
+<p>Un point de résilience est la  <strong>caching</strong>  : heureusement, tous les trois possèdent un cache local des réponses DNS. Ainsi, si votre lien Internet tombe temporairement, les noms récemment résolus restent dans le cache pour la durée du TTL, permettant aux appareils de continuer à fonctionner pour les domaines déjà connus. Vous pouvez augmenter la taille du cache si vous avez beaucoup de clients, mais généralement les valeurs par défaut suffisent (Pi-hole FTL et AdGuard gèrent ça automatiquement). Technitium vous laissera ajuster certains paramètres DNS avancés (taille cache, etc.) si besoin.</p>
+<p>Enfin, du point de vue  <em>cybersécurité</em>, on peut parler de la  <strong>résilience face aux attaques DNS</strong>  : un homelab pourrait être la cible d’une attaque DNS (ex: un malware interne fait des millions de requêtes pour saturer Pi-hole). Pi-hole et AdGuard ont des mécanismes basiques de rate-limiting pour éviter qu’un client unique spame trop de requêtes et ne submerge le service. Par exemple Pi-hole limite à 1000 requêtes par minute par client par défaut (configurable) – cela évite qu’un IoT bavard ne rende le DNS indisponible pour tout le monde. Sur Technitium, je ne suis pas sûr du taux par défaut, mais étant un serveur plus sophistiqué, il doit pouvoir encaisser pas mal de charges (voire on peut utiliser les fonctionnalités de Windows/.NET if it runs on Windows to mitigate abuse). Dans tous les cas, surveillez vos tableaux de bord : si vous voyez qu’un appareil fait 10 000 requêtes/jour, il y a un souci (boucle DNS, etc.) qu’il faut corriger pour ne pas impacter la qualité de service DNS.</p>
+<p>En résumé, la mise en place d’un DNS filtrant dans un homelab de sécurité apporte non seulement un confort (moins de pubs) mais fait partie intégrante de la  <strong>défense en profondeur</strong>  du réseau domestique. Avec Pi-hole, AdGuard Home ou Technitium DNS, on dispose d’outils modulables qu’il faut configurer selon les besoins : n’hésitez pas à expérimenter différentes topologies et réglages pour trouver l’équilibre optimal entre  <strong>sécurité</strong>,  <strong>performance</strong>  et  <strong>simplicité de gestion</strong>  . Chaque solution a ses points forts, mais toutes visent le même objectif : donner à l’utilisateur le contrôle sur ses résolutions DNS afin de sécuriser le réseau contre une partie des menaces et nuisances en ligne. Les retours d’expérience conseillent même d’<strong>tester plusieurs solutions en parallèle</strong>  et d’adopter celle qui vous convient le mieux en termes d’interface et de fonctionnalités  .</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

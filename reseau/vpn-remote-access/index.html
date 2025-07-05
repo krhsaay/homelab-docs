@@ -1,0 +1,1664 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../dns/">
+      
+      
+        <link rel="next" href="../reverse-proxy/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Accès VPN distant - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#comparatif-twingate-vs-wireguard-vs-zerotier-pour-lacces-vpn-distant" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Accès VPN distant
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#presentation-generale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Présentation générale
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performances-comparees" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performances comparées
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-et-gestion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration et gestion
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploiement-et-contraintes-nat-cloud-vs-self-host-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Déploiement et contraintes (NAT, cloud vs self-host, etc.)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-dans-un-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage dans un homelab
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cas d’usage dans un homelab">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#acces-distant-securise-au-lan-personnel" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accès distant sécurisé au LAN personnel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interconnexion-de-sites-site-to-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interconnexion de sites (site-to-site)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acces-a-un-vlan-reseau-specifique" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accès à un VLAN / réseau spécifique
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion-et-tableau-recapitulatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion et tableau récapitulatif
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="comparatif-twingate-vs-wireguard-vs-zerotier-pour-lacces-vpn-distant"><strong>Comparatif : Twingate vs WireGuard vs ZeroTier pour l’accès VPN distant</strong><a class="headerlink" href="#comparatif-twingate-vs-wireguard-vs-zerotier-pour-lacces-vpn-distant" title="Permanent link">&para;</a></h1>
+<h2 id="presentation-generale"><strong>Présentation générale</strong><a class="headerlink" href="#presentation-generale" title="Permanent link">&para;</a></h2>
+<p><strong>Twingate :</strong>  Twingate est une solution d’accès réseau “Zero Trust” visant à remplacer les VPN traditionnels. Au lieu d’ouvrir un accès complet à un réseau, Twingate segmente l’accès au niveau des  <strong>services</strong>  individuels. Par conception, tout est  <em>fermé par défaut</em>  et l’utilisateur n’obtient que les accès spécifiques qui lui sont accordés (principe du moindre privilège)  . La plateforme Twingate est gérée via le cloud : on déploie des  <em>Connecteurs</em>  dans le réseau privé (par ex. sur un serveur ou NAS) et les utilisateurs installent un client Twingate sur leurs appareils. L’authentification s’intègre généralement avec un fournisseur d’identité (SSO/LDAP, etc.), et chaque tentative d’accès est vérifiée (authentification  <strong>et</strong>autorisation) avant d’être autorisée  . L’architecture est conçue de sorte qu’aucun composant unique ne puisse à lui seul autoriser du trafic : il faut toujours au moins deux validations (par ex. le contrôleur cloud + le connecteur) pour qu’un flux passe, ajoutant ainsi une couche de sécurité  . Twingate établit des tunnels chiffrés (via TLS 1.2) entre le client de l’utilisateur et le connecteur, en empruntant des connexions  <strong>sortantes</strong>  (aucun port entrant n’est ouvert sur le réseau privé). Il en résulte un accès distant très discret (invisible aux scans externes) et maîtrisé, ne donnant accès qu’aux ressources définies (applications web, bases de données, SSH, etc.) plutôt qu’à tout le LAN. En résumé, Twingate est un  <strong>service cloud</strong>  (non self-hosted) qui offre une expérience utilisateur simple (client “toujours actif” s’authentifiant via SSO) et une administration centralisée (console web pour définir les ressources, droits, politiques MFA, etc.).</p>
+<p><strong>WireGuard :</strong>  WireGuard est un protocole VPN moderne, open-source, conçu pour être  <strong>simple, rapide et sécurisé</strong>. Il s’agit d’un logiciel que l’on peut auto-héberger sur un serveur (Linux, Windows, routeur, etc.) afin de créer un tunnel VPN chiffré de niveau IP entre le client et le serveur. Son code source extrêmement minimaliste (seulement quelques milliers de lignes) réduit la surface d’attaque et facilite l’audit de sécurité  . WireGuard utilise des algorithmes cryptographiques de pointe (Curve25519, ChaCha20, Poly1305…) garantissant la confidentialité et l’intégrité des données  . Il est supporté nativement par de nombreux OS (intégré au noyau Linux, disponible sur Windows, macOS, Android, iOS, etc.) ce qui lui confère une excellente  <strong>performance</strong>  et compatibilité multiplateforme  . En pratique, WireGuard fonctionne en attribuant à chaque pair une clé publique et une adresse IP virtuelle ; les pairs autorisés sont configurés statiquement (échange de clés pré-partagées) et le serveur écoute sur un port UDP fixe. Comparé aux solutions classiques (OpenVPN, IPsec), WireGuard est réputé bien plus simple à configurer et administrer. Cependant, il ne gère pas nativement les notions d’utilisateurs ou d’annuaires : l’authentification se fait uniquement par les clés. Une fois connecté, le client a généralement accès à tout le réseau privé routé par le serveur (sauf à segmenter manuellement via des règles firewall ou en déployant plusieurs serveurs). WireGuard excelle par sa légèreté et son efficacité, mais nécessite de  <strong>l’auto-hébergement</strong>  et souvent des ajustements réseau (ouverture de port, DNS dynamique) pour un accès depuis l’extérieur.</p>
+<p><strong>ZeroTier :</strong>  ZeroTier est une solution de  <strong>réseau virtuel peer-to-peer</strong>  qui permet de créer facilement un LAN virtuel chiffré entre des appareils distribués sur Internet. Contrairement à un VPN classique point-à-point, ZeroTier crée un réseau overlay  <strong>SD-WAN</strong>  dans lequel chaque nœud exécute le client ZeroTier et rejoint un réseau virtuel identifié par un ID. Les nœuds obtiennent une adresse virtuelle (par ex. dans un plan d’adressage 10.<strong><em>.</em>) et peuvent communiquer entre eux comme s’ils étaient sur le même commutateur Ethernet. ZeroTier opère en mode  </strong>full mesh<strong>  : tous les nœuds établissent des sessions chiffrées entre eux, en cherchant à atteindre la meilleure connectivité possible. Pour ce faire, le système s’appuie sur des serveurs racine (planète/lune) gérés par ZeroTier Inc. qui aident aux découvertes initiales de pairs et relaient le trafic si nécessaire  . Toutefois, une fois les pairs découverts, ZeroTier tente d’établir des liens directs en  <em>peer-to-peer</em>  (techniques de hole punching NAT) afin d’optimiser la latence et le débit  . Chaque appareil est sécurisé par une identité propre (adresse ZeroTier de 10 hex, dérivée de sa clé publique), et seuls les appareils autorisés par le contrôleur du réseau peuvent joindre le VPN  . ZeroTier chiffre les communications de bout-en-bout en 256 bits, de sorte que même l’infrastructure centrale ne peut pas lire les données utilisateurs  . L’administration par défaut se fait via une interface web (ZeroTier Central) où l’on peut approuver les nouveaux membres et définir des  </strong>règles de flux<strong>  au besoin (ZeroTier intègre un moteur de règles de filtrage pour segmenter le trafic entre membres). ZeroTier est  </strong>très flexible**  : il fonctionne sur presque tous les OS (y compris sur des routeurs, NAS, Android/iOS…) et peut virtualiser aussi bien du niveau 3 (routage IP) que du niveau 2 (pont réseau façon VLAN étendu). En somme, ZeroTier permet de se créer facilement un réseau privé global, sans avoir à se soucier des routes et NAT (tout se fait en P2P), avec la possibilité de le self-héberger (contrôleur open source) si on le souhaite.</p>
+<h2 id="performances-comparees"><strong>Performances comparées</strong><a class="headerlink" href="#performances-comparees" title="Permanent link">&para;</a></h2>
+<p>En termes de performances brutes (débit, latence),  <strong>WireGuard</strong>  est généralement la référence, car il opère dans l’espace noyau et utilise des primitives crypto très optimisées. Dans des tests de tunnel entre serveurs, WireGuard a démontré un débit  <em>presque identique à la connexion directe</em>  sans VPN  . Par exemple, une mesure montre WireGuard atteignant un débit proche du gigabit, là où des alternatives comme OpenVPN plafonnaient à ~20% du même débit  . En pratique, sur une machine puissante ou un routeur moderne, WireGuard peut facilement saturer la bande passante disponible. Toutefois, sur de petits matériels (VPS bas de gamme, Raspberry Pi…), le chiffrement peut être limité par le CPU single-thread : ainsi, un WireGuard auto-hébergé sur 1 vCPU a montré ~60% de débit en moins qu’une connexion directe dans un test, faute de ressources processeur suffisantes  .</p>
+<p>ZeroTier, de son côté, ajoute une petite couche d’abstraction (son moteur tourne en espace utilisateur et encapsule en UDP). Son débit est donc un peu inférieur à WireGuard dans les mêmes conditions. D’après des comparatifs, ZeroTier et Tailscale atteignent environ la moitié du débit de WireGuard sur des liaisons identiques  . Cela reste suffisant pour la plupart des usages courants (streaming HD, transferts modérés), mais sur des transferts massifs ou des réseaux gigabit, WireGuard garde l’avantage de la vitesse pure. ZeroTier privilégie la résilience : si une connexion directe P2P est possible, le débit sera bon (souvent plusieurs centaines de Mbit/s) ; en revanche si le trafic doit transiter par un relais public (par ex. en cas de CGNAT symétrique empêchant le P2P), le débit peut être limité par ce relais (généralement quelques centaines de Mbit/s max).</p>
+<p><strong>Twingate</strong>, bien qu’utilisant son propre protocole basé sur TLS, affiche des performances très proches de WireGuard dans les tests. Comme il établit des tunnels P2P entre le client et le connecteur (lorsque cela est possible), la latence et le débit sont quasiment optimaux. Des mesures indiquent que Twingate atteint  <strong>95% (ou plus) du débit natif</strong>, soit une perte généralement inférieure à 5-10% par rapport à l’absence de VPN  . Sur un transfert de fichier de 1,8 Go, par exemple, le débit via Twingate était le même qu’en direct (~600 Mbps), alors qu’un tunnel WireGuard sur le même VPS chutait à ~224 Mbps dans ce cas de figure limité par le CPU  . Twingate profite de son architecture répartie : si le chemin direct est optimal, le tunnel est direct; en cas d’obstacle, le trafic peut passer par un relais Twingate global (débit dans ce cas plutôt de l’ordre de 200–250 Mbps) d’après leur documentation  . À noter que Twingate, étant  <strong>split-tunnel par défaut</strong>, ne véhicule que le trafic destiné aux ressources privées : ainsi, la bande passante n’est pas gaspillée à router du trafic Internet général, ce qui évite de saturer le tunnel inutilement  .</p>
+<p>En résumé,  <strong>WireGuard</strong>  offre la  <strong>meilleure performance</strong>  absolue sur matériel puissant et liens directs,  <strong>Twingate</strong>  parvient à s’en approcher grâce à l’optimisation P2P et à son overhead minimal (cloud natif très scalable), et  <strong>ZeroTier</strong>  offre de bonnes performances tout en sacrifiant quelques Mbps pour la commodité du maillage automatique. Dans la plupart des scénarios homelab, les trois solutions pourront fournir un accès fluide (par ex. streaming vidéo, jeux, télétravail) – c’est surtout dans des usages intensifs (gros transferts de données, multiples utilisateurs simultanés) ou sur des équipements modestes que les différences de débit pourront se faire sentir.</p>
+<h2 id="securite"><strong>Sécurité</strong><a class="headerlink" href="#securite" title="Permanent link">&para;</a></h2>
+<p>Chaque solution adopte une approche différente en matière de sécurité, au-delà du simple chiffrement des données (que les trois assurent avec des algorithmes robustes) :</p>
+<ul>
+<li>
+<p><strong>Twingate :</strong>  La sécurité est son point fort principal. Grâce au modèle  <strong>Zero Trust Network Access (ZTNA)</strong>, aucun utilisateur ou appareil n’est implicitement fiable. Par défaut,  <strong>rien n’est accessible tant que ce n’est pas explicitement autorisé</strong>  . L’accès est contrôlé au niveau applicatif : un utilisateur doit s’authentifier (idéalement via SSO + MFA) et n’obtient que des droits fins (par ex : accès au serveur X sur le port Y). Contrairement à un VPN traditionnel qui placerait l’utilisateur “dans le LAN” une fois connecté, Twingate ne laisse transiter que le trafic vers les ressources définies. De plus, le plan de contrôle (Cloud Twingate) vérifie à chaque connexion que l’appareil de l’utilisateur est approuvé et à jour (posture device). La conception cloud permet aussi une  <strong>intégration SSO</strong>complète : on peut lier Twingate à Okta, Azure AD, Google Workspace, etc., et gérer les autorisations par groupes d’utilisateurs  . Sur le plan réseau, Twingate apporte un gros avantage :  <strong>aucun port ouvert</strong>  sur le pare-feu de l’entreprise. Les connecteurs initient des connexions sortantes chiffrées, ce qui signifie qu’un attaquant extérieur  <strong>ne voit pas</strong>  de service exposé à attaquer. Il ne peut même pas savoir qu’un certain port donne accès à telle ressource, là où un VPN classique (même WireGuard) reste détectable (port UDP ouvert, potentiellement identifiable). Enfin, la double confirmation évoquée (contrôleur + connecteur) signifie qu’un pirate ayant compromis un composant isolé ne peut pas détourner le trafic sans avoir aussi les clés d’un second composant  . En somme, Twingate offre une  <strong>sécurité granulaire et multi-couches</strong>, adaptée aux environnements sensibles (d’ailleurs souvent utilisé en entreprise pour remplacer des VPN jugés trop larges).</p>
+</li>
+<li>
+<p><strong>WireGuard :</strong>  Le protocole WireGuard a été conçu avec la  <strong>simplicité</strong>  comme gage de sécurité. Son implantation légère minimise les risques de failles (moins de code = moins de bugs) et a fait l’objet d’audits. WireGuard n’utilise que des  <strong>algorithmes cryptographiques modernes</strong>  considérés comme sûrs (pas de vieux chiffrement potentiellement obsolète)  . Par exemple, chaque paquet est authentifié via un tag Poly1305, et le protocole intègre des mécanismes contre les attaques de type  <em>replay</em>. En outre, un nœud WireGuard ne répond qu’aux paquets chiffrés provenant de pairs connus (il est  <strong>silencieux</strong>  sur son port UDP tant qu’il ne voit pas une clé publique autorisée), ce qui rend difficile son scan par un attaquant opportuniste – il apparaît “fermé” pour quiconque ne possède pas la bonne clé. Cependant, WireGuard reste un  <strong>VPN traditionnel IP</strong>  : si un attaquant parvient à obtenir/voler une clé privée autorisée (par ex. vol de l’ordinateur d’un admin contenant le fichier de config), il pourrait potentiellement se connecter et avoir accès au réseau privé. Il n’y a pas de notion d’authentification utilisateur/mot de passe ou 2FA intégrée – il faut mettre en place des mesures externes pour contrôler l’utilisation des clés (certains l’intègrent avec LDAP via des scripts de génération de config, etc., mais ce n’est pas natif). La  <strong>surface d’attaque</strong>  d’un serveur WireGuard est très réduite (pas de gestion de session complexe, pas de pile TLS lourde), ce qui lui vaut une excellente réputation de sécurité intrinsèque  . En revanche, il faut réaliser que WireGuard, une fois connecté, donne un accès IP complet selon la configuration réseau : par défaut, un client est “virtuellement” dans le LAN (ou au moins dans le subnet du VPN) et peut communiquer librement – il n’y a pas de segmentation fine out-of-the-box. Il revient à l’administrateur de filtrer au besoin (via des pare-feu, des tables de routage, etc.). Pour un usage homelab ou personnel, ceci est généralement acceptable, mais dans un contexte multi-utilisateurs, on devra prévoir des règles si l’on souhaite restreindre certains clients à certaines ressources uniquement.</p>
+</li>
+<li>
+<p><strong>ZeroTier :</strong>  ZeroTier assure également un  <strong>chiffrement bout-en-bout</strong>  par défaut (basé sur des courbes ECC et chiffrement symétrique 256-bit). Chaque nœud possède une adresse ZeroTier (son identifiant de 40 bits) dérivée de sa clé publique, ce qui garantit que seuls les appareils  <strong>explicitement autorisés</strong>  par le contrôleur peuvent joindre le réseau virtuel  . En terme d’exposition, ZeroTier fonctionne, comme Twingate, sur des connexions sortantes : un client derrière un NAT établira lui-même la session vers les serveurs racine et tentera des connexions UDP vers les autres pairs, évitant là aussi d’ouvrir un port serveur local. Cependant,  <strong>ZeroTier repose sur une infrastructure centrale</strong>  (serveurs d’autorité et de relais). Même si les données sont chiffrées (ZeroTier Inc. ne peut pas les lire), certains modèles de menace pourraient considérer la dépendance à des serveurs tiers comme un risque (par exemple, une attaque sur les serveurs racine pourrait, dans le pire cas, perturber le réseau Overlay). Il est toutefois possible d’atténuer cela en self-hébergeant son propre contrôleur et même ses propres “planet nodes” (racines), mais c’est une configuration avancée. En conditions normales, la  <strong>confiance</strong>  accordée à ZeroTier Inc. est surtout pour la disponibilité, pas pour la confidentialité (puisque le zero-trust est assuré via le chiffrement). ZeroTier offre une fonctionnalité de  <strong>Network Rules Engine</strong>  : l’admin peut définir des règles de filtrage (au niveau des adresses/ports, protocole, etc.) pour interdire ou limiter certains flux à l’intérieur du VPN. Par exemple, on peut isoler deux groupes de machines virtuelles pour qu’elles ne communiquent pas, ou n’autoriser qu’un certain port vers une IP donnée. Cela permet de se rapprocher d’une politique de moindre privilège – mais ces règles étant globales au réseau virtuel, elles sont moins dynamiques qu’une approche ZTNA comme Twingate. Côté client, ZeroTier n’impose pas d’authentification utilisateur supplémentaire, ce qui signifie que la compromission d’un appareil autorisé peut donner accès au réseau virtuel (il faut alors le retirer via la console pour le bannir). En résumé, ZeroTier apporte une  <strong>sécurité satisfaisante pour la plupart des usages</strong>  (chiffrement fort, pas de ports ouverts, contrôle des pairs autorisés), avec une souplesse supplémentaire grâce aux règles personnalisées, mais il ne fournit pas le même niveau de micro-contrôle qu’une solution zero-trust dédiée.</p>
+</li>
+</ul>
+<h2 id="integration-et-gestion"><strong>Intégration et gestion</strong><a class="headerlink" href="#integration-et-gestion" title="Permanent link">&para;</a></h2>
+<p>Les trois solutions diffèrent notablement dans leur mode de déploiement et d’intégration à l’écosystème :</p>
+<ul>
+<li>
+<p><strong>Twingate</strong>  étant un service cloud, il s’intègre aisément avec les outils d’entreprise. On l’a mentionné, il supporte nativement les principaux fournisseurs d’<strong>identité</strong>  (Azure AD/Entra ID, Okta, Google, OneLogin, etc.)  . Ainsi, la gestion des utilisateurs et groupes est centralisée : inutile de créer des comptes VPN séparés, on réutilise les identités existantes. De plus, Twingate offre des API et peut s’intégrer à des SIEM/Monitoring pour tracer qui accède à quoi. L’enrôlement des appareils est également pensé pour être simple : on peut déployer le client via un MDM, ou laisser l’utilisateur l’installer lui-même puis se connecter avec son compte SSO (pas de fichier de config ou de clé à gérer manuellement). Pour l’<strong>administrateur</strong>, la gestion passe par une console web très complète, où l’on définit les ressources (par nom DNS ou IP/port), crée des groupes d’accès, visualise les journaux de connexion, etc. Il n’est pas nécessaire d’avoir des compétences pointues en réseau pour utiliser Twingate – le plus technique consiste à lancer les connecteurs (container Docker ou service Linux) dans chaque réseau à exposer, ce qui est assez simple si l’on sait exécuter une image Docker  . Aucune modification IP ou firewall n’est requise, ce qui facilite la mise en place (et on peut même faire cohabiter Twingate avec un VPN existant pour tester, puisqu’il n’y a pas de conflit)  . L’inconvénient de cette approche managée est la  <strong>dépendance au cloud</strong>  : sans Internet ou si les serveurs Twingate sont indisponibles, l’accès tombe. De plus, certaines entreprises/homelabs peuvent hésiter à faire transiter la gestion de leurs accès par un service tiers propriétaire. Twingate a un modèle gratuit pour usage personnel (limité en utilisateurs/connexions), mais les fonctionnalités avancées (par ex. plus d’utilisateurs, plus de connecteurs, SSO entreprise) sont payantes.</p>
+</li>
+<li>
+<p><strong>WireGuard</strong>  s’intègre au contraire de façon  <strong>auto-hébergée</strong>. Il s’agit d’un binaire/service à installer sur un serveur que vous contrôlez. Cela signifie une  <strong>liberté totale</strong>  (pas de compte à créer sur une plateforme externe, pas de limite d’utilisateurs imposée, etc.), au prix d’une gestion plus manuelle. Il existe peu d’intégrations “clé en main” avec les annuaires ou les outils de monitoring – toutefois, l’écosystème a produit plusieurs solutions pour faciliter l’administration de WireGuard : par ex.  <strong>wg-easy</strong>,  <strong>WireGuard UI</strong>,  <strong>PiVPN</strong>, etc., qui fournissent une interface web ou des scripts pour générer les configurations clients et les QR codes. En entreprise, des solutions comme Netmaker ou Tailscale (commercial) utilisent WireGuard en arrière-plan et ajoutent une surcouche de gestion centralisée, mais dans notre comparaison on considère WireGuard “pur”. La gestion des  <strong>clés et configs</strong>  peut devenir lourde si on a de nombreux clients, car il faut générer une clé par poste, l’ajouter sur le serveur (édition du fichier wg0.conf) puis distribuer le bon fichier au client. Des utilisateurs ont noté que cette phase de setup et de distribution des clés demandait un minimum de connaissances, contrairement à des outils plus automatisés  . Côté intégration réseau, WireGuard crée simplement une interface réseau virtuelle ; à l’admin de l’insérer dans son plan d’adressage. On peut configurer le serveur pour pousser des routes, ou laisser le client décider (par ex. tunnel par défaut ou non). Il est possible d’intégrer WireGuard avec des configurations avancées (ex: routage conditionnel, scripts Up/Down pour mettre à jour des route tables, etc.), ce qui le rend très  <strong>flexible</strong>  pour un homelab. En revanche, sans effort supplémentaire, il n’a pas de notion de “portail captif” ou d’authentification user-friendly : l’utilisateur doit récupérer un fichier de configuration (ou scanner un QR code) et l’importer dans son client WireGuard. Une fois fait, c’est très stable et ça se connecte automatiquement en arrière-plan (on peut configurer la reconnexion automatique), mais tout changement (comme retirer un accès) implique de toucher la config du serveur (retirer la clé publique concernée). Ainsi, WireGuard est  <strong>léger mais rudimentaire</strong>  en termes de gestion multi-utilisateurs.</p>
+</li>
+<li>
+<p><strong>ZeroTier</strong>  occupe un peu le milieu : c’est un service p2p mais avec une  <strong>console de gestion cloud</strong>  conviviale sur my.zerotier.com (si on utilise la version hébergée). L’administrateur crée un réseau virtuel sur cette console, obtient un Network ID, et à chaque nouvel appareil qui rejoint (en exécutant  zerotier-cli join <ID>  ou via l’UI) il voit l’appareil apparaître dans la console en attente d’autorisation. En un clic, il peut l’accepter dans le réseau et éventuellement lui attribuer une IP fixe ou un nom. Ce mode de fonctionnement est très pratique pour un homelab : pas besoin de échanger des clés manuellement ni de configurer des ports. La console permet aussi de définir des routes (par ex. “tel membre relaye le sous-réseau 192.168.1.0/24 aux autres”) et d’écrire des  <strong>règles de filtrage</strong>  si souhaité.  <strong>Sans configuration additionnelle</strong>, tous les membres d’un réseau ZeroTier peuvent communiquer librement entre eux (une fois autorisés). Il faut donc penser à activer le moteur de règles si l’on veut restreindre les communications internes (ce que beaucoup d’utilisateurs personnels ne font pas forcément, profitant simplement du “LAN virtuel” ouvert). Du point de vue intégration SI, ZeroTier n’a pas de liaison SSO/LDAP directe – on gère les membres par appareil, pas par utilisateur. Mais on peut contourner cette limitation en  <strong>self-hostant</strong>  le contrôleur ZeroTier : le code du contrôleur est inclus dans le binaire ZeroTier One et on trouve des outils comme  <em>ZeroUI</em>  pour l’exploiter  . En self-host, on peut alors imaginer intégrer l’inscription des membres avec des processus internes (API, etc.), et surtout on lève la limite de 50 nœuds maximum imposée par le service cloud gratuit  . Cependant, le self-hosting complet de ZeroTier est non trivial et plutôt réservé aux power users ; la plupart se contentent de la version cloud, très fiable et suffisamment gratuite pour un usage modéré. Pour un homelab classique, ZeroTier est  <strong>extrêmement facile à déployer</strong>  : quelques minutes suffisent pour que tous vos PC, VPS et Raspberry Pi “se voient” sur un même LAN virtuel. Il faut juste garder en tête que cette simplicité dépend d’une plateforme tierce (sauf à se lancer dans l’auto-hébergement avancé).</p>
+</li>
+</ul>
+<h2 id="deploiement-et-contraintes-nat-cloud-vs-self-host-etc"><strong>Déploiement et contraintes (NAT, cloud vs self-host, etc.)</strong><a class="headerlink" href="#deploiement-et-contraintes-nat-cloud-vs-self-host-etc" title="Permanent link">&para;</a></h2>
+<p><strong>Accès depuis Internet / NAT :</strong>  C’est un point critique en pratique : comment la solution traverse-t-elle les NAT et firewalls pour établir la connexion ?</p>
+<ul>
+<li>
+<p><em>Twingate</em>  : Aucun pré-requis réseau, c’est l’atout majeur. Les connecteurs établissent d’eux-mêmes des connexions sortantes vers le cloud Twingate, et les clients utilisateurs font de même. La coordination cloud leur fait ensuite tenter un lien direct P2P. Si le NAT de part et d’autre le permet (UPnP, UDP hole punching), le trafic passe directement. Sinon, il transitera chiffré via un  <strong>Relay</strong>  Twingate (serveur de rebond)  . Dans tous les cas, le fonctionnement est  <strong>transparent</strong>  : même derrière plusieurs NAT ou en 4G, l’utilisateur n’a rien à configurer sur son routeur. Ceci est idéal en environnement  <strong>CGNAT</strong>  ou lorsque l’on n’a pas la main sur la box (par ex. accéder à son réseau domestique depuis l’extérieur sans pouvoir ouvrir de ports). L’autre face de la médaille est la  <strong>dépendance cloud</strong>  déjà évoquée : sans Internet ou si Twingate (le service) a une panne, le VPN ne peut s’établir, puisqu’il n’y a pas de chemin alternatif.</p>
+</li>
+<li>
+<p><em>WireGuard</em>  : En version auto-hébergée, il nécessite au moins  <strong>un point d’accès réseau publiquement joignable</strong>. Typiquement, on configure son serveur WireGuard sur un réseau avec IP publique (ou on fait un  <strong>port forwarding</strong>sur sa box vers le serveur). Le protocole étant UDP uniquement, il faut que le client puisse envoyer des paquets UDP au serveur. Si votre homelab est derrière un NAT de votre FAI, il faudra soit utiliser un relais (par ex. un VPS intermédiaire ayant une IP publique), soit opter pour des solutions type Tailscale qui basculent sur des relais STUN/TURN. Par défaut, WireGuard ne fait pas de traversée de NAT sophistiquée : il repose sur la simplicité, donc sans configuration manuelle, un client  <strong>ne peut pas</strong>  se connecter à un serveur qui n’a pas de port accessible. Une fois la connexion établie, toutefois, WireGuard gère bien les changements d’adresse côté client (roaming) : on peut passer du Wi-Fi à la 4G, l’adresse IP du client change mais le tunnel reste établi sans reconnection manuelle. Dans un contexte homelab, beaucoup utilisent un nom de domaine  <strong>DDNS</strong>  pour joindre le serveur (puisque l’IP publique peut changer)  . Il faut aussi veiller aux conflits de sous-réseaux privés (si votre LAN est en 192.168.1.0/24 comme beaucoup, et que vous vous connectez depuis un Wi-Fi public ou autre en 192.168.1.x, il peut y avoir chevauchement d’IPs – une astuce est d’utiliser un subnet non standard pour le LAN et/ou le VPN)  . En résumé,  <strong>WireGuard nécessite de la configuration réseau</strong>  (port UDP ouvert, adresse IP ou DDNS connu) – ce qui est très faisable sur un routeur grand public, mais constitue une contrainte par rapport aux solutions “cloud”.</p>
+</li>
+<li>
+<p><em>ZeroTier</em>  : Comme Twingate, ZeroTier excelle dans la traversée de NAT. Chaque client sortant contacte le service central et les autres pairs, et la magie du  <strong>hole punching</strong>  fait le reste. Même derrière plusieurs couches de NAT, ZeroTier arrive généralement à établir un chemin P2P entre deux nœuds  . En cas d’échec, les paquets passent par un  <em>relay</em>  (appelé “moon”) – ce qui peut augmenter la latence, mais garantit la connectivité. Aucune configuration de port n’est nécessaire dans 99% des cas. C’est pour cela que ZeroTier (comme Tailscale) est prisé :  <strong>aucune intervention sur le réseau</strong>  n’est requise, on peut l’utiliser sur un réseau d’entreprise verrouillé ou un hotspot mobile sans souci. Concernant le  <strong>cloud vs self-host</strong>  : par défaut, on utilise les serveurs de ZeroTier Inc. pour tout (authentification des membres, routage initial). Il est possible de déployer son propre contrôleur (appelé  <em>ZeroTier Central</em>  self-hosted) pour gérer les membres localement – cela enlève la limite de 50 et vous donne le contrôle sur les attributions d’adresses  . Même dans ce cas, cependant, la fonction des serveurs racine (planet) pour aider à la découverte P2P reste utile – on peut aussi les self-héberger mais c’est rare dans la communauté homelab. La  <strong>contrainte principale</strong>  avec ZeroTier peut être  <strong>la confiance dans l’infrastructure externe</strong>  et potentiellement les limites du plan gratuit (nombre de appareils). Mais pour un usage personnel (quelques PCs, téléphone, VPS…), la version gratuite suffit largement.</p>
+</li>
+</ul>
+<p><strong>Écosystème et support :</strong>  Twingate étant une solution commerciale récente, on trouve surtout du support via leur documentation et quelques tutoriels officiels (ou vidéos de youtubers). La communauté homelab commence à en parler, mais c’est moins répandu que WireGuard ou ZeroTier. WireGuard, au contraire, a une  <strong>large communauté open-source</strong>  : de nombreux guides, et il est inclus par défaut dans des projets comme  <strong>OPNsense/pfSense, OpenWrt</strong>, etc. ZeroTier aussi a une communauté active (forums, subreddit) et est intégré dans des produits (par ex. certains routeurs Netgear ou QNAP proposent ZeroTier). Selon votre affinité, il peut être plus facile de trouver de l’aide sur WireGuard (générique) ou ZeroTier (community) que sur Twingate (solution propriétaire), bien que Twingate offre un support client pour ses utilisateurs.</p>
+<h2 id="cas-dusage-dans-un-homelab"><strong>Cas d’usage dans un homelab</strong><a class="headerlink" href="#cas-dusage-dans-un-homelab" title="Permanent link">&para;</a></h2>
+<p>Voyons comment chaque solution s’applique à des scénarios typiques de  <strong>homelab</strong>  : accès à son LAN domestique depuis l’extérieur, interconnexion de deux sites distants, ou encore accès à un segment réseau particulier (VLAN) du lab.</p>
+<h3 id="acces-distant-securise-au-lan-personnel"><strong>Accès distant sécurisé au LAN personnel</strong><a class="headerlink" href="#acces-distant-securise-au-lan-personnel" title="Permanent link">&para;</a></h3>
+<p><em>Schéma – Exemple d’accès distant à un réseau local via un VPN.</em>  Dans ce cas d’usage, on souhaite pouvoir accéder à distance aux appareils de son réseau local (PC, NAS, domotique…) comme si l’on était chez soi, mais  <strong>sans exposer</strong>  ces services directement sur Internet. Traditionnellement, un VPN permet d’obtenir une IP du LAN ou d’y router son trafic.</p>
+<ul>
+<li>
+<p><em>Avec WireGuard:</em>  on déploie un serveur WireGuard sur le LAN (par ex. sur le routeur ou un Raspberry Pi). Ce serveur est configuré avec une IP virtuelle (ex: 10.0.0.1) et on lui assigne la route du LAN (par ex. 192.168.1.0/24) dans la section AllowedIPs de ses pairs. Côté client, on configure une IP virtuelle (ex: 10.0.0.2) et on autorise le trafic vers le LAN via le tunnel. Une fois connecté, le client peut joindre n’importe quelle machine du LAN en 192.168.1.x. Il faut s’assurer que le serveur fait du  <strong>forwarding IP</strong>  et du NAT correct (pour que les paquets du VPN atteignent le LAN et que les réponses reviennent)  . En pratique, cela fonctionne très bien : depuis son téléphone ou son laptop, on active WireGuard et on peut par exemple se connecter à l’interface de son NAS (par son IP locale) ou à son serveur domotique. La latence ajoutée est minimale (quelques ms) et le débit dépendra de sa connexion Internet et des points évoqués plus haut (performance). L’inconvénient potentiel est qu’il faut  <strong>ouvrir/forwarder le port UDP</strong>  du serveur – on veille donc à choisir un port non standard et à utiliser éventuellement un DNS dynamique pour le joindre. Mais une fois en place, c’est une solution fiable et sans abonnement.</p>
+</li>
+<li>
+<p><em>Avec ZeroTier:</em>  on installe le client ZeroTier sur au moins une machine du LAN (idéalement le routeur ou un serveur allumé en permanence). On peut aussi l’installer sur plusieurs machines (NAS, PC…) si on veut accéder à chacune directement. Supposons qu’on crée un réseau ZeroTier et que chaque appareil obtient une IP virtuelle (ex: 10.10.0.x). Si on a mis ZeroTier sur le routeur, on peut définir cette machine comme  <em>routeur géré</em>  pour le LAN : ainsi, quand le laptop à distance veut joindre 192.168.1.50, il enverra le trafic via ZeroTier à l’IP virtuelle du routeur, qui le routera dans le LAN. Alternativement, on peut mettre ZeroTier directement sur les cibles (NAS, etc.), et alors le laptop y accédera via leur IP ZeroTier (sans même passer par 192.168.1.x). ZeroTier offre donc  <strong>beaucoup de souplesse</strong>  : on peut recréer un  <strong>LAN virtuel unique</strong>  englobant toutes les machines locales et le client distant. Cela évite de toucher au routeur ou aux paramètres réseau local. En termes de sécurité, par défaut, une fois connecté au même réseau ZeroTier, le laptop pourra scanner et se connecter aux appareils joints sur ce réseau virtuel (qui correspondent aux appareils du LAN qu’on a mis sur ZeroTier). Il est recommandé d’activer des règles si l’on veut limiter cela, mais dans un homelab personnel avec peu de nœuds, ce n’est généralement pas un souci. ZeroTier a l’avantage de ne nécessiter aucune IP publique ni port, donc c’est  <strong>particulièrement indiqué si on ne peut pas faire de port-forwarding</strong>  (par exemple logement collectif avec routeur imposé).</p>
+</li>
+<li>
+<p><em>Avec Twingate:</em>  on déploie un  <strong>Connector Twingate</strong>  sur le LAN (par ex. sur un petit VM ou Docker sur le NAS). Dans l’interface Twingate, on déclare les  <strong>ressources</strong>  auxquelles on veut accéder : par exemple “NAS Web UI” = IP 192.168.1.50 port 5000, “Serveur Domotique SSH” = 192.168.1.100 port 22, etc. On peut aussi exposer toute une plage (par ex. 192.168.1.0/24) d’un coup, mais ce n’est pas l’esprit Zero Trust – on choisit plutôt précisément ce qui est nécessaire. Ensuite, sur le client distant (PC portable, smartphone), l’utilisateur installe le client Twingate, s’authentifie via le SSO configuré, et voit ces ressources. S’il tente d’accéder à 192.168.1.50:5000 dans son navigateur, le client Twingate intercepte la requête DNS/IP et établit le tunnel automatiquement vers le Connector, qui la relaie au NAS  .  <strong>Aucun port</strong>  n’a été ouvert sur le routeur du LAN, et pourtant l’accès se fait de manière sécurisée. L’expérience est très transparente : l’utilisateur n’a pas besoin d’activer/désactiver le VPN, Twingate établit à la demande la connexion quand on accède à une ressource protégée. Pour un homelab, cela signifie qu’on peut garder tous ses services locaux fermés sur Internet, et y accéder uniquement via le client Twingate. C’est probablement la solution offrant le plus de  <strong>finesse</strong>  (on peut autoriser par utilisateur tel service et pas tel autre), au prix d’une dépendance au cloud et d’un setup initial un peu plus lourd que WireGuard/ZeroTier pour un usage perso très simple. À noter que Twingate ne “met pas le client sur le LAN” : par défaut, on ne peut  <strong>pas pinguer</strong>  n’importe quelle IP du LAN ou parcourir le réseau Windows – on peut seulement contacter les ressources explicitement définies (mais on peut en définir beaucoup si on veut émuler un accès LAN complet).</p>
+</li>
+</ul>
+<h3 id="interconnexion-de-sites-site-to-site"><strong>Interconnexion de sites (site-to-site)</strong><a class="headerlink" href="#interconnexion-de-sites-site-to-site" title="Permanent link">&para;</a></h3>
+<p>Ici, le besoin est de relier  <strong>deux réseaux distincts</strong>  (par ex. le réseau de la maison et celui du bureau, ou deux labs de test) de manière permanente, pour que les machines de chaque côté puissent communiquer. On parle souvent de  <strong>VPN site-à-site</strong>.</p>
+<ul>
+<li>
+<p><em>WireGuard :</em>  On peut configurer un tunnel WireGuard entre deux routeurs (ou deux serveurs Linux) – c’est tout à fait faisable et similaire à IPsec site-to-site en plus simple. Il suffit que chaque côté ait un peer WireGuard avec l’AllowedIPs configuré sur le subnet de l’autre. Par exemple, le routeur A (maison) aura AllowedIPs = 10.0.0.0/24 (le réseau du site B), et le routeur B (bureau) aura AllowedIPs = 192.168.1.0/24 (le LAN du site A). Ainsi, chaque routeur acheminera vers le tunnel tout trafic destiné au réseau opposé. Il faut qu’au moins un des deux ait une IP publique ou un port ouvert (comme pour l’accès distant). Une fois en place, c’est très stable : les deux sites sont reliés en permanence, et les PC de chaque côté peuvent se pinguer, accéder aux services etc. On peut même faire du  <strong>maillage</strong>  en configurant plusieurs pairs (ex : A vers B, A vers C, B vers C…). Cependant, la config devient manuelle pour chaque lien (pas d’autorouting dynamique). Dans un homelab, un site-to-site WireGuard est utile si par exemple on a un serveur chez un ami ou sur un VPS et qu’on veut l’intégrer à son réseau local.</p>
+</li>
+<li>
+<p><em>ZeroTier :</em>  ZeroTier simplifie énormément le site-to-site. En fait, si on installe ZeroTier sur un routeur ou une machine de chaque site et qu’on les met dans le même réseau virtuel, ils se comporteront comme s’ils étaient sur un switch virtuel commun. Concrètement, on pourrait mettre  <strong>tous les appareils de deux sites sur le même réseau ZeroTier</strong>  et ils seraient alors tous interconnectés (attention quand même aux plages IP qui se chevauchent – il peut être préférable alors de garder des sous-réseaux distincts et d’utiliser le routage ZeroTier plutôt qu’un pont L2 global). ZeroTier permet par exemple de déclarer que le membre “Routeur_SiteA” route le subnet 192.168.1.0/24 et que “Routeur_SiteB” route le 10.0.0.0/24 ; ensuite, tout appareil du réseau virtuel pourra atteindre 192.168.1.x (via SiteA) ou 10.0.0.x (via SiteB). C’est très pratique pour fédérer plusieurs environnements. La  <strong>topologie mesh</strong>  fait que même si SiteA parle à SiteB, ils tenteront une connexion directe. S’il y a un troisième site C dans le même ZeroTier, les paquets de A vers C iront soit direct, soit via relais si nécessaire, indépendamment de B. Comparé à WireGuard, ZeroTier évite de configurer N tunnels pour N sites – tout se passe dans un  <strong>seul réseau</strong>. Cette souplesse s’accompagne de la même considération de sécurité : par défaut, tous les sites peuvent tout voir (donc on aura soin de segmenter avec des règles si besoin de limitation).</p>
+</li>
+<li>
+<p><em>Twingate :</em>  Twingate n’est pas conçu à la base pour du site-to-site “LAN merge”. C’est davantage un modèle accès utilisateur-serveur. Néanmoins, on peut l’utiliser pour relier deux réseaux si on approche le problème différemment. Par exemple, supposons deux sites (A et B) avec chacun des serveurs. Si un serveur du site B a besoin d’accéder à un service du site A, on pourrait installer un  <strong>Client Twingate headless</strong>  sur ce serveur B (Twingate supporte les clients Linux sans interface, pour des cas d’usage service-to-service) et autoriser ce client à la ressource du site A. Ainsi le serveur B pourrait consommer une API ou une base de A via Twingate. Mais cela reste un accès ponctuel d’une machine à une autre. Il n’y a pas de moyen facile de “fondre” deux LANs entiers avec Twingate, puisque chaque ressource doit être définie. Théoriquement on pourrait définir la ressource “réseau A entier = 192.168.1.0/24” et connecter un client sur le routeur B… mais Twingate n’est pas prévu pour transporter tout un sous-réseau (pas de mode “subnet router” multiple dynamique comme Tailscale par ex. – du moins pas gratuitement). Donc pour un vrai site-to-site permanent, Twingate n’est pas le meilleur choix. Il vaut mieux dans ce cas se tourner vers WireGuard ou ZeroTier, voire utiliser Tailscale qui permet des routeurs de sous-réseaux multiples facilement. Twingate brille vraiment en  <em>remote access</em>  pour clients nomades ou en segmentation d’accès, plus qu’en interconnexion de deux infrastructures réseau.</p>
+</li>
+</ul>
+<h3 id="acces-a-un-vlan-reseau-specifique"><strong>Accès à un VLAN / réseau spécifique</strong><a class="headerlink" href="#acces-a-un-vlan-reseau-specifique" title="Permanent link">&para;</a></h3>
+<p>Beaucoup de homelabs segmentent leur réseau en VLAN (par exemple un VLAN IoT, un VLAN lab, un VLAN stockage…). Le défi est alors :  <strong>comment accéder à un VLAN particulier à distance</strong>  ?</p>
+<ul>
+<li>
+<p><em>WireGuard :</em>  Il peut transporter n’importe quel trafic IP que le serveur voit. Si le serveur WG est sur un routeur qui connaît tous les VLAN, il suffit de lui ajouter les routes de ces VLAN dans la config et il les routera pour le client. Par exemple,  AllowedIPs = 192.168.10.0/24  pour VLAN10, etc., et le routeur enverra ces paquets sur le bon VLAN. Si le serveur WG n’a accès qu’à un VLAN (ex: on l’a installé directement sur un NAS dans le VLAN IoT), alors par défaut il ne voit que ce VLAN – ce qui peut être un moyen simple de cloisonner l’accès : ce VPN ne donne accès qu’aux IoT. Il est aussi possible de déployer  <strong>plusieurs instances WireGuard</strong>  – par exemple une pour chaque VLAN critique, avec des ports distincts – et ainsi attribuer aux utilisateurs le VPN correspondant à ce qu’ils doivent atteindre. C’est un peu lourd, mais ça fonctionne. Notons que WireGuard est purement L3, il ne véhiculera pas vos balises VLAN ou du broadcast DHCP par exemple. Mais pour accéder à un équipement VLAN depuis l’extérieur, c’est très efficace.</p>
+</li>
+<li>
+<p><em>ZeroTier :</em>  ZeroTier opère par défaut au niveau 2 sur son réseau virtuel, ce qui signifie qu’il peut même  <strong>recréer un VLAN</strong>  sur Internet. On peut configurer un pont L2 entre un VLAN local et le réseau ZeroTier : par exemple, un petit Raspberry Pi dans le VLAN IoT qui joint le ZeroTier et qu’on configure en bridge avec l’interface VLAN locale. Ainsi, tout appareil distant connecté au même ZeroTier est en réalité membre du VLAN IoT : il tirera une IP du DHCP IoT, etc., comme s’il était directement branché au switch du VLAN (c’est documenté dans les guides ZeroTier, cette configuration de bridge L2)  . Cela permet un accès  <strong>transparent</strong>  comme si on y était – utile pour découvrir un équipement, utiliser des protocoles non routables, etc. En alternative plus simple, on peut laisser ZeroTier en L3 et déclarer via les routes managées que tel membre (un routeur/Pi) route le VLAN IoT. Alors les clients ZeroTier peuvent joindre les IP du VLAN IoT via ce membre routeur. C’est un peu comme le site-to-site mentionné, appliqué à un VLAN spécifique. ZeroTier étant très flexible, c’est probablement la solution la plus adaptée si l’on veut  <strong>se “téléporter” dans un VLAN</strong>  : soit en pont L2 si vraiment nécessaire, soit en routage L3 sans effort de config sur le routeur principal.</p>
+</li>
+<li>
+<p><em>Twingate :</em>  On peut tout simplement déployer un Connector dans le VLAN ciblé (il suffit qu’il ait une IP dedans) et déclarer les ressources voulues. Par exemple, si on a un VLAN “Caméras” isolé, on peut mettre un Connector sur un petit host dans ce VLAN et autoriser l’accès aux flux RTSP ou à l’NVR via Twingate. Twingate n’a pas conscience des VLAN, juste des IP/ports, donc ça revient à “exposer” proprement ce qu’on veut de ce segment. Il n’y a pas de possibilité d’envoyer du broadcast ou d’accéder à l’ensemble du segment d’un coup sans le définir (bien sûr, on  <em>pourrait</em>  définir une ressource 192.168.20.0/24 via Twingate – tous ports, ce qui reviendrait à ouvrir le VLAN entier, mais ce n’est pas l’usage recommandé). L’approche Twingate offre une sécurité maximale (on ne donne accès qu’à un service précis du VLAN sensible, par ex. le flux vidéo d’une caméra, et rien d’autre), au prix de ne pas pouvoir utiliser certaines fonctions réseau (MDNS, découverte locales) si elles ne sont pas relayées via un proxy applicatif.</p>
+</li>
+</ul>
+<p>En somme, pour un homelab multi-VLAN :  <strong>ZeroTier</strong>  permet d’unifier les segments facilement dans un overlay (voire émuler le VLAN lui-même en overlay),  <strong>WireGuard</strong>  peut être utilisé soit via un serveur central connaissant tout (moins segmenté), soit via plusieurs tunnels dédiés, et  <strong>Twingate</strong>  permettra d’atteindre des équipements spécifiques dans chaque VLAN de manière très verrouillée (connecteurs multiples), plutôt que de fondre les VLAN ensemble.</p>
+<h2 id="conclusion-et-tableau-recapitulatif"><strong>Conclusion et tableau récapitulatif</strong><a class="headerlink" href="#conclusion-et-tableau-recapitulatif" title="Permanent link">&para;</a></h2>
+<p>En conclusion, ces trois solutions répondent à des besoins de nature un peu différente, et le choix dépendra de vos priorités en termes de  <strong>contrôle, simplicité et sécurité</strong>  :</p>
+<ul>
+<li>
+<p><strong>Twingate</strong>  : Solution moderne  <strong>Zero Trust</strong>  orientée entreprise, offrant un  <strong>contrôle granulaire</strong>  des accès et une intégration SSO/MFA poussée. Idéale si la  <strong>sécurité fine</strong>  est primordiale (accès par application, journaux détaillés) et si l’on veut  <em>zéro exposition réseau</em>. Très facile à déployer (techniquement) sans configurer de réseau, mais nécessite de faire confiance à un  <strong>service cloud</strong>  externe. Pour un homelab, Twingate peut être un peu complexe/par-dessus si on n’a pas besoin d’autant de segmentation, mais c’est un excellent moyen d’accéder à quelques services sensibles sans rien ouvrir sur Internet. Performance et UX excellentes (client léger, presque pas de perte de débit  ). Coût : gratuit pour une petite utilisation, payant au-delà.</p>
+</li>
+<li>
+<p><strong>WireGuard</strong>  : Solution VPN  <strong>classique</strong>  (L3) orientée performance et minimalisme. Parfaite si vous voulez une  <strong>maîtrise totale</strong>  en self-hosted, sans dépendance cloud, et que ça ne vous dérange pas de mettre un peu les mains dans la config. C’est l’option la plus  <strong>efficace</strong>  en termes de débit et latence, bien adaptée pour interconnecter deux sites ou accéder à tout un LAN de façon transparente. Cependant, il faudra gérer vous-même tout ce qui est gestion utilisateurs/clé, firewall, etc. – WireGuard fournit le tunnel, à vous de bâtir autour. En homelab c’est souvent un premier choix pour accéder à son réseau depuis l’extérieur, à condition de pouvoir  <em>forwarder</em>  un port sur sa box. En environnement NAT compliqué, il peut nécessiter des solutions tierces. C’est entièrement gratuit et open-source.</p>
+</li>
+<li>
+<p><strong>ZeroTier</strong>  : Solution  <strong>overlay P2P</strong>  orientée  <strong>commodité</strong>  et connectivité transparente. Idéale si vous voulez que “tout fonctionne hors de la boîte” à travers Internet et interconnecter plusieurs appareils/sites sans réfléchir aux routes. ZeroTier se comporte comme un  <strong>commutateur virtuel global</strong>  – très pratique pour faire communiquer des conteneurs, VMs, machines réparties sur le cloud et la maison, etc. Sa mise en place est enfantine, ce qui en fait un favori des homelabers qui cherchent la simplicité. Il offre moins de granularité que Twingate (par défaut c’est comme un grand LAN), mais on peut y rajouter des règles si nécessaire. La dépendance à un service central est à garder en tête, même si techniquement tout est chiffré et distribué. En usage gratuit personnel, c’est souvent le plus  <strong>simple</strong>  pour accéder à son homelab sans toucher à la box, ou pour connecter plusieurs homelabs entre amis.</p>
+</li>
+</ul>
+<p>En résumé,  <strong>WireGuard</strong>  convient si vous cherchez la  <strong>performance brute et le contrôle</strong>  (et que ça ne vous dérange pas d’automatiser/écrire quelques scripts si besoin),  <strong>ZeroTier</strong>  brille par la  <strong>facilité et la connectivité instantanée</strong>  d’un réseau virtuel (idéal multi-sites ou quand on ne peut pas ouvrir de ports), et  <strong>Twingate</strong>  apporte la  <strong>sécurité zero-trust</strong>  maximale et l’intégration d’entreprise (avec un déploiement simplifié mais cloud). Chacune a ses atouts dans un homelab selon que vous privilégiez la  <strong>sécurité granulaire</strong>, la  <strong>simplicité plug-and-play</strong>  ou la  <strong>sobriété efficiente</strong>. Les retours d’expérience montrent d’ailleurs que certains combinent les outils : par ex. utiliser Twingate pour les services critiques et WireGuard pour un usage plus général, ou ZeroTier pour interconnecter des sites et WireGuard pour accéder à un seul site – il n’y a pas de solution unique, mais un ensemble d’outils à choisir selon vos besoins spécifiques  .</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

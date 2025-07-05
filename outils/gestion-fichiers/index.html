@@ -1,0 +1,1575 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../../reseau/torrent-vpn/">
+      
+      
+        <link rel="next" href="../gestion-mots-de-passe/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Gestion de fichiers - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gestion-de-fichiers-auto-hebergee" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Gestion de fichiers
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#comparaison-technique-des-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparaison technique des solutions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-avec-differents-nas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration avec différents NAS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-en-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage en homelab
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-et-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation et intégration
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gestion-de-fichiers-auto-hebergee"><strong>Gestion de fichiers auto-hébergée</strong><a class="headerlink" href="#gestion-de-fichiers-auto-hebergee" title="Permanent link">&para;</a></h1>
+<p>Les solutions de gestion de fichiers self-hosted permettent d’accéder et partager ses documents via une interface web en conservant ses données chez soi. Parmi les plus populaires,  <strong>File Browser</strong>  (un gestionnaire de fichiers web léger) et  <strong>Nextcloud Files</strong>  (une suite complète de sync &amp; partage) se distinguent. D’autres alternatives existent (Seafile, Pydio Cells, FileRun, Filestash, etc.) offrant chacune des fonctionnalités particulières. L’objectif est de comparer ces solutions selon leur interface, permissions, synchronisation, accès distant et protocoles supportés, en tenant compte de l’usage en « homelab » (stockage perso, partage local/externe, sauvegardes, multi-utilisateur) et des aspects de sécurité (chiffrement, audit, SSO, HTTPS, droits granulaires).</p>
+<h2 id="comparaison-technique-des-solutions"><strong>Comparaison technique des solutions</strong><a class="headerlink" href="#comparaison-technique-des-solutions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>File Browser</strong>  : c’est un gestionnaire de fichiers web simple et rapide  . On l’installe sur un serveur en pointant un répertoire racine (filebrowser -r /chemin/vers/fichiers), et on accède aux fichiers via une interface web épurée. Il permet de  <em>téléverser, supprimer, prévisualiser, renommer et modifier</em>  les fichiers, avec gestion multi-utilisateurs  (avec rôles Admin/User). Il n’inclut pas de clients de synchronisation automatique : tout passe par l’interface HTTP. File Browser prend en charge l’édition de fichiers en ligne et des commandes personnalisées, mais reste limité à ses propres fonctionnalités. Il ne propose pas de chiffrement côté serveur ni d’audit avancé (log minimal). </p>
+</li>
+<li>
+<p><strong>Nextcloud Files</strong>  : c’est une plateforme cloud complète (sync &amp; share) qui propose une  <em>interface web moderne</em>, des clients de synchronisation (Windows/Mac/Linux) et des applis mobiles  . Elle offre la  <strong>collaboration en temps réel</strong>(édition de documents, notes, etc.), la recherche unifiée et le partage sécurisé. Nextcloud supporte de nombreux protocoles et intégrations : on peut accéder aux fichiers via WebDAV, FTP, SMB/CIFS, NFS, SharePoint, ou en stockant les données sur des stockages externes (S3, OpenStack Swift, etc.)  . En termes de permissions, Nextcloud permet des partages publics avec mot de passe/expiration, ou privés aux utilisateurs/groupes, avec droits (lecture/écriture/commentaire) très granulaires  . Côté sécurité, Nextcloud inclut des  <strong>fonctionnalités de cryptage puissant</strong>(chiffrement côté serveur et chiffrement de bout-en-bout pour les partages sensibles)  , ainsi que des contrôles d’accès aux fichiers basés sur des règles avancées et des protections anti-ransomware/brute-force  . Des apps Nextcloud permettent d’ajouter SSO/SAML, LDAP/AD et MFA pour l’authentification.</p>
+</li>
+<li>
+<p><strong>Autres solutions</strong>  : on trouve notamment  <strong>Pydio Cells</strong>  (plateforme de partage de fichiers orientée entreprise) et  <strong>Seafile</strong>. Pydio se veut « privacy-friendly » et permet aux équipes de travailler ensemble sur un cloud interne  . Seafile est axé synchronisation et partage fiable, avec chiffrement des bibliothèques et travail en groupe  . Ces solutions incluent généralement leurs propres clients desktop/mobiles et protocoles (par ex. WebDAV pour Pydio).  <strong>Filestash</strong>  (anciennement Nuage) est un client web multi-protocoles (FTP/SFTP/S3/WebDAV/Git, etc.) qui sert à monter diverses sources de fichiers.  <strong>FileRun</strong>  est un gestionnaire Web (type Google Drive) avec base de données, partage de liens et visionneuse intégrée. Chacune diffère par la richesse fonctionnelle et l’ergonomie : Nextcloud propose le plus de fonctionnalités (agenda, mail, chat, bureautique en ligne…), File Browser offre la plus grande légèreté et simplicité, Pydio et Seafile se positionnent sur la collaboration d’équipe. L’utilisation de l’une ou l’autre dépendra du besoin : simple partage de fichiers (File Browser), cloud personnel complet (Nextcloud), synchronisation de dossiers collaboratifs (Seafile) ou intégration multi-protocoles (Filestash).</p>
+</li>
+</ul>
+<h2 id="integration-avec-differents-nas"><strong>Intégration avec différents NAS</strong><a class="headerlink" href="#integration-avec-differents-nas" title="Permanent link">&para;</a></h2>
+<p>Dans un homelab on utilise souvent un NAS (Network Attached Storage) pour centraliser les données. Les principales plateformes NAS (Synology, QNAP, TrueNAS, OpenMediaVault, Unraid, etc.) proposent des outils de gestion de fichiers et des protocoles variés. Par exemple,  <strong>Synology DSM</strong>  inclut  <em>File Station</em>, un gestionnaire centralisé accessible par navigateur, et  <strong>Synology Drive</strong>  pour la synchronisation. Les fichiers du NAS sont exposés via les protocoles  <strong>SMB, NFS, AFP, FTP et WebDAV</strong>  , rendant l’accès possible depuis Windows, macOS ou mobiles. Synology permet de configurer des partages publics ou privés avec mots de passe, expiration, quotas et ACLs fines  . De même,  <strong>QNAP</strong>  offre File Station avec des fonctionnalités proches.</p>
+<p>D’autres OS de NAS (« DIY NAS » sur serveurs génériques) supportent aussi ces logiciels : par exemple,  <strong>OpenMediaVault (OMV)</strong>  sous Linux ou  <strong>TrueNAS</strong>  (FreeBSD) permettent d’installer Nextcloud ou File Browser via Docker/jails. On peut héberger un conteneur Nextcloud sur un NAS Synology, QNAP (via Container Station) ou sur un système comme OMV grâce au plugin Docker (« OMV-Extras ») ou via LXC sur Proxmox/TrueNAS SCALE. Les NAS libres offrent souvent des plugins ou images pour Nextcloud/OnlyOffice. Ainsi, on peut soit utiliser le gestionnaire natif du NAS, soit déployer l’application tierce (Nextcloud, FileBrowser, etc.) sur le même matériel. En résumé, quel que soit le type de NAS, les fichiers peuvent être servis directement (partage SMB/NFS traditionnel) et/ou via une solution web auto-hébergée qui profite alors du stockage du NAS.</p>
+<h2 id="cas-dusage-en-homelab"><strong>Cas d’usage en homelab</strong><a class="headerlink" href="#cas-dusage-en-homelab" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Stockage personnel et synchronisation</strong>  : Nextcloud est idéal pour une « private cloud » maison – chaque appareil peut synchroniser des dossiers (photos, documents) vers le serveur Nextcloud, offrant un backup et une disponibilité multi-appareils  . File Browser peut servir de dépôt central simple, auquel on charge manuellement les fichiers via l’interface. Dans les deux cas, on accède à ses données depuis le réseau local ou Internet (avec des DNS dynamiques ou domaine personnalisé).</p>
+</li>
+<li>
+<p><strong>Partage local et externe</strong>  : on peut partager des fichiers avec la famille ou des collaborateurs. Nextcloud permet de créer des liens publics protégés (mot de passe, expiration) ou de partager directement avec d’autres comptes Nextcloud, très pratique pour échanger des gros fichiers ou dossiers. File Browser offre un partage plus basique (compte utilisateur dédié, liens directs en lecture seule). Dans un réseau local (LAN), on peut simplement mapper le stockage réseau (SMB/NFS) ; pour l’extérieur, on ouvrira le port HTTPS ou via un reverse-proxy (voir sécurité)  .</p>
+</li>
+<li>
+<p><strong>Sauvegardes</strong>  : on peut sauvegarder les données du NAS vers Nextcloud (utiliser des tâches cron, rclone ou l’app «External storage» de Nextcloud pour répliquer un partage réseau vers Nextcloud). Nextcloud propose aussi une app de sauvegarde pair-à-pair (Backups Nextcloud) permettant de dupliquer un Nextcloud chez un ami. File Browser ne gère pas explicitement de sauvegardes, mais on peut sauvegarder le répertoire de fichiers via des outils externes (rsync, BorgBackup, Snapshots ZFS).</p>
+</li>
+<li>
+<p><strong>Multi-utilisateur et collaboration</strong>  : Nextcloud gère nativement plusieurs utilisateurs et groupes avec quotas et droits différents, idéal pour un homelab familial ou associatif. On peut attribuer des permissions sur dossiers partagés, et avoir différents comptes (invités, experts, etc.). File Browser supporte également plusieurs utilisateurs (un admin et des utilisateurs)  , mais sans la granularité de Nextcloud. D’autres solutions comme Seafile ajoutent le concept de « bibliothèques » partagées en groupe.</p>
+</li>
+</ul>
+<h2 id="securite"><strong>Sécurité</strong><a class="headerlink" href="#securite" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Chiffrement</strong>  : Nextcloud propose le chiffrement côté serveur (de bout en bout pour certains partages sensibles via «File Drop»). L’interface web permet d’activer le chiffrement des données au repos (soit en stockant sur serveur chiffré, soit en E2EE pour les fichiers partagés)  . File Browser ne chiffre pas les fichiers, on s’appuie donc sur le chiffrement au niveau du disque ou volume (ex. LUKS sur le NAS) et sur le HTTPS.</p>
+</li>
+<li>
+<p><strong>Accès réseau sécurisé (HTTPS / Reverse proxy)</strong>  : Il est impératif d’utiliser HTTPS pour protéger les échanges. On place typiquement File Browser ou Nextcloud derrière un reverse-proxy (Nginx, Traefik, Caddy…) fournissant TLS/SSL (certificats Let’s Encrypt). Dans la DMZ du homelab (voir diagramme réseau), on autorise seulement le port 443 vers le serveur de fichiers et on filtre selon les VLAN. Grâce au proxy, on peut également configurer une authentification avancée (Auth JWT, mTLS) si nécessaire.</p>
+</li>
+<li>
+<p><strong>Contrôles d’accès et permissions granulaires</strong>  : Nextcloud permet d’affiner les droits (lecture/écriture/commentaire) à l’échelle du fichier ou dossier partagé  . On peut mettre des ACL Windows/NFS, limiter certains utilisateurs ou groupes, définir des quotas. File Browser se limite aux droits d’un répertoire global par utilisateur (pas de partage public natif, pas d’ACL complexes). Les NAS eux-mêmes (Synology, TrueNAS…) intègrent des ACLs et peuvent protéger les partages par mot de passe.</p>
+</li>
+<li>
+<p><strong>Authentification centrale (SSO/LDAP)</strong>  : Nextcloud peut s’intégrer avec des annuaires LDAP/Active Directory pour gérer les utilisateurs, et des solutions SSO (SAML, OAuth) via apps externes  . Par exemple, on peut connecter Keycloak ou Authelia à Nextcloud. File Browser supporte l’authentification interne ou externe (OAuth ou LDAP possible via configuration). Ainsi, on peut centraliser les comptes sur un annuaire du homelab.</p>
+</li>
+<li>
+<p><strong>Audit et journaux</strong>  : Nextcloud génère des journaux détaillés (logs de connexion, de partage, etc.) pour vérifier les accès et détecter les anomalies. File Browser journalise de manière plus basique (activités d’upload/suppression). On peut compléter avec un SIEM local : par exemple, collecter les logs (via Filebeat/Logstash) du serveur Nextcloud ou du NAS pour les analyser (architecture ELK/Kibana). Le tout afin de détecter d’éventuels accès suspects ou compromissions.</p>
+</li>
+</ul>
+<h2 id="installation-et-integration"><strong>Installation et intégration</strong><a class="headerlink" href="#installation-et-integration" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Docker et conteneurs</strong>  : Pour faciliter le déploiement, la plupart de ces outils fournissent des images Docker officielles. Par exemple,  <em>Nextcloud All-in-One</em>  propose un conteneur unique (« AIO ») qui installe et configure Nextcloud ainsi que ses dépendances  . File Browser dispose aussi d’une image Docker prête à l’emploi  . On lancera ces conteneurs dans la DMZ ou sur l’hôte, en montant les volumes de données adéquats. Sous Proxmox ou TrueNAS Scale, on peut utiliser un conteneur LXC/VM ou un plugin intégré.</p>
+</li>
+<li>
+<p><strong>LXC / VM</strong>  : Si l’on utilise Proxmox ou TrueNAS, on peut héberger Nextcloud ou File Browser dans une machine virtuelle (avec Debian/Ubuntu) ou un conteneur LXC. Par exemple, on installe Docker dans la VM ou on déploie Nextcloud directement depuis les paquets officiels. Les images Docker sont pratiques, mais on peut aussi compiler/récupérer l’exécutable File Browser en binaire (Linux)  .</p>
+</li>
+<li>
+<p><strong>Reverse proxy et routage</strong>  : On configure un reverse proxy pour gérer le trafic HTTPS/HTTP. Par exemple, avec Nginx on redirige  https://files.mondomaine.fr  vers l’IP interne de Nextcloud, en gérant les certificats. Un reverse proxy peut également fournir un pare-feu applicatif (WAF) ou limiter les taux de connexion. Dans un script d’installation (comme le guide Nextcloud AIO), on voit souvent la commande  docker run … --publish 80:80 --publish 443:443 --publish 8080:8080, mais derrière il est courant d’inverser la polarité : le proxy frontal (port 443) redirige vers le port interne du conteneur  . Il faut configurer dans Nextcloud l’URL externe correcte et éventuellement les en-têtes de proxy (trusted_proxies).</p>
+</li>
+<li>
+<p><strong>Authentification et utilisateurs</strong>  : On créera d’abord un utilisateur administrateur (Nextcloud/AIO génère un mot de passe par défaut à récupérer dans les logs  ). Ensuite, on peut importer ou synchroniser les utilisateurs depuis LDAP/AD pour un accès SSO unique dans le homelab. L’authentification peut être renforcée (2FA, clé U2F, tokens OTP) surtout pour les accès web externes. Il est recommandé d’activer des mots de passe forts et de limiter les tentatives (Nextcloud gère la protection brute-force en natif  ).</p>
+</li>
+<li>
+<p><strong>Reverse proxy / Firewall (DMZ)</strong>  : Dans l’architecture réseau (voir schéma), on place les serveurs de fichiers dans la DMZ « Services » derrière le firewall (OPNsense). Le firewall ouvre les ports nécessaires (443/TCP, 80 pour redirections, 22 si besoin de SFTP) depuis l’Internet vers la DMZ, en isolant les autres VLAN (LAN perso, Lab). Cette configuration « neutre » limite les risques qu’un service compromis atteigne le LAN interne.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

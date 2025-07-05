@@ -1,0 +1,1560 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../../securite/segmentation/">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>ESP32 & capteurs - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#projet-diy-esp32-capteurs-de-temperature-et-mqtt" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ESP32 & capteurs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#capteurs-recommandes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Capteurs recommandés
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#programmation-de-lesp32-arduino-ide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Programmation de l’ESP32 (Arduino IDE)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#broker-mqtt-comparatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      Broker MQTT : comparatif
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-home-assistant-et-stockage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration Home Assistant et stockage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#homelab-vs-projet-autonome-iot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Homelab vs projet autonome IoT
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="projet-diy-esp32-capteurs-de-temperature-et-mqtt">Projet DIY ESP32 : capteurs de température et MQTT<a class="headerlink" href="#projet-diy-esp32-capteurs-de-temperature-et-mqtt" title="Permanent link">&para;</a></h1>
+<p>Nous allons construire un système IoT avec un ESP32, mesurant la température (et autres données) via divers capteurs, et transmettant ces mesures via MQTT. L’ESP32 se connecte au Wi-Fi et publie les données sur un  <em>broker</em>  MQTT (local ou cloud). Les données peuvent ensuite être exploitées dans un  <strong>homelab</strong>  (ex. Home Assistant, InfluxDB, Grafana) ou dans un environnement IoT autonome (services cloud). Ce guide détaille les capteurs recommandés, la programmation Arduino, le protocole MQTT et l’intégration avec Home Assistant/InfluxDB/Grafana.</p>
+<h2 id="capteurs-recommandes">Capteurs recommandés<a class="headerlink" href="#capteurs-recommandes" title="Permanent link">&para;</a></h2>
+<p>On privilégie des capteurs populaires et fiables pour domotique et IoT :</p>
+<ul>
+<li>
+<p><strong>DHT11 / DHT22</strong> : capteurs numériques de température et humidité. Très utilisés par les hobbyistes. Le DHT22 offre une plus grande plage de mesure et une meilleure résolution (jusqu’à ±0,5 °C de précision, –40 à +80 °C), tandis que le DHT11 est plus limité (0–50 °C, ±2 °C) mais moins cher. Ces capteurs intègrent un convertisseur analogique-numérique et délivrent directement des données numériques sur un seul fil (avec pull-up).</p>
+</li>
+<li>
+<p><strong>DS18B20</strong> : capteur de température numérique « 1-Wire », alimenté en 3,3–5 V. Il communique sur une seule broche de données plus la masse. Chaque DS18B20 dispose d’un identifiant unique 64 bit, ce qui permet de chaîner plusieurs sondes sur la même ligne numérique. C’est pratique pour multiplier les points de mesure (par exemple, eau, air, radiateurs) avec un seul GPIO.</p>
+</li>
+<li>
+<p><strong>BME280</strong> : capteur 3-en-1 mesurant pression atmosphérique, température et humidité. On l’interroge généralement en I2C (broches SDA/SCL), ce qui économise les broches GPIO. La mesure de pression permet d’estimer l’altitude, utile pour des stations météo ou l’optimisation du chauffage/ventilation. Ce capteur offre de bonnes précisions sur ses trois paramètres et couvre de larges plages de fonctionnement.</p>
+</li>
+<li>
+<p><strong>Autres capteurs domotique</strong>  (sans citation spécifique) : selon les besoins on peut ajouter un  <strong>détecteur de mouvement PIR</strong>, des  <strong>capteurs de gaz/fumée</strong>  (MQ-2, MQ-135), des  <strong>capteurs de luminosité</strong>  (photocellule), ou un  <strong>contacteur d’ouverture</strong>  (Reed/magnétique). Ces éléments étendent l’application vers la sécurité et la gestion d’énergie.</p>
+</li>
+</ul>
+<p><em>Fig. 1 – ESP32 branché à un capteur DHT22 (blanc), mesurant température et humidité.</em></p>
+<p>Le DHT11/DHT22 mesure la température et l’humidité, et est très populaire chez les makers. On le branche sur un GPIO numérique de l’ESP32 (avec une résistance de tirage interne ou un pull-up externe). Le DHT22 est plus précis et couvre des plages plus grandes que le DHT11, mais il rafraîchit les données toutes les ~2 s (contre 1 s pour le DHT11). Ces capteurs sont relativement lents, mais embarquent un convertisseur A/N, sortant directement des valeurs numériques prêtes à l’emploi, ce qui simplifie grandement la lecture via Arduino.</p>
+<p><em>Fig. 2 – L’ESP32 affichant via une page Web la température lue par un capteur DS18B20.</em></p>
+<p>Le capteur  <strong>DS18B20</strong>  est un thermomètre numérique 1-wire. Il se connecte à une seule broche de données (plus la masse), et peut être alimenté en 5 V ou 3,3 V. Ce capteur est précis (environ ±0,5 °C) et robuste. De plus, chaque DS18B20 a un code interne à 64 bits, ce qui permet de mettre plusieurs sondes sur le même fil de données. On peut ainsi connecter plusieurs DS18B20 (par exemple dans différentes pièces ou dans de l’eau) à un seul GPIO de l’ESP32, et lire successivement la température de chacun.</p>
+<p><em>Fig. 3 – Module capteur BME280 (température, pression, humidité) utilisé comme station météo embarquée.</em></p>
+<p>Le  <strong>BME280</strong>  combine trois mesures : pression atmosphérique, température et humidité relative. Il communique généralement en I2C (broches SDA/SCL), ce qui réduit l’occupation de GPIO sur l’ESP32. La pression mesurée permet d’estimer l’altitude locale, ce qui est utile pour les applications météo ou de contrôle environnemental. Ce capteur, très répandu en IoT, offre de bonnes précisions sur ses mesures et supporte de larges plages de températures et de pressions. On l’utilise souvent dans des stations météo ou des systèmes domotiques nécessitant des données environnementales complètes.</p>
+<h2 id="programmation-de-lesp32-arduino-ide">Programmation de l’ESP32 (Arduino IDE)<a class="headerlink" href="#programmation-de-lesp32-arduino-ide" title="Permanent link">&para;</a></h2>
+<p>Nous utiliserons l’IDE Arduino (C++) pour programmer l’ESP32. Il faut inclure les bibliothèques Wi-Fi (<code>WiFi.h</code>) et MQTT (<code>PubSubClient.h</code>  par exemple) ainsi que celles spécifiques aux capteurs : Adafruit DHT pour DHT11/22, OneWire + DallasTemperature pour DS18B20, Adafruit BME280, etc. Dans le  <code>setup()</code>, on configure la connexion Wi-Fi (SSID + mot de passe), puis on initialise la connexion MQTT au broker (adresse IP/URL, port, login).</p>
+<p>Dans la boucle  <code>loop()</code>, on lit périodiquement les capteurs (par exemple toutes les 10 secondes), puis on publie les valeurs sur des  <em>topics</em>  MQTT dédiés. Par exemple, pour un DHT22 on peut écrire en C++ :</p>
+<div class="highlight"><pre><span></span><code><span class="n">mqttClient</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">MQTT_PUB_TEMP</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">temperature</span><span class="p">).</span><span class="n">c_str</span><span class="p">());</span>
+<span class="n">mqttClient</span><span class="p">.</span><span class="n">publish</span><span class="p">(</span><span class="n">MQTT_PUB_HUM</span><span class="p">,</span><span class="w">  </span><span class="n">String</span><span class="p">(</span><span class="n">humidity</span><span class="p">).</span><span class="n">c_str</span><span class="p">());</span>
+</code></pre></div>
+<p>Cette ligne fait appel à  <code>mqttClient.publish(topic, payload)</code>  de la librairie PubSubClient. Elle envoie les mesures sous forme de chaînes de caractères sur les topics définis (ex.  <code>"esp32/dht/temp"</code>). Dans l’exemple ci-dessous, l’ESP32 publie successivement la température et l’humidité lues. En ouvrant le moniteur série on vérifie que l’ESP32 se connecte au broker et diffuse bien les messages sur les topics appropriés.</p>
+<p>Ainsi, chaque mesure est mise en  <em>payload</em>  d’un message MQTT. On peut configurer le  <strong>QoS</strong>  (qualité de service) et le flag  <em>retain</em>  selon les besoins (par défaut QoS 0,  <em>retain</em>  peut être activé pour conserver la dernière valeur). Par ailleurs, on gère la reconnexion automatique au broker si nécessaire. Tout le code reste en Arduino C++ (sans microPython ici, comme demandé).</p>
+<h2 id="broker-mqtt-comparatif">Broker MQTT : comparatif<a class="headerlink" href="#broker-mqtt-comparatif" title="Permanent link">&para;</a></h2>
+<p>Le  <strong>broker MQTT</strong>  relaie les messages entre éditeurs et abonnés. Le choix du broker dépend du scénario :</p>
+<ul>
+<li>
+<p><strong>Mosquitto</strong>  (open-source) : extrêmement léger et populaire. Supporte MQTT v5, TLS/SSL et l’authentification basique. On peut l’installer sur un serveur local (Raspberry Pi, VM, NAS) ou via un conteneur Docker.</p>
+</li>
+<li>
+<p><strong>Mosquitto (Home Assistant)</strong> : Home Assistant propose un  <em>add-on</em>  Mosquitto tout configuré. C’est l’option la plus simple pour un homelab HA. L’add-on génère automatiquement un utilisateur/sujet sécurisé pour HA, facilitant l’intégration.</p>
+</li>
+<li>
+<p><strong>Brokers SaaS (cloud)</strong> : AWS IoT Core, Google Cloud IoT, HiveMQ Cloud, CloudMQTT, etc. Ces solutions fournissent un broker MQTT hautement disponible et géré (authentification avancée, TLS mutualisé, quotas, etc.). Elles sont pratiques si l’ESP32 doit transmettre sur Internet sans serveur local (par exemple depuis l’extérieur du réseau domestique), mais requièrent souvent un abonnement payant.</p>
+</li>
+<li>
+<p><strong>Autres (Enterprise)</strong> : des brokers comme EMQX, RabbitMQ avec plugin MQTT ou ActiveMQ existent, mais Home Assistant ne les recommande pas (bugs connus).</p>
+</li>
+</ul>
+<p>Pour résumer : un broker local (ex. Mosquitto sur Raspberry Pi) est gratuit et facile à gérer en homelab. Un broker cloud (AWS, CloudMQTT…) simplifie l’accès externe et la montée en charge. Home Assistant souligne que l’option la plus privée est un broker auto-hébergé (ex. Mosquitto en local), mais proposer un broker cloud reste possible pour un projet mobile/autonome.</p>
+<h2 id="integration-home-assistant-et-stockage">Intégration Home Assistant et stockage<a class="headerlink" href="#integration-home-assistant-et-stockage" title="Permanent link">&para;</a></h2>
+<p>Dans Home Assistant (HA), on installe d’abord l’intégration MQTT en renseignant l’hôte et les identifiants du broker (par exemple,  <code>core-mosquitto</code>  si on utilise l’add-on). Les capteurs publiés sur MQTT deviennent alors accessibles : on peut configurer des  <strong>MQTT Sensors</strong>  soit via l’interface (MQTT Discovery) soit manuellement dans  <code>configuration.yaml</code>. Chaque capteur MQTT apparaît alors comme une entité HA (ex.  <code>sensor.temperature_salon</code>).</p>
+<p>Pour la persistance des données, HA peut être combiné avec  <strong>InfluxDB</strong>  et  <strong>Grafana</strong>. InfluxDB est une base de données  <em>time-series</em>  open-source idéale pour stocker de grandes quantités de mesures horodatées. Par exemple, l’add-on InfluxDB d’HA capture automatiquement les entités MQTT et enregistre chaque valeur dans la base. Grafana peut ensuite se connecter à InfluxDB et tracer des courbes temporelles personnalisées. Comme l’a noté David Essenius,  <em>les graphiques intégrés de HA ne sont pas très paramétrables et les données ne sont pas conservées indéfiniment</em>; il préconise donc l’usage d’InfluxDB+Grafana pour des visualisations avancées et un historique complet. Grâce à cette architecture, on peut disposer de beaux tableaux de bord dynamiques (interpolation, moyennes, alertes, etc.) basés sur les capteurs de l’ESP32.</p>
+<p>En résumé, le flux de données peut être :  <strong>ESP32 → Broker MQTT (Mosquitto)</strong>  → 1) Home Assistant (pour supervision/automatisation) et 2) InfluxDB/Grafana (pour stockage/visualisation). Dans HA on peut également déclencher des automatismes sur seuils de température, allumer un ventilateur, etc. L’ESP32 publie de son côté de manière indépendante les données via MQTT, et HA se contente de les consommer.</p>
+<h2 id="homelab-vs-projet-autonome-iot">Homelab vs projet autonome IoT<a class="headerlink" href="#homelab-vs-projet-autonome-iot" title="Permanent link">&para;</a></h2>
+<p>Le scénario « homelab » implique que l’ensemble reste sur le réseau local. Par exemple, on installe Mosquitto, HA, InfluxDB et Grafana sur un Raspberry Pi ou un NAS. L’avantage est la  <strong>complète maîtrise</strong>  des données et leur sécurité (pas d’envoi extérieur), ainsi qu’un faible coût. En revanche, pour un projet IoT autonome (ex. capteur embarqué, exposition), on choisira un broker accessible publiquement. On peut exposer son broker Mosquitto via une IP/DNS statique, ou utiliser un service cloud (AWS IoT, CloudMQTT…). De même, on peut opter pour InfluxDB Cloud ou Grafana Cloud afin de visualiser les données depuis n’importe où. Dans tous les cas, il faut prévoir l’authentification et le chiffrement (MQTT sur TLS) si on traverse Internet. HA conseille en général d’héberger soi-même le broker quand cela est possible, mais un mode  <em>IoT mobile</em>  peut légitimement reposer sur des services externes (broker SaaS, bases de données cloud).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1973 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../stockage/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Proxmox VE - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#proxmox-dans-un-homelab-securise-et-auto-heberge" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Proxmox VE
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-a-proxmox-ve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction à Proxmox VE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-pour-un-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage pour un homelab
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fonctionnalites-cles-de-proxmox-ve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fonctionnalités clés de Proxmox VE
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparaison-avec-dautres-solutions-open-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparaison avec d’autres solutions open source
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avantages-et-inconvenients-de-proxmox-ve" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avantages et inconvénients de Proxmox VE
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Avantages et inconvénients de Proxmox VE">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#avantages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Avantages
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inconvénients
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonnes-pratiques-de-configuration-securite-performances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bonnes pratiques de configuration (sécurité &amp; performances)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonnes pratiques de configuration (sécurité &amp; performances)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sécurité
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performances
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-du-stockage-nvme" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gestion du stockage : NVMe,
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cold-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      cold storage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sur-hdd-integration-truenas-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      sur HDD, intégration TrueNAS, etc.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-avec-docker-portainer-home-assistant-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration avec Docker, Portainer, Home Assistant, etc.
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intégration avec Docker, Portainer, Home Assistant, etc.">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#heberger-des-conteneurs-docker-avec-ou-sans-portainer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Héberger des conteneurs Docker (avec ou sans Portainer)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#executer-home-assistant-sur-proxmox" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exécuter Home Assistant sur Proxmox
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utilisation-des-templates-debian-ubuntu-alpine-pour-deployer-rapidement-des-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      Utilisation des templates (Debian, Ubuntu, Alpine…) pour déployer rapidement des services
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utilisation des templates (Debian, Ubuntu, Alpine…) pour déployer rapidement des services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#templates-lxc-tout-prets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Templates LXC tout prêts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modeles-et-clones-de-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      Modèles et clones de VM
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ressources-officielles-et-communautes-utiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ressources officielles et communautés utiles
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="proxmox-dans-un-homelab-securise-et-auto-heberge"><strong>Proxmox dans un homelab sécurisé et auto-hébergé</strong><a class="headerlink" href="#proxmox-dans-un-homelab-securise-et-auto-heberge" title="Permanent link">&para;</a></h1>
+<p>Proxmox VE (Virtual Environment) est une plateforme de virtualisation open-source de type  <strong>bare metal</strong>. Elle permet d’exécuter des  <strong>machines virtuelles (VM)</strong>  et des  <strong>conteneurs Linux (LXC)</strong>  sur un ou plusieurs serveurs, le tout gérable via une interface web centralisée. Proxmox est basée sur Debian Linux et intègre l’hyperviseur KVM pour la virtualisation complète, ainsi que LXC pour la virtualisation légère de conteneurs  . Très utilisée en entreprise comme en homelab, Proxmox offre un riche ensemble de fonctionnalités prêtes à l’emploi pour créer un environnement auto-hébergé à la fois flexible et sécurisé.</p>
+<p><em>(Suggestion de capture d’écran : Interface web de Proxmox VE affichant le tableau de bord des VMs et conteneurs.)</em></p>
+<h2 id="introduction-a-proxmox-ve"><strong>Introduction à Proxmox VE</strong><a class="headerlink" href="#introduction-a-proxmox-ve" title="Permanent link">&para;</a></h2>
+<p><strong>Proxmox VE (Virtual Environment)</strong>  est une solution libre (licence AGPLv3) permettant de transformer un serveur x86_64 en un hyperviseur complet. Installable directement sur le matériel (type 1), Proxmox utilise  <strong>KVM</strong>  pour créer des machines virtuelles isolées (compatibles Windows, Linux, <em>BSD, etc.) et  </em><em>LXC</em>*  pour créer des conteneurs Linux légers partageant le noyau de l’hôte  . L’administration se fait via une interface web intuitive, sans nécessiter de ligne de commande pour les tâches courantes. Un seul serveur Proxmox peut héberger de nombreuses VM et conteneurs, optimisant ainsi l’utilisation des ressources de votre machine.</p>
+<p>En contexte  <em>homelab</em>  (laboratoire personnel hébergé chez soi), Proxmox brille par sa  <strong>polyvalence</strong>. Il permet de consolider sur une même machine plusieurs services auto-hébergés tout en assurant leur isolation. Par exemple, on pourra faire tourner simultanément un serveur domotique, un serveur web, un NAS virtuel, etc., chacun dans une VM ou un conteneur séparé. Proxmox offre aussi des outils intégrés de sauvegarde, de snapshot et de haute disponibilité, ce qui en fait un choix de premier plan pour un homelab fiable et  <em>secure by design</em>.</p>
+<p><em>(Suggestion de capture d’écran : Écran de connexion à l’interface Proxmox VE avec option 2FA.)</em></p>
+<h2 id="cas-dusage-pour-un-homelab"><strong>Cas d’usage pour un homelab</strong><a class="headerlink" href="#cas-dusage-pour-un-homelab" title="Permanent link">&para;</a></h2>
+<p>Quels usages concrets peut-on attendre de Proxmox dans un homelab sécurisé ? En voici les principaux cas d’utilisation :</p>
+<ul>
+<li>
+<p><strong>Machines virtuelles (VM)</strong> : Hébergez plusieurs systèmes d’exploitation en parallèle (Linux, Windows, etc.) pour segmenter vos services. Par exemple, une VM Debian pour un serveur web et une VM Windows pour un logiciel spécifique. Chaque VM dispose de ses ressources dédiées (CPU, RAM, disque) et est isolée des autres, ce qui renforce la sécurité.</p>
+</li>
+<li>
+<p><strong>Conteneurs LXC</strong> : Déployez des conteneurs Linux légers pour vos services moins gourmands. Les conteneurs partagent le noyau de l’hôte, consomment peu de ressources et démarrent en quelques secondes. Idéal pour héberger un Pi-hole, un serveur DNS, un petit service web ou une base de données  <em>lightweight</em>  sous Alpine Linux, etc.</p>
+</li>
+<li>
+<p><strong>Stockage centralisé</strong> : Proxmox peut gérer différentes solutions de stockage pour vos données. Vous pouvez utiliser du  <strong>stockage local</strong>  sur le serveur (disques SSD NVMe, HDD, RAID, ZFS…), monter un stockage réseau de type  <strong>NAS</strong>  (partage NFS/SMB) ou même déployer du  <strong>stockage distribué</strong>  avec Ceph. Cela permet d’adapter les performances de stockage selon les besoins : par exemple, du SSD pour les VM critiques et du disque dur mécanique pour l’archivage.</p>
+</li>
+<li>
+<p><strong>Réseau virtualisé</strong> : Proxmox facilite la création de réseaux virtuels isolés ou bridgés vers votre LAN. Vous pouvez définir des  <strong>bridges</strong>  pour connecter des VM à votre réseau local, des  <strong>VLAN</strong>  pour segmenter le trafic (par exemple séparer une DMZ des services internes), ou utiliser le module  <strong>SDN</strong>  (Software Defined Network) de Proxmox pour des configurations réseau avancées. Tout cela se configure facilement depuis l’UI, permettant de reproduire une topologie réseau complexe à des fins de test ou de sécurité.</p>
+</li>
+<li>
+<p><strong>Snapshots et sauvegardes</strong> : Avant une mise à jour risquée ou une manipulation, prenez un  <strong>snapshot</strong>  de la VM/LXC afin de pouvoir revenir en arrière instantanément en cas de problème. Proxmox gère les snapshots (sur systèmes de fichiers compatibles comme ZFS) et propose une planification de  <strong>sauvegardes</strong>  automatisées de vos VM/CT vers un stockage de votre choix (NAS, disque USB, Proxmox Backup Server, etc.). Ces sauvegardes peuvent être incrémentales et compressées pour gagner de l’espace. En homelab, cela permet de tester sans crainte de “casser” son environnement, et d’avoir des backups prêts en cas de panne matérielle.</p>
+</li>
+</ul>
+<p><em>(Suggestion de capture d’écran : Vue d’une VM en cours d’exécution dans Proxmox, avec ses ressources CPU/RAM affichées.)</em></p>
+<h2 id="fonctionnalites-cles-de-proxmox-ve"><strong>Fonctionnalités clés de Proxmox VE</strong><a class="headerlink" href="#fonctionnalites-cles-de-proxmox-ve" title="Permanent link">&para;</a></h2>
+<p>Proxmox VE apporte par défaut un  <strong>large éventail de fonctionnalités</strong>  appréciables dans un homelab, alliant simplicité d’utilisation et options avancées :</p>
+<ul>
+<li>
+<p><strong>Gestion centralisée via Web UI</strong> : L’interface web de Proxmox (accessible sur le port 8006) offre un tableau de bord unifié pour gérer toutes vos VM et conteneurs, même sur plusieurs nœuds. On peut créer, configurer, démarrer/arrêter les VMs, consulter les métriques, le tout depuis un navigateur  . L’UI intègre également un  _shell_Web pour accéder à la console des VM/CT, et supporte plusieurs utilisateurs avec rôles si nécessaire.</p>
+</li>
+<li>
+<p><strong>Clustering et Haute Disponibilité (HA)</strong> : Proxmox permet de former un  <strong>cluster</strong>  en regroupant plusieurs serveurs physiques. Le cluster offre une gestion commune via l’UI (vue datacenter) et permet des fonctionnalités avancées comme la  <strong>migration à chaud</strong>  des VM d’un nœud à l’autre sans interruption  . En configurant la HA, une VM critique pourra redémarrer automatiquement sur un autre nœud en cas de panne du serveur hôte.  <em>(Pour tirer parti de la HA, un stockage partagé ou une réplication Ceph/ZFS est généralement requis.)</em></p>
+</li>
+<li>
+<p><strong>Support natif de ZFS et stockage avancé</strong> : Proxmox VE s’intègre nativement avec le système de fichiers  <strong>ZFS</strong>, dès l’installation vous pouvez choisir ZFS pour le stockage principal. ZFS apporte  <strong>compression transparente, snapshots rapides et réplication</strong>. Proxmox facilite la gestion des volumes ZFS via l’interface  . En mode cluster, Proxmox propose également une intégration directe de  <strong>Ceph</strong>  depuis l’UI pour déployer un stockage distribué et redondant  . En plus de ZFS/Ceph, Proxmox gère de multiples types de stockage : LVM, répertoires ext4, partages  <strong>NFS</strong>, cibles  <strong>iSCSI</strong>, GlusterFS, etc.  .</p>
+</li>
+<li>
+<p><strong>Snapshots et sauvegardes intégrés</strong> : L’hyperviseur inclut des outils intégrés pour  <strong>snapshoter</strong>  un système (s’il est sur un stockage compatible, ex. ZFS ou LVM-Thin) et pour  <strong>sauvegarder</strong>  les VM/CT. Les sauvegardes peuvent être planifiées (mode  <em>cron</em>) et envoyées vers un stockage local ou distant. Proxmox prend en charge la suspension du système invité (<em>freeze</em>) lors des sauvegardes pour assurer la cohérence. La restauration d’une VM depuis une sauvegarde se fait en quelques clics, améliorant nettement la résilience de votre homelab.</p>
+</li>
+<li>
+<p><strong>Fonctions réseau et pare-feu</strong> : Proxmox VE supporte les  <strong>bridges Linux</strong>  classiques mais aussi  <strong>Open vSwitch</strong>  pour les cas complexes, et offre un module  <strong>SDN</strong>  depuis la version 7+ pour définir des réseaux virtuels plus élaborés. Chaque interface réseau de VM/CT peut être attachée à un bridge ou VLAN tagué. De plus, Proxmox embarque un  <strong>firewall</strong>  configurable par VM, par hôte et au niveau datacenter. On peut ainsi appliquer des règles (au niveau IP, port, protocoles) pour segmenter le trafic entre VMs ou vers l’extérieur, directement depuis l’interface de Proxmox.</p>
+</li>
+<li>
+<p><strong>Open Source &amp; Communauté</strong> : Proxmox VE est entièrement open-source et gratuit à utiliser. Le code source est public, et une  <strong>vaste communauté</strong>  d’utilisateurs contribue via le forum officiel, des wikis et des tutoriels. Des mises à jour régulières améliorent sans cesse la plateforme. Pour les entreprises ou utilisateurs exigeants, Proxmox propose un abonnement  <strong>support entreprise</strong>  (payant) donnant accès à un dépôt stable et une assistance technique  – optionnel pour un homelab, car la version gratuite est pleinement fonctionnelle (seules les MAJ se font via le dépôt communautaire).</p>
+</li>
+</ul>
+<p><em>(Suggestion de capture d’écran : Onglet de configuration du stockage ZFS dans Proxmox, montrant un pool ZFS et ses volumes.)</em></p>
+<h2 id="comparaison-avec-dautres-solutions-open-source"><strong>Comparaison avec d’autres solutions open source</strong><a class="headerlink" href="#comparaison-avec-dautres-solutions-open-source" title="Permanent link">&para;</a></h2>
+<p>Plusieurs alternatives open source à Proxmox existent pour la virtualisation en homelab, chacune avec ses spécificités. Ci-dessous un tableau comparatif de Proxmox VE avec trois solutions populaires :  <strong>XCP-ng</strong>,  <strong>TrueNAS SCALE</strong>  et  <strong>Harvester</strong>.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Solution</strong></th>
+<th><strong>Technologie</strong> <strong>(Hyperviseur)</strong></th>
+<th><strong>Support Conteneurs</strong></th>
+<th><strong>Clustering / HA</strong></th>
+<th><strong>Gestion du Stockage</strong></th>
+<th><strong>Interface</strong></th>
+<th><strong>Orientation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Proxmox VE</strong></td>
+<td>Type 1 Linux (Debian + KVM/QEMU) + LXC</td>
+<td><strong>Oui</strong>  (LXC natif pour Linux)</td>
+<td><strong>Optionnel</strong>  (cluster multi-nœuds, HA possible si stockage partagé ou Ceph)</td>
+<td>Local (dir, LVM,  <strong>ZFS</strong>), externe (NFS, iSCSI), distribué (<strong>Ceph</strong>  intégré)</td>
+<td>Interface web unifiée (Proxmox GUI)</td>
+<td>Hyperviseur polyvalent (VM + conteneurs sur une infra unifiée)</td>
+</tr>
+<tr>
+<td><strong>XCP-ng</strong></td>
+<td>Type 1 Xen (basé sur XenServer)</td>
+<td><strong>Non</strong>  (pas de conteneurs natifs)</td>
+<td><strong>Oui</strong>  (pool de nœuds Xen, HA et migration via Xen Orchestra)</td>
+<td>Local (LVM/ext), externe (NFS, iSCSI), pas de ZFS natif intégré</td>
+<td><strong>Xen Orchestra</strong>  (web, à déployer séparément) ou outil Windows (XCP-ng Center)</td>
+<td>Hyperviseur pur pour VM (fork libre de Citrix XenServer)</td>
+</tr>
+<tr>
+<td><strong>TrueNAS SCALE</strong></td>
+<td>OS hyperconvergé (Debian + KVM + Kubernetes)</td>
+<td><strong>Oui</strong>  (Apps Docker via Kubernetes)</td>
+<td><strong>Limité</strong>  (fonction  <em>scale-out</em>  en cours, clustering GlusterFS possible pour le stockage)</td>
+<td>Local uniquement (<strong>ZFS</strong>  natif pour NAS, RAID-Z), partage réseau (SMB, NFS, iSCSI intégrés)</td>
+<td>Interface web complète (NAS + VMs + Apps Docker)</td>
+<td><strong>NAS orienté services</strong>  (stockage centralisé avec possibilité de VMs/containers supplémentaires)</td>
+</tr>
+<tr>
+<td><strong>Harvester HCI</strong></td>
+<td>Type 1 hyperconvergé (SUSE Linux + KVM via KubeVirt)</td>
+<td><strong>Oui</strong>  (conteneurs via Kubernetes sous-jacent)</td>
+<td><strong>Oui</strong>  (conçu pour cluster HCI ≥3 nœuds, HA natif)</td>
+<td>Stockage distribué intégré (<strong>Longhorn</strong>  – nécessite disques SSD sur chaque nœud)</td>
+<td>Interface web (intégrée à Rancher)</td>
+<td>Infra  <strong>hyperconvergée cloud-native</strong>  (VM orchestrées par Kubernetes, approches type VMware vSphere)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Remarques :</strong>  Proxmox et XCP-ng sont des hyperviseurs “classiques” similaires à VMware ESXi ou Hyper-V, installés sur bare metal pour héberger principalement des VMs.  <strong>XCP-ng</strong>  utilise l’hyperviseur Xen (système différent de KVM) et nécessite Xen Orchestra pour une gestion web complète; il offre une stabilité et des performances solides, mais sans conteneurs intégrés et avec davantage de configurations en CLI pour certaines fonctions avancées (ex: passthrough GPU ou ZFS sur l’hôte)  .  <strong>TrueNAS SCALE</strong>, à l’inverse, est d’abord pensé comme un NAS haut de gamme utilisant ZFS – il excelle pour le stockage et les services de fichiers. TrueNAS intègre quand même KVM pour les VM et surtout un orchestrateur Kubernetes pour déployer des applications Docker en quelques clics (catalogue d’applications). C’est donc un excellent  <strong>appliance de stockage</strong>  enrichi de virtualisation légère, mais moins flexible qu’un hyperviseur pur pour multiplier les VM  .  <strong>Harvester</strong>, enfin, est une solution très récente d’infrastructure hyperconvergée open-source (projet SUSE/Rancher) visant à combiner virtualisation et conteneurs de façon transparente. Basé sur Kubernetes (k3s) et KubeVirt, il propose une approche moderne similaire aux clouds privés (avec SDN, gestion intégrée du stockage via Longhorn, etc.), mais il est plus complexe à mettre en place et  <strong>consomme davantage de ressources à l’état idle</strong>  qu’une solution comme Proxmox  . Harvester est encore jeune et moins répandu dans les homelabs, bien qu’il soit prometteur pour l’avenir.</p>
+<p>En résumé,  <strong>Proxmox VE se distingue par son équilibre</strong>  entre  <strong>richesse fonctionnelle</strong>  (VM + conteneurs, clustering, ZFS, etc.) et  <strong>simplicité d’utilisation</strong>, ce qui le rend très adapté à un homelab polyvalent. XCP-ng pourra convenir pour un usage orienté pure virtualisation Xen, TrueNAS SCALE brillera si le stockage NAS est prioritaire, et Harvester s’adresse aux lab plus expérimentés cherchant à explorer l’approche Kubernetes intégrée.</p>
+<h2 id="avantages-et-inconvenients-de-proxmox-ve"><strong>Avantages et inconvénients de Proxmox VE</strong><a class="headerlink" href="#avantages-et-inconvenients-de-proxmox-ve" title="Permanent link">&para;</a></h2>
+<h3 id="avantages"><strong>Avantages</strong><a class="headerlink" href="#avantages" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Open-source et gratuit</strong>  – Proxmox VE est libre d’utilisation sans limitation de fonctionnalités. La communauté est active et publie régulièrement des mises à jour et correctifs. L’absence de coûts de licence est un plus pour un homelab.</p>
+</li>
+<li>
+<p><strong>Interface unifiée et simplicité</strong>  – Toute l’administration se fait via une interface web ergonomique, centralisant VM, conteneurs, stockage, réseau, etc. Pour un débutant, Proxmox est l’une des solutions les plus faciles à prendre en main pour créer et gérer des VMs  . De nombreuses opérations (création de VM, ajout de disques, snapshots…) sont réalisables en quelques clics.</p>
+</li>
+<li>
+<p><strong>VM et conteneurs sur la même plateforme</strong>  – Pas besoin de choisir entre virtualisation traditionnelle et conteneurs : Proxmox offre les deux nativement. On peut ainsi faire tourner des conteneurs LXC pour les services Linux légers, tout en hébergeant des VM (y compris Windows) sur le même serveur. Cette polyvalence est un atout majeur par rapport à des hyperviseurs qui ne gèrent pas les conteneurs.</p>
+</li>
+<li>
+<p><strong>Écosystème complet (clustering, ZFS, Ceph, backups…)</strong>  – Proxmox intègre out-of-the-box des fonctionnalités normalement réservées aux solutions d’entreprise : gestion multi-nœuds avec quorum, support du stockage distribué Ceph, snapshots, planification des backups, gestion fine du réseau (VLAN, firewall, SDN), etc. Cela évite d’assembler soi-même plusieurs outils externes : tout est prêt à l’emploi.</p>
+</li>
+<li>
+<p><strong>Performance et efficacité</strong>  – Basé sur Debian Linux et KVM, Proxmox offre des performances proches du natif pour les VM. La gestion des ressources est efficace, avec prise en charge de l’oversubscription (overcommit) contrôlée de la RAM et des vCPU. L’overhead système est relativement faible, ce qui permet d’exploiter au maximum le matériel, même modeste. De plus, la prise en charge de technologies comme  <strong>virtIO</strong>  (pilotes paravirt) et  <strong>SPICE</strong>  pour l’affichage optimise les performances des systèmes invités.</p>
+</li>
+<li>
+<p><strong>Support étendu et options pro</strong>  – Bien que gratuit, Proxmox propose des abonnements support pour ceux qui le souhaitent, ainsi qu’une documentation officielle exhaustive. La communauté (forums, wiki) répond rapidement aux questions. On trouve pléthore de tutoriels et de retours d’expérience en ligne (y compris en français) étant donné la popularité de la solution en homelab.</p>
+</li>
+</ul>
+<h3 id="inconvenients"><strong>Inconvénients</strong><a class="headerlink" href="#inconvenients" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Courbe d’apprentissage sur les fonctions avancées</strong>  – Les bases de Proxmox sont simples, mais exploiter des fonctionnalités comme Ceph, la haute dispo ou le SDN demande une certaine expertise. Un débutant pourra se sentir un peu dépassé en configurant un cluster 3 nœuds ou en optimisant ZFS. Il faut accepter de se documenter et parfois de passer par la ligne de commande pour les ajustements pointus.</p>
+</li>
+<li>
+<p><strong>Pas de fonctions NAS intégrées</strong>  – Contrairement à TrueNAS, Proxmox n’embarque pas de service de fichiers prêt à l’emploi. Il n’y a pas de partage SMB/NFS intégré  <em>by design</em>. L’hyperviseur se concentre sur les VM/containers, et part du principe que si un NAS est requis, il sera installé  <strong>dans</strong>  une VM ou conteneur séparé (par ex. une VM TrueNAS, ou un conteneur SAMBA)  . Cela demande un peu plus de travail pour mettre en place un serveur de fichiers ou de médias.</p>
+</li>
+<li>
+<p><strong>Gestion des conteneurs limitée aux Linux</strong>  – Les conteneurs LXC de Proxmox ne peuvent exécuter que des systèmes Linux. Si vous devez virtualiser d’autres systèmes (Windows, *BSD), il faudra nécessairement créer une VM. De plus, certains logiciels ne fonctionnent pas bien dans des conteneurs (notamment s’ils requièrent un accès bas niveau ou un kernel module spécifique). Dans ces cas-là, la solution sera de passer par une VM, plus lourde en ressources.</p>
+</li>
+<li>
+<p><strong>Écosystème moins cloud-native</strong>  – Par rapport à une approche Kubernetes (comme Harvester ou même TrueNAS SCALE), Proxmox n’intègre pas de gestion des conteneurs applicatifs Docker au niveau de l’hyperviseur. Chaque VM/CT est une entité séparée à administrer. Il n’y a pas de catalogue d’applications en un clic. Pour un homelab classique cela n’est pas vraiment un problème, mais si l’on cherche une plateforme style PaaS, il faudra installer des outils supplémentaires (ex: Kubernetes sur Proxmox).</p>
+</li>
+<li>
+<p><strong>Abonnement requis pour le dépôt stable</strong>  – Ce n’est pas un frein majeur, mais à noter : sans abonnement payant, les mises à jour de Proxmox se font via le dépôt « non-subscription » (communautaire). Il contient les mêmes packages mais avec potentiellement un peu moins de validation approfondie. Dans les faits, il est tout à fait utilisable en homelab. Un simple message d’avertissement s’affiche dans l’UI si vous n’avez pas de souscription, message que l’on peut masquer manuellement.</p>
+</li>
+<li>
+<p><strong>Impossibilité de downgrader</strong>  – Une fois Proxmox installé ou mis à niveau, il est difficile de revenir à une version antérieure sans tout réinstaller. Il faut donc bien tester les mises à jour majeures sur un environnement de test ou attendre les retours de la communauté avant de sauter le pas en production (homelab avancé). Heureusement, les migrations de version sont généralement bien documentées et fiables.</p>
+</li>
+</ul>
+<p><em>(Suggestion de capture d’écran : Fenêtre de configuration du firewall Proxmox montrant des règles filtrant l’accès aux VMs.)</em></p>
+<h2 id="bonnes-pratiques-de-configuration-securite-performances"><strong>Bonnes pratiques de configuration (sécurité &amp; performances)</strong><a class="headerlink" href="#bonnes-pratiques-de-configuration-securite-performances" title="Permanent link">&para;</a></h2>
+<p>Pour tirer le meilleur parti de Proxmox dans un homelab sécurisé, voici quelques conseils de configuration couvrant la  <strong>sécurité</strong>  et les  <strong>performances</strong>.</p>
+<h3 id="securite"><strong>Sécurité</strong><a class="headerlink" href="#securite" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Segmenter les réseaux</strong> : Isolez votre hyperviseur et vos VMs sensibles sur des réseaux/VLAN distincts. Par exemple, placez l’interface management de Proxmox sur un VLAN admin inaccessible depuis le Wi-Fi invité ou Internet. De même, les VMs exposées au web (serveur web, Nextcloud…) devraient résider dans une  <strong>DMZ</strong>  séparée du LAN personnel. Un routeur/pare-feu (OPNsense, pfSense) pourra gérer ces VLAN et filtrer le trafic entre eux.  <em>(Suggestion de capture d’écran : Schéma réseau avec firewall OPNsense séparant VLAN LAN, DMZ services et Lab).</em>  Ceci empêche qu’une VM compromise dans la DMZ n’accède à vos appareils du LAN.</p>
+</li>
+<li>
+<p><strong>Configurer le pare-feu Proxmox</strong> : Proxmox VE inclut un firewall applicatif. Activez-le et définissez des règles par défaut restrictives. Par exemple, au niveau datacenter, on peut bloquer tout trafic entrant non nécessaire vers l’hyperviseur (seuls SSH, HTTPS 8006, et éventuellement 5900-5999 pour la console VNC, devraient être autorisés depuis le LAN admin). Pour chaque VM, n’ouvrir que les ports requis (HTTP/HTTPS, etc.). Le firewall Proxmox comprend aussi des  <em>Security Groups</em>  pour réutiliser des règles facilement.</p>
+</li>
+<li>
+<p><strong>Mises à jour régulières</strong> : Maintenez Proxmox et vos VM à jour. Les mises à jour de sécurité du noyau Linux, de l’hyperviseur ou des conteneurs corrigent des vulnérabilités critiques. Sur Proxmox, il suffit d’exécuter régulièrement  apt update &amp;&amp; apt full-upgrade  (ou via l’UI) pour appliquer les patchs disponibles. Astuce : souscrire au flux RSS des annonces Proxmox pour être alerté des nouvelles versions.</p>
+</li>
+<li>
+<p><strong>Authentification renforcée</strong> : Par défaut, l’authentification se fait avec le compte  root  de Proxmox. Il est recommandé d’activer la  <strong>double authentification (2FA)</strong>  pour l’accès à l’interface web (Proxmox supporte TOTP – par ex. avec Google Authenticator). Envisagez de créer des comptes administrateurs non-root pour l’usage courant, afin de désactiver les connexions root directes sur l’UI et SSH. Utilisez des mots de passe forts ou des clés SSH pour le compte root. Si possible, limitez l’accès SSH à Proxmox aux seules adresses IP de confiance (via  /etc/hosts.allow  ou le firewall).</p>
+</li>
+<li>
+<p><strong>Ne pas exposer Proxmox directement à Internet</strong> : Évitez de rendre l’interface web accessible depuis le web public. Si vous avez besoin d’y accéder à distance, privilégiez une connexion VPN vers votre réseau local, ou éventuellement un tunnel SSH sécurisé. Proxmox n’est pas conçu pour être placé en frontal sur Internet et un accès direct augmenterait la surface d’attaque.</p>
+</li>
+<li>
+<p><strong>Limiter les services sur l’hôte</strong> : N’installez pas de services additionnels (serveur web, base de données, etc.) directement sur l’OS Proxmox. Gardez l’hyperviseur épuré pour réduire les risques. Toute application doit idéalement tourner dans une VM ou un conteneur, jamais sur l’hôte lui-même (sauf outils de monitoring légers). Cela suit le principe de  <em>séparation des rôles</em> : l’hyperviseur fait de la virtualisation, les services tournent  <em>dans</em>  les machines virtuelles.</p>
+</li>
+<li>
+<p><strong>Sauvegardes externes et chiffrées</strong> : Stockez les sauvegardes de vos VM sur un stockage externe (NAS, disque USB chiffré, cloud) et non uniquement sur le serveur Proxmox lui-même. En cas de compromission de l’hyperviseur ou de ransomware, il faut pouvoir restaurer ses données à partir d’un emplacement sûr. Proxmox Backup Server (PBS) peut être une bonne solution : il déduplique et chiffre les sauvegardes  . À défaut, un simple export vers un NAS TrueNAS via NFS, avec snapshots ZFS sur le NAS, peut convenir.</p>
+</li>
+</ul>
+<h3 id="performances"><strong>Performances</strong><a class="headerlink" href="#performances" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Bien dimensionner la RAM (surtout avec ZFS)</strong> : Si vous utilisez ZFS sur Proxmox, rappelez-vous que ZFS adore la RAM (cache ARC). Pour un serveur avec 16 Go par exemple, il est raisonnable de réserver 4 à 8 Go pour ZFS et le système, le reste pour les VM. Il est possible de limiter la taille de l’ARC ZFS (zfs_arc_max) pour éviter qu’il n’utilise toute la mémoire. Adapter la RAM en fonction du nombre de VM et de leur usage (base de données, JVM et autres applis consommatrices).</p>
+</li>
+<li>
+<p><strong>Utiliser les SSD/NVMe pour les VM critiques</strong> : Installez Proxmox et vos images de VM sur des  <strong>SSD</strong>  ou NVMe si possible, en particulier pour les OS et applications nécessitant beaucoup d’I/O (base de données, HAProxy, etc.). Les temps d’accès réduits amélioreront nettement la réactivité des services. Vous pouvez dédier un pool ZFS miroir de deux SSD NVMe pour les volumes de VM, et garder les disques durs classiques pour du stockage de masse ou des backups.</p>
+</li>
+<li>
+<p><strong>RAID matériel vs ZFS</strong> : Si vous optez pour ZFS, évitez d’utiliser un RAID matériel en dessous – ZFS préfère avoir un accès direct aux disques (HBA en JBOD). Laissez ZFS gérer la redondance (RAID-Z, miroir) pour bénéficier de ses capacités de correction d’erreurs et surveillance d’intégrité. En revanche, si vous utilisez du  <strong>LVM-thin</strong>  sur un RAID matériel existant, assurez-vous que le contrôleur RAID dispose de cache protégé (BBU) pour de bonnes performances en écriture.</p>
+</li>
+<li>
+<p><strong>Configurer le cache des disques virtuels</strong> : Dans Proxmox, chaque disque virtuel d’une VM a un mode de cache (No cache, WriteBack, etc.). Pour les volumes de systèmes d’exploitation, le mode  <strong>Write Back</strong>  avec  <strong>cache direct</strong>fonctionne bien et accélère les I/O (en assumant que l’hôte a une protection d’alimentation ou que la perte de quelques secondes de données est acceptable). En revanche, pour une VM de base de données où la cohérence prime, on peut rester en  <strong>Write Through</strong>  (par défaut) pour garantir que les écritures sont directement flush sur le stockage.</p>
+</li>
+<li>
+<p><strong>virtIO et agents invités</strong> : Utilisez les  <strong>pilotes virtIO</strong>  pour les périphériques virtuels (disque, réseau) dans vos VM Linux et Windows – ils offrent de bien meilleures performances que l’émulation IDE/E1000. Proxmox propose d’office virtIO pour les nouvelles VM Linux. Pour Windows, installez les  <em>Drivers virtIO</em>  fournis par Red Hat. De plus, pensez à installer l’<strong>agent QEMU Guest</strong>  dans chaque VM (paquet  qemu-guest-agent) : cela permet une meilleure interaction (arrêt propre depuis l’UI, informations IP remontées, etc.).</p>
+</li>
+<li>
+<p><strong>Surveillance et affinage</strong> : Mettez en place un monitoring de base de votre hyperviseur (Proxmox exporte des métriques CPU, RAM, réseau par VM dans l’UI). Pour aller plus loin, des outils comme  <strong>Zabbix, Prometheus, Grafana</strong>  ou  <strong>Glances</strong>  peuvent être utilisés pour surveiller l’utilisation des ressources en continu. Vous pourrez ainsi repérer une VM consommatrice qui swap ou un conteneur qui sature le CPU, et ajuster les ressources allouées en conséquence (RAM max, limites CPU, etc.).</p>
+</li>
+<li>
+<p><strong>Éviter la surallocation excessive</strong> : Proxmox autorise de surallouer la RAM (ballooning) et les vCPU (sur plusieurs VM) par rapport au physique. Un léger surcommit peut passer si toutes les VM ne sont pas actives en même temps. Cependant, en homelab, il est plus sûr d’éviter une surallocation trop optimiste, car en cas de pic simultané, vous risquez du swap (ralentissements drastiques) ou une contention CPU. Gardez une petite marge de ressources libres pour l’hyperviseur lui-même.</p>
+</li>
+<li>
+<p><strong>Optimisations spécifiques</strong> : Activez  <strong>l’IOMMU</strong>  dans le BIOS/UEFI de votre machine pour permettre le  <strong>pass-through</strong>  de périphériques (GPU, USB contrôleur) vers les VM si vous en avez besoin (par ex. une VM media center avec GPU pour transcodage). Assurez-vous que la fonction VT-x/AMD-V est activée également pour les VMs. Si vous utilisez un cluster multi-nœuds, configurez un réseau dédié Gigabit+ (ou mieux 10 Gb) pour le trafic de synchronisation (Corosync, Ceph) et un autre pour les VMs, afin d’éviter les saturations. Enfin, en environnement domestique, un onduleur (UPS) communiquant avec l’hyperviseur est conseillé pour envoyer une commande d’arrêt propre en cas de coupure prolongée – il existe des connecteurs NUT ou APCUPSd que l’on peut installer sur Proxmox pour cela.</p>
+</li>
+</ul>
+<h2 id="gestion-du-stockage-nvme"><strong>Gestion du stockage : NVMe,</strong><a class="headerlink" href="#gestion-du-stockage-nvme" title="Permanent link">&para;</a></h2>
+<h2 id="cold-storage"><strong>cold storage</strong><a class="headerlink" href="#cold-storage" title="Permanent link">&para;</a></h2>
+<h2 id="sur-hdd-integration-truenas-etc"><strong>sur HDD, intégration TrueNAS, etc.</strong><a class="headerlink" href="#sur-hdd-integration-truenas-etc" title="Permanent link">&para;</a></h2>
+<p>La configuration du stockage est un élément clé d’un homelab. Proxmox offre la flexibilité de combiner différentes catégories de disques et même des solutions externes pour obtenir le meilleur compromis entre performance, capacité et résilience :</p>
+<ul>
+<li>
+<p><strong>Utiliser les SSD NVMe pour les workloads actifs</strong> : Les disques NVMe (ou SSD SATA) offrent des IOPS élevées et une faible latence. Il est judicieux d’y stocker les  <strong>disques système</strong>  de vos VM et conteneurs, ainsi que les bases de données et services nécessitant beaucoup d’accès disques. Par exemple, votre VM Home Assistant ou votre base PostgreSQL bénéficieront grandement d’être sur NVMe. Vous pouvez créer un  <strong>pool ZFS en miroir</strong>  de deux NVMe pour la fiabilité (tolérance à la panne d’un disque). Si la capacité NVMe est limitée, ne mettez que les OS et données “chaudes” dessus.</p>
+</li>
+<li>
+<p><strong>Stockage “froid” sur disques durs</strong> : Pour les données volumineuses et moins fréquemment accédées (médias, backups, archives), les disques durs classiques (HDD) conviennent et coûtent moins cher au To. Vous pouvez soit les intégrer au serveur Proxmox (par ex. un deuxième pool ZFS en RAID-Z sur 3-4 HDD pour stocker les sauvegardes de VM, les vidéos, etc.), soit les héberger sur un NAS séparé. Proxmox peut tout à fait accéder à un NAS via NFS ou iSCSI pour y stocker des données  . N’hésitez pas à utiliser la  <strong>compression ZFS</strong>  (lz4) sur les stockages HDD pour réduire la taille des archives et backups (elle est rapide et souvent transparente en coût CPU).</p>
+</li>
+<li>
+<p><strong>Cache et tiering</strong> : Si vous combinez SSD et HDD, pensez à exploiter les SSD comme cache. ZFS permet par exemple d’ajouter un  <strong>cache L2ARC</strong>  (lecture) sur SSD pour accélérer l’accès aux données souvent lues depuis un pool HDD, et un  <strong>disque de log (SLOG)</strong>  sur SSD pour fiabiliser/accélérer les écritures synchrones d’un pool HDD (utile pour un serveur de fichiers ou VM base de données sur HDD). Dans Proxmox, ces opérations se font en ligne de commande (commande  zpool add  pour ajouter cache ou log). Veillez toutefois à utiliser des SSD de qualité pour le SLOG (haute endurance) et une capacité de L2ARC raisonnable (pas plus de 5x la RAM typiquement, sinon l’empreinte mémoire du cache metadata devient contre-productive).</p>
+</li>
+<li>
+<p><strong>Intégration avec un NAS (TrueNAS ou autre)</strong> : De nombreux homelab ont un NAS dédié pour stocker documents, médias, sauvegardes, etc. Proxmox s’intègre bien avec ces solutions. Le cas le plus courant :  <strong>monter un partage NFS du NAS dans Proxmox</strong>  pour y déposer les backups de VM ou même héberger certaines VM non critiques. Par exemple, un NAS TrueNAS SCALE (qui excelle en ZFS) peut exposer un dataset en NFS, ajouté comme stockage dans Proxmox en quelques clics. On peut alors sauvegarder les VM vers ce NAS, ou y héberger des disques de VM moins sensibles aux latences du réseau  . Alternativement, le NAS peut présenter une cible  <strong>iSCSI</strong>  que Proxmox utilisera comme LUN de stockage (souvent couplé à LVM côté Proxmox). L’iSCSI offre de bonnes performances mais une configuration un peu plus complexe (et nécessite une gestion soigneuse si plusieurs nœuds y accèdent simultanément, via un gestionnaire de volume partagé).</p>
+</li>
+<li>
+<p><strong>TrueNAS en VM sur Proxmox</strong> : Une autre intégration possible, si vous n’avez qu’un seul serveur physique, est d’<strong>installer TrueNAS (Core ou SCALE) dans une VM Proxmox</strong>. Dans ce scénario, on passe un contrôleur HBA (SATA/SAS) en  <em>passthrough</em>  à la VM TrueNAS, qui a ainsi un accès direct aux disques durs. TrueNAS gère son pool ZFS et sert de NAS, tandis que Proxmox gère la VM TrueNAS comme n’importe quelle VM. Cette approche permet de bénéficier de l’interface de TrueNAS pour le partage de fichiers, tout en profitant des snapshots et backups Proxmox au niveau de la VM complète.  <strong>Attention</strong>  toutefois : en cas d’arrêt de la VM ou de Proxmox, le NAS devient indisponible. De plus, le passthrough demande que votre matériel supporte bien l’IOMMU. Certains homelabers préfèrent cette solution “2-en-1” pour économiser du matériel, mais elle complexifie un peu la maintenance. Si vous optez pour cela, assurez-vous que Proxmox ne tente pas d’utiliser les disques dédiés TrueNAS (ne pas les intégrer dans un pool Proxmox).</p>
+</li>
+<li>
+<p><strong>Proxmox Backup Server (PBS)</strong> : Pour le stockage des sauvegardes, l’outil recommandé est PBS – qui peut tourner sur une machine séparée ou sur une VM/container. PBS déduplique et compresse fortement les backups, économisant de l’espace. Une stratégie courante est d’avoir un petit serveur (ou une VM sur un autre nœud) avec des disques HDD qui sert de PBS, recevant les backups quotidiens chiffrés depuis le Proxmox principal  . En cas de besoin, on peut restaurer granulairement des fichiers ou VM entières depuis PBS via l’UI Proxmox. Si votre homelab est modeste, un simple disque USB externe monté sur Proxmox pour y copier les backups régulièrement peut suffire, mais pensez à la déconnecter quand elle n’est pas en cours d’utilisation (pour éviter qu’un ransomware qui infecterait une VM ne chiffre aussi vos sauvegardes montées).</p>
+</li>
+</ul>
+<p>En combinant judicieusement NVMe, SSD, HDD et stockage réseau, vous assurez à votre homelab Proxmox à la fois des  <strong>performances élevées</strong>  pour les services critiques et une  <strong>grande capacité de stockage</strong>  pour les données volumineuses, le tout avec des sauvegardes sécurisées. Cette hybridation des stockages est un des grands atouts d’une solution auto-hébergée : vous pouvez ajuster au mieux en fonction de votre budget et de vos besoins.</p>
+<h2 id="integration-avec-docker-portainer-home-assistant-etc"><strong>Intégration avec Docker, Portainer, Home Assistant, etc.</strong><a class="headerlink" href="#integration-avec-docker-portainer-home-assistant-etc" title="Permanent link">&para;</a></h2>
+<p>Proxmox VE, en tant qu’hyperviseur, sert de base pour déployer d’autres couches de services. Voici comment tirer parti de Proxmox pour intégrer des technologies populaires de self-hosting comme Docker/Portainer ou Home Assistant.</p>
+<h3 id="heberger-des-conteneurs-docker-avec-ou-sans-portainer"><strong>Héberger des conteneurs Docker (avec ou sans Portainer)</strong><a class="headerlink" href="#heberger-des-conteneurs-docker-avec-ou-sans-portainer" title="Permanent link">&para;</a></h3>
+<p>Beaucoup d’utilisateurs de homelab souhaitent utiliser  <strong>Docker</strong>  pour déployer des applications (Nextcloud, MariaDB, Jellyfin, etc.). Docker n’est pas fourni en natif sur Proxmox (il ne faut pas l’installer directement sur l’hôte Proxmox, ce n’est pas recommandé). À la place, deux approches s’offrent à vous pour utiliser Docker  <strong>sur</strong>  Proxmox :</p>
+<ul>
+<li>
+<p><strong>LXC Docker</strong> : Créer un conteneur LXC sous Proxmox et y installer Docker. Cette méthode utilise peu de ressources (pas de surcouche OS lourde) et offre des performances quasi natives, puisque l’LXC partage le noyau de Proxmox. Il faut pour cela activer certaines options sur le conteneur (notamment les cgroups et le nesting) afin que Docker puisse tourner à l’intérieur. De nombreux homelabers utilisent par exemple un conteneur Debian LXC dédié comme hôte Docker.  <em>Avantages:</em>  légèreté, efficacité.  <em>Inconvénients:</em>  Pas de vraie isolation kernel (moins sécurisé qu’une VM) et  <strong>pas de migration à chaud possible</strong>  pour ce conteneur Docker (les conteneurs LXC ne supportent pas la live migration facilement). À noter que Proxmox recommande plutôt la seconde approche pour Docker  , mais l’approche LXC fonctionne et est pratique sur petite infra.</p>
+</li>
+<li>
+<p><strong>VM Docker</strong> : Créer une VM (par ex. Debian, Ubuntu Server) sur Proxmox et y installer le moteur Docker + éventuellement  <strong>Portainer</strong>  pour l’administration web des containers. Cette VM servira de “host Docker” classique. Par rapport à l’option LXC, on a l’avantage d’une isolation complète (noyau séparé), la possibilité de snapshots et migrations  <em>comme pour n’importe quelle VM</em>, au prix d’une légère surcouche de ressources (une VM consomme plus de RAM/CPU qu’un LXC minimal). C’est la méthode préconisée pour une fiabilité maximale  . Vous pourriez par exemple avoir une VM Ubuntu 22.04 avec 2 vCPU et 4 Go de RAM qui fait tourner Docker + Portainer, hébergeant vos divers services conteuneurisés.</p>
+</li>
+</ul>
+<p><strong>Portainer</strong>  s’intègre dans ce contexte comme un conteneur Docker facultatif offrant une UI pour piloter vos autres conteneurs. Si vous souhaitez l’utiliser, déployez-le dans l’environnement Docker de votre choix (VM ou LXC). Portainer permettra de gérer et superviser vos conteneurs via le navigateur, ce qui complète bien Proxmox (Portainer ne gère que le niveau Docker, tandis que Proxmox gère la VM/CT hôte). Vous pouvez même ajouter plusieurs  <strong>Endpoints</strong>  dans Portainer (par ex. si plus tard vous avez plusieurs hôtes Docker sur différentes VM ou machines).</p>
+<p>En somme, Proxmox sert ici de  <strong>couche d’orchestration basse</strong>  : on crée une VM ou CT dédiés qui deviennent notre “serveur Docker”. Cette séparation assure que Docker n’interfère pas avec l’hyperviseur et que les bonnes pratiques sont respectées (on ne transforme pas Proxmox en machine à tout faire, on cloisonne). Les deux approches sont valables; pour débuter, la VM Docker+Portainer est souvent plus simple à mettre en œuvre et à maintenir à jour (car identique à n’importe quel Ubuntu standard, avec les docs Docker officielles applicables).</p>
+<p><em>(Suggestion de capture d’écran : Interface Portainer montrant la liste des containers en fonctionnement, hébergée dans une VM Proxmox.)</em></p>
+<h3 id="executer-home-assistant-sur-proxmox"><strong>Exécuter Home Assistant sur Proxmox</strong><a class="headerlink" href="#executer-home-assistant-sur-proxmox" title="Permanent link">&para;</a></h3>
+<p><strong>Home Assistant</strong>  est une application phare en domotique, que de nombreux utilisateurs souhaitent auto-héberger. Proxmox est un excellent hôte pour Home Assistant, car il permet de faire tourner  <strong>Home Assistant OS</strong>  (la distribution dédiée officielle) dans une VM avec la possibilité de faire des snapshots avant mise à jour, de restaurer rapidement en cas de crash, etc.</p>
+<p>Plusieurs méthodes s’offrent à vous pour Home Assistant (HA) sur Proxmox :</p>
+<ul>
+<li>
+<p><strong>VM Home Assistant OS</strong> : La méthode recommandée consiste à installer Home Assistant OS dans une VM KVM. L’équipe HA fournit une image disque (fichier .qcow2 ou .vdi) prête à l’emploi. On crée une VM dans Proxmox (2 vCPU, 2 Go RAM par exemple), on importe le disque fourni et on démarre. En quelques minutes, Home Assistant est opérationnel et accessible sur le réseau. Cette VM dédiée tourne 24/7 pour votre domotique. L’avantage est que HA OS inclut le superviseur, ce qui permet d’installer facilement les add-ons, et Proxmox permet de  <strong>snapshoter</strong>  la VM avant une mise à jour Home Assistant, ou de planifier des sauvegardes automatiques de la VM complète.</p>
+</li>
+<li>
+<p><strong>Home Assistant Container ou Core</strong> : Alternativement, si vous ne voulez pas de VM, vous pourriez faire tourner Home Assistant sous forme de conteneur Docker (méthode dite “Home Assistant Core” ou via l’image Docker) à l’intérieur soit d’un LXC, soit d’une VM Linux comme discuté plus haut. Cette approche peut convenir si vous avez déjà une infra Docker et que HA n’a pas besoin d’accéder à du hardware particulier. Cependant, vous perdez la simplicité du  <em>superviseur</em>  HA et des add-ons. En général, la communauté recommande l’approche VM HA OS pour une expérience la plus simple et complète.</p>
+</li>
+</ul>
+<p>Avec Home Assistant sur Proxmox, quelques  <strong>bonnes pratiques</strong>  spécifiques :</p>
+<ul>
+<li>
+<p>Pensez à  <strong>activer l’USB passthrough</strong>  si vous avez des dongles Zigbee/Z-Wave ou autre matériel domotique branché au serveur. Proxmox permet d’attacher un périphérique USB physique à une VM (via l’UID ou le port). Vous pourrez ainsi rendre visible le dongle Zigbee dans Home Assistant (la VM) comme s’il y était branché directement.</p>
+</li>
+<li>
+<p>Allouez suffisamment de ressources à la VM HA (2 à 4 Go RAM selon la taille de votre installation, et 1 à 2 vCPU minimum). Home Assistant OS est basé sur un Linux Alpine avec Docker, il n’est pas très lourd, mais les add-ons comme Node-RED, Zigbee2MQTT, etc. consomment un peu de RAM.</p>
+</li>
+<li>
+<p>Isolez le réseau de la VM HA si possible (par exemple, dans un VLAN spécifique domotique) surtout si vous exposez Home Assistant à Internet (via Nabu Casa ou autre). Même si Home Assistant est relativement sûr, une segmentation limite les impacts en cas d’intrusion.</p>
+</li>
+<li>
+<p>Profitez des  <strong>snapshots Proxmox</strong>  : avant de faire une grosse modification dans Home Assistant (mise à jour majeure, ajout d’une intégration expérimentale), prenez un snapshot à chaud de la VM. Si quelque chose va mal, vous pourrez en quelques secondes revenir à l’état antérieur connu.</p>
+</li>
+<li>
+<p>Configurez des  <strong>backup automatisés</strong>  de Home Assistant : soit à l’intérieur de Home Assistant (il peut faire des sauvegardes de sa config), soit au niveau Proxmox (sauvegarde programmée de la VM HA comme n’importe quelle VM). Idéalement, exportez ces backups hors du serveur (par ex. copie vers un NAS via un script).</p>
+</li>
+</ul>
+<p>En adoptant cette approche, Proxmox devient la fondation stable sur laquelle Home Assistant tourne de manière quasi transparente, tout en offrant un filet de sécurité (snapshots, backups faciles) très apprécié des power users.</p>
+<p><em>(Suggestion de capture d’écran : Console Proxmox affichant Home Assistant OS en cours de démarrage dans une VM.)</em></p>
+<h2 id="utilisation-des-templates-debian-ubuntu-alpine-pour-deployer-rapidement-des-services"><strong>Utilisation des templates (Debian, Ubuntu, Alpine…) pour déployer rapidement des services</strong><a class="headerlink" href="#utilisation-des-templates-debian-ubuntu-alpine-pour-deployer-rapidement-des-services" title="Permanent link">&para;</a></h2>
+<p>L’un des avantages de Proxmox pour gagner du temps est sa prise en charge des  <strong>templates de conteneurs LXC</strong>  et des  <strong>modèles de VM</strong>. Plutôt que d’installer à la main un OS à chaque nouvelle VM ou container, on peut s’appuyer sur ces modèles préconfigurés pour déployer un service en quelques secondes.</p>
+<h3 id="templates-lxc-tout-prets"><strong>Templates LXC tout prêts</strong><a class="headerlink" href="#templates-lxc-tout-prets" title="Permanent link">&para;</a></h3>
+<p>Dans l’interface Proxmox, lorsque vous créez un nouveau conteneur (CT), il est proposé de télécharger un  _template_depuis la bibliothèque officielle Proxmox. Ces templates sont des images minimales d’OS Linux courants, maintenues à jour, par ex.  <strong>Debian 11/12 Standard</strong>,  <strong>Ubuntu 22.04 LTS</strong>,  <strong>Alpine 3.17</strong>,  <strong>CentOS/AlmaLinux 8</strong>, etc. (et même des appliances TurnKey avec des applications préinstallées). Une fois le template (tarball) téléchargé sur votre nœud, déployer un nouveau conteneur revient essentiellement à cloner cette image.</p>
+<p><strong>Exemple d’utilisation</strong> : vous voulez rapidement un petit conteneur pour héberger un serveur web Nginx sur Alpine. Depuis Proxmox, cliquez  <em>Créer CT</em>, choisissez le template Alpine Linux (téléchargeable s’il ne l’est pas), quelques paramètres (CPU, RAM, mot de passe root) et validez. En 10 secondes le conteneur est créé et en cours d’exécution, avec Alpine prêt à l’emploi. Il ne reste plus qu’à  apk add nginx  via la console, et votre serveur web tourne. Cette vélocité de déploiement est impossible à battre comparé à une installation manuelle d’OS.</p>
+<p>La même logique s’applique pour Debian ou Ubuntu : si vous avez l’habitude de ces distributions, utiliser le  <em>template Debian Standard</em>  vous donne un conteneur minimal (quelques centaines de Mo) en moins d’une minute, sur lequel vous installez uniquement les paquets requis pour votre service (ex:  apt install mariadb-server  si c’est une base MariaDB).  <strong>Alpine</strong>  est excellente pour les tout petits services (très léger, quelques packages de base),  <strong>Debian/Ubuntu</strong>  offrent plus de confort (systemd, glibc) pour des applications plus complexes.</p>
+<p>Les  <strong>templates TurnKey Linux</strong>  disponibles sont aussi intéressants pour tester rapidement une application : il y a par exemple des CT TurnKey  <em>Nextcloud</em>,  <em>WordPress</em>,  <em>GitLab</em>  etc., qui viennent préconfigurés. En quelques clics on peut avoir une instance Nextcloud fonctionnelle. Cependant, pour un usage pérenne en homelab, on préfère souvent déployer manuellement sur un OS propre pour mieux contrôler la config. À vous de voir.</p>
+<p>Les conteneurs LXC Proxmox sont des  <em>containeurs système</em>  (OS complet) et non juste des conteneurs applicatifs type Docker  . Cela signifie que chaque conteneur se comporte comme une mini distrib Linux isolée. On peut s’y connecter en root (ou via un utilisateur si configuré) et l’administrer comme un petit serveur. Proxmox facilite grandement cette gestion grâce à  pct, l’outil en ligne de commande, ou via l’interface pour modifier ressources, réseau, montages, etc.  . Les conteneurs s’intègrent aux mécanismes Proxmox (backups, snapshots, firewall, etc. fonctionnent aussi pour eux).</p>
+<h3 id="modeles-et-clones-de-vm"><strong>Modèles et clones de VM</strong><a class="headerlink" href="#modeles-et-clones-de-vm" title="Permanent link">&para;</a></h3>
+<p>Outre les LXC, Proxmox permet également de travailler avec des  <strong>templates de VM</strong>. L’idée ici est de créer une VM de base (par ex. une Debian 12 minimale installée avec les bons réglages), puis de la  <strong>convertir en modèle</strong>. Ce modèle ne sera pas démarré directement, mais pourra être  <strong>cloné</strong>  à la demande pour créer de nouvelles VM identiques. En homelab, cela sert si vous avez besoin de déployer plusieurs VM similaires rapidement (par exemple, 5 VM Ubuntu pour tester un cluster, ou simplement gagner du temps à ne pas répéter l’installation OS). La fonction  <em>Clone</em>  de Proxmox, surtout en mode  <em>clone complet</em>, permet d’obtenir en quelques minutes une copie indépendante d’une VM modèle.</p>
+<p>Un usage pratique : vous avez une VM  <strong>Windows 10</strong>  configurée (générée via  <em>Sysprep</em>  pour avoir un SID unique à la clone). Vous la convertissez en  <em>Template</em>. Lorsqu’un jour vous avez besoin d’une nouvelle VM Windows pour tester un logiciel, vous faites  <em>Cloner</em>  -&gt;  <em>Créer VM clonée</em>, et en 2-3 minutes la nouvelle VM Windows est prête, sans devoir réinstaller depuis l’ISO et passer 30 min de configuration. Il faudra juste l’activer avec votre licence et la renommer.</p>
+<p>Pour Linux, le gain est moindre (car l’installation est rapide), mais ça reste utile si vous avez personnalisé un modèle avec des outils communs à toutes vos VM (par ex. une Debian modèle avec  sudo,  vim, les dépôts non-free activés, l’agent QEMU installé, etc.). Chaque nouvelle VM clonée héritera de ces préparatifs.</p>
+<p>Enfin, notez que Proxmox gère  <strong>Cloud-Init</strong>  pour les VM : vous pouvez télécharger des images  <em>cloud</em>  (Ubuntu Cloud, Alpine Cloud, etc.), les utiliser comme base de VM, et via l’outil Cloud-Init de Proxmox, injecter automatiquement un utilisateur, un mot de passe ou une clé SSH, une configuration réseau, etc. Cela facilite le déploiement automatisé de VM prêtes à l’emploi, surtout si vous orchestrez votre homelab avec des outils comme Terraform ou Ansible. Pour un débutant, ce n’est pas indispensable, mais c’est bon de savoir que la fonctionnalité existe pour le jour où l’on veut automatiser davantage.</p>
+<p>En résumé, exploitez les templates mis à disposition par Proxmox pour  <strong>accélérer vos déploiements</strong>. Non seulement cela vous fait gagner du temps, mais en plus vous obtenez des installations propres et cohérentes (toutes basées sur l’image officielle de la distrib choisie). La gestion ultérieure s’en retrouve facilitée et homogène à travers vos conteneurs et VMs.</p>
+<p><em>(Suggestion de capture d’écran : Menu Proxmox montrant la liste des templates LXC disponibles au téléchargement.)</em></p>
+<h2 id="ressources-officielles-et-communautes-utiles"><strong>Ressources officielles et communautés utiles</strong><a class="headerlink" href="#ressources-officielles-et-communautes-utiles" title="Permanent link">&para;</a></h2>
+<p>Pour aller plus loin avec Proxmox VE et obtenir de l’aide, voici quelques liens utiles :</p>
+<ul>
+<li>
+<p><strong>Site Officiel Proxmox VE</strong>  – Page officielle avec présentation des fonctionnalités, téléchargements de l’ISO, informations sur les offres de support, etc. (disponible en anglais et autres langues).  <a href="https://www.proxmox.com/en/proxmox-ve">proxmox.com</a></p>
+</li>
+<li>
+<p><strong>Documentation Officielle (Wiki)</strong>  – Le wiki de Proxmox VE contient le guide d’administration complet, les notes de version, et de nombreux articles techniques (réseau, stockage, etc.). C’est la référence à consulter pour les détails pointus.  <a href="https://pve.proxmox.com/wiki/">pve.proxmox.com/wiki</a></p>
+</li>
+<li>
+<p><strong>Forum Communautaire Proxmox</strong>  – Forum officiel où échangent les développeurs et utilisateurs. Très actif, on y trouve des sections par thématiques et langue (une catégorie française existe pour l’aide dans la langue de Molière). Idéal pour poser vos questions ou chercher si quelqu’un a déjà résolu un problème similaire.  <a href="https://forum.proxmox.com/">forum.proxmox.com</a></p>
+</li>
+<li>
+<p><strong>Proxmox VE sur GitHub</strong>  – Le code source de Proxmox VE et de ses composants (QEMU custom, GUI, etc.) est accessible sur GitHub. Utile pour les contributeurs ou pour signaler des bugs sur Bugzilla.  <a href="https://github.com/proxmox">github.com/proxmox</a></p>
+</li>
+<li>
+<p><strong>Communautés &amp; tutoriels</strong>  – En dehors des ressources officielles, de nombreuses communautés homelab abordent Proxmox : par exemple le subreddit  <em>r/Proxmox</em>  (en anglais) regorge de retours d’expérience, le subreddit  _r/homelab_discute souvent de Proxmox vs autres solutions, et il existe des groupes Facebook francophones dédiés à Proxmox. N’hésitez pas à consulter des blogs spécialisés (par ex.  <strong>tutos-info.fr</strong>,  <strong>blog.stephane-robert.info</strong>  en français) ou des chaînes YouTube (Techno Tim, Level1Techs, …) qui proposent des tutoriels et comparatifs sur Proxmox et son écosystème.</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

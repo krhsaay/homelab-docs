@@ -1,0 +1,1589 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../siem/">
+      
+      
+        <link rel="next" href="../../diy/esp32/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Segmentation & honeypots - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#segmentation-reseau-et-honeypots-dans-un-homelab-blue-team" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Segmentation & honeypots
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#honeypots-et-systemes-de-leurre" class="md-nav__link">
+    <span class="md-ellipsis">
+      Honeypots et systèmes de leurre
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#outils-cles-pour-la-segmentation-et-la-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Outils clés pour la segmentation et la détection
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-typiques-en-homelab-blue-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage typiques en homelab Blue Team
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-et-architecture-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation et architecture type
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommandations-et-bonnes-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommandations et bonnes pratiques
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="segmentation-reseau-et-honeypots-dans-un-homelab-blue-team">Segmentation réseau et honeypots dans un homelab Blue Team<a class="headerlink" href="#segmentation-reseau-et-honeypots-dans-un-homelab-blue-team" title="Permanent link">&para;</a></h1>
+<p>La  <strong>segmentation réseau</strong>  est une pratique clé de la défense en profondeur : elle consiste à diviser le réseau en zones isolées (VLAN, DMZ, sous-réseaux physiques) pour limiter la propagation d’une attaque. Comme le souligne l’OWASP, la segmentation est « au cœur de la défense en profondeur », car elle permet de construire une architecture sécurisée et isolée. En pratique, on crée au minimum plusieurs « zones de confiance » (LAN interne, DMZ publique, réseau des serveurs, etc.), chacune protégée par un pare-feu (firewall). Par exemple, pfSense (open-source) peut être utilisé comme pare-feu/routeur principal : il prend en charge les VLANs, le NAT et les DMZ et peut même intégrer des IDS/IPS (Snort ou Suricata). Un conseil éprouvé est d’isoler physiquement les zones de confiance : utiliser deux commutateurs distincts (un pour le WAN/DMZ et un pour les réseaux internes) afin qu’une mauvaise configuration de VLAN ne relie pas accidentellement Internet au LAN interne. On évitera aussi d’utiliser le VLAN 1 natif pour le trafic de données, car les protocoles de gestion réseau y transitent en clair.</p>
+<p>Dans cette architecture, on définit souvent une  <strong>DMZ</strong>  (zone démilitarisée) en bordure : c’est un réseau isolé exposé à Internet, devant lequel se situent les services publics. Les honeypots sont idéalement déployés en DMZ ou dans des segments « leurres » dédiés, afin de piéger les attaquants sans compromettre le cœur du LAN. Conformément aux bonnes pratiques, chaque trafic externe qui pénètre la DMZ doit passer par le pare-feu, et tout trafic de la DMZ vers le réseau interne est fortement filtré. Les VLANs sur le commutateur et les règles de firewall pfSense garantissent ce cloisonnement. Par exemple, dans un homelab, on peut créer un VLAN  <strong>DMZ</strong>  pour les honeypots et un VLAN  <strong>Production</strong>  pour les serveurs sensibles, le tout sur pfSense en configurant les interfaces virtuelles et les règles de pare-feu appropriées. Les honeypots (machines factices) n’ont alors accès qu’à la DMZ et éventuellement à Internet, mais pas au LAN interne.</p>
+<h2 id="honeypots-et-systemes-de-leurre">Honeypots et systèmes de leurre<a class="headerlink" href="#honeypots-et-systemes-de-leurre" title="Permanent link">&para;</a></h2>
+<p>Un  <strong>honeypot</strong>  (ou « pot de miel ») est un dispositif ou service factice destiné à attirer les attaquants pour étudier leur comportement et générer des alertes. C’est un leurre censé paraître vulnérable afin de détourner et piéger l’intrus. Comme l’explique Ben Lutkevich (TechTarget), un honeypot est « un dispositif réseau qui trompe les hackers en leur faisant croire qu’ils ont pénétré un vrai réseau, alors qu’en réalité ils sont dans un système isolé conçu comme piège ». Concrètement, le honeypot émule des services courants (SSH, HTTP, FTP, etc.) avec de fausses données pour sembler réaliste. L’attaquant y croira, ce qui permet de  <em>détecter</em>  et d’<em>analyser</em>  ses actions en profondeur. Idéalement, on le place dans la DMZ (ou dans un segment isolé) : un firewall sépare la DMZ du réseau interne pour éviter toute propagation, comme le résume TechTarget, « la DMZ est une zone tampon sécurisée qui isole le réseau interne d’Internet ». Le honeypot apparaît alors depuis l’extérieur comme un composant vulnérable de ce réseau public, attirant l’attaquant. Une fois piégé, on le laisse agir suffisamment longtemps pour collecter un maximum d’informations sur ses techniques (attaques réseau, scans de ports, brute force SSH, etc.).</p>
+<p>Il existe plusieurs types de honeypots :  <strong>low-interaction</strong>  (simples services factices),  <strong>medium-interaction</strong>  (émulent plusieurs services) et  <strong>high-interaction</strong>  (machines virtuelles entières, très réalistes mais complexes). Dans un homelab Blue Team, on emploie souvent des honeypots de type moyen : par exemple  <em>Cowrie</em>, un honeypot SSH/Telnet open-source très populaire, qui enregistre toutes les tentatives de connexion et les commandes tapées par l’attaquant. D’autres outils comme  <em>Glastopf</em>  (piège web),  <em>Conpot</em>  (pour systèmes industriels) ou l’« ensemble » Modern Honey Network/T-Pot peuvent être utilisés pour couvrir différents protocoles. Une pratique recommandée est de déployer un honeypot sur chaque segment interne critique. Héctor Herrero (blog Bujarra) suggère ainsi de « déployer un honeypot léger dans chaque segment de réseau que nous avons… pour détecter les curieux, bots ou scans de ports sur notre réseau interne ».</p>
+<p>Les honeypots fournissent des informations précieuses sur les tactiques des attaquants. Leurs journaux (logs) peuvent être centralisés dans un SIEM (par ex. ELK, Graylog, Wazuh) pour corrélation. Par exemple, un laboratoire de type  <em>SOC homelab</em>  met souvent un honeypot web (DVWA) et un honeypot SSH (Cowrie) en DMZ, et enregistre automatiquement toute activité dans le SIEM. Un tel scénario est décrit par Ankeshraj (mai 2025) : « la zone publique DMZ présente un double honeypot : DVWA dans un conteneur Docker et un serveur SSH Cowrie. Toute activité attaquante y est enregistrée et remontée vers le SOC ». Cette combinaison permet au Blue Team de s’entraîner : par exemple, tout scan ou brute force détecté sur le honeypot génère immédiatement une alerte. Pendant ce temps, le honeypot étant isolé, l’attaquant n’atteint pas les vrais serveurs internes.</p>
+<h2 id="outils-cles-pour-la-segmentation-et-la-detection">Outils clés pour la segmentation et la détection<a class="headerlink" href="#outils-cles-pour-la-segmentation-et-la-detection" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>pfSense (pare-feu/routeur)</strong> : distribution BSD open-source très répandue pour la sécurisation des réseaux. Elle prend en charge les VLANs, la DMZ, le NAT et offre de nombreux packages (comme Snort/Suricata en IDS/IPS). En d’autres termes, « pfSense peut jouer un rôle d’IDS/IPS grâce à des paquets comme Snort et Suricata ». On l’installe typiquement sur une machine dédiée (PC, appliance ou VM) avec plusieurs interfaces réseau (WAN, LAN, DMZ) ou en mode tronc (802.1Q) pour gérer les VLANs. Les règles de firewall pfSense définissent quelles communications sont permises entre les zones (typiquement, bloquer tout trafic entrant vers le LAN sauf VPN, n’autoriser que ce qui est nécessaire vers la DMZ, etc.). Le package  <em>Suricata</em>  de pfSense offre de l’IDS/IPS en temps réel.</p>
+</li>
+<li>
+<p><strong>Suricata (IDS/IPS)</strong> : système open-source d’inspection réseau très performant. Il s’agit d’un moteur  <em>Network Security Monitoring</em>  (NSM) capable de surveiller tout le trafic d’une interface en mode promiscuous, de l’analyser selon des signatures et d’émettre des alertes en cas de détection d’une menace connue. Suricata gère de nombreux protocoles et permet, en mode IDS, de journaliser des événements suspects, ou en mode IPS, de bloquer des paquets. Son atout est sa versatilité (grand volume de trafic, règles personnalisables). Suricata s’intègre facilement dans un homelab (via pfSense ou en VM/container dédiée) et alimente le SIEM en alertes NIDS.</p>
+</li>
+<li>
+<p><strong>Cowrie (honeypot SSH/Telnet)</strong> : honeypot Python très utilisé pour piéger les attaquants sur les services SSH et Telnet. Cowrie enregistre les frappes clavier et les transferts de fichiers (wget, scp, sftp), fournissant un journal détaillé des actions de l’attaquant. Comme le note la documentation officielle, « Cowrie est un honeypot SSH/Telnet (de faible à moyenne interaction) conçu pour journaliser les attaques par bruteforce et les interactions en shell exécutées par l’attaquant ». Cowrie simule un vrai shell Unix (avec un faux système de fichiers) : par exemple, un attaquant pourra voir un fichier factice  <code>/etc/passwd</code>. Cowrie existe aussi sous forme d’image Docker sur Docker Hub. Par exemple, on peut rapidement tester Cowrie en lançant  <code>docker run -p 2222:2222 cowrie/cowrie:latest</code>. Cette portabilité Docker facilite son déploiement dans des containers isolés sur le homelab.</p>
+</li>
+<li>
+<p><strong>VLAN (segmentation par commutateurs)</strong> : technique incontournable pour isoler plusieurs réseaux sur un même switch géré. En homelab, on attribue différents ID VLAN aux ports/sous-interfaces pour séparer physiquement (au niveau L2) les flux. Par exemple, le VLAN 10 pour le LAN interne, VLAN 20 pour les honeypots, VLAN 30 pour l’IOT, etc. PfSense prend en charge les VLAN IEEE 802.1Q sur une interface. La documentation pfSense rappelle que les VLANs « segmentent un réseau et isolent des sous-réseaux », mais qu’il faut prendre garde aux configurations (ex.  <strong>VLAN hopping</strong>  si on n’éloigne pas le trafic non marqué VLAN 1). Par ailleurs, on appliquera les bonnes pratiques : ne pas laisser le VLAN 1 par défaut servir au trafic de données et protéger physiquement les ports en tronc (voir Doc pfSense).</p>
+</li>
+<li>
+<p><strong>Docker/VM/LXC (virtualisation et conteneurs)</strong> : les technologies de conteneurisation simplifient le déploiement de nombreuses briques. Par exemple, un honeypot comme Cowrie peut tourner dans un container Docker (image publique), facilement relié à un réseau dédié via le pont Docker. On peut aussi déployer des appliances virtuelles dans des VM ou LXC pour simuler des vulnérabilités (ex : DVWA, OWASP Juice Shop, un serveur Windows vulnérable, etc.). Les environnements comme Proxmox LXC/VM ou VMware permettent de créer plusieurs VMs interconnectées par VLANs virtuels. Un homelab typique pourrait lancer un pfSense en VM (ou sur un Proxmox LXC avec bridged NIC), des serveurs Linux/Windows en VM, et divers conteneurs Docker pour les honeypots ou outils d’analyse. Tout ceci est ensuite câblé (virtuellement) derrière le firewall pfSense ou un routeur logiciel afin de respecter la segmentation. Par exemple, la mise en place du honeypot « Caméléon » décrite par Bujarra utilise Docker pour déployer plusieurs honeypots (DNS, HTTP, SSH, etc.) dans un conteneur unique, exposé sur un port standard.</p>
+</li>
+</ul>
+<h2 id="cas-dusage-typiques-en-homelab-blue-team">Cas d’usage typiques en homelab Blue Team<a class="headerlink" href="#cas-dusage-typiques-en-homelab-blue-team" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Attirer et observer les attaquants</strong> : le honeypot sert de leurre pour détecter des scans et intrusions. Lorsqu’un malware ou un attaquant essaye de scanner le réseau, il tombe d’abord sur le honeypot isolé. Les connexions sont consignées (connexion SSH ratée dans Cowrie, requêtes HTTP malicieuses sur un honeypot web, tentatives de login sur un serveur factice, etc.). Le Blue Team peut alors investiguer à partir de ces journaux. Dans un lab comme celui d’Orange (GOAT Lab), l’objectif est précisément de « simuler des attaques et capturer des indicateurs de compromission pour entraîner la détection ». La segmentation permet ici de contenir toute attaque dans la zone « trompe-l’œil », sans risque pour l’infrastructure réelle.</p>
+</li>
+<li>
+<p><strong>Détection d’intrusion réseau (NIDS)</strong> : avec Suricata ou Snort activé sur le firewall (pfSense) ou sur un segment réseau (port mirroring), on surveille en parallèle le trafic de chaque VLAN. Suricata détectera par exemple un balayage de ports, des tentatives de signature connues (ex. CVE exploit, pattern de ransomware en action) et générera des alertes. Ces alertes, agrégées par le SIEM, complètent celles du honeypot. Par exemple, si le honeypot SSH (Cowrie) enregistre des tentatives de brute force, Suricata pourra observer ces mêmes paquets et confirmer l’attaque. Ces corrélations aident à affiner les règles.</p>
+</li>
+<li>
+<p><strong>Segmentation de l’IoT et des environnements critiques</strong> : dans un homelab, on pratique souvent la règle de distinguer les machines fragiles (périphériques IOT, HomeAssistant, cameras) du réseau professionnel simulé. Ces périphériques IOT sont placés sur un VLAN isolé, sans accès direct aux serveurs internes. On y applique des règles stricte (ex. seulement accès Internet et accès limité au NAS), évitant qu’une compromission d’un capteur ne donne un pivot facile vers le cœur du réseau. C’est l’application du principe Zero Trust et du « least privilege » réseau.</p>
+</li>
+<li>
+<p><strong>Automatisation et alerting</strong> : les honeypots et IDS sont configurés pour remonter automatiquement les alertes vers la plateforme centrale (ex. Graylog, ELK/Wazuh). Par exemple, un simple script peut envoyer par email ou par Slack une alerte dès qu’un honeypot est touché. Ainsi, même dans un cadre d’apprentissage, on peut tester des playbooks de réponse (isoler la machine compromise, vérifier logs, etc.).</p>
+</li>
+</ul>
+<h2 id="installation-et-architecture-type">Installation et architecture type<a class="headerlink" href="#installation-et-architecture-type" title="Permanent link">&para;</a></h2>
+<p>Pour un homelab Blue Team, on préconise généralement une architecture multi-VM/containeurs :</p>
+<ul>
+<li>
+<p><strong>Firewall / Routeur principal</strong> : exécutez pfSense sur une VM (KVM, VMware, Proxmox) ou sur du matériel dédié. Il aura au moins deux NIC : WAN (vers l’Internet ou un routeur upstream) et LAN (réseau interne). Le LAN physique est souvent relié à un switch managé (ou aux bridges Proxmox) qui a un port trunk lui permettant de transporter plusieurs VLAN vers le LAN.</p>
+</li>
+<li>
+<p><strong>Switch virtuel / VLANs</strong> : si vous utilisez Proxmox ou ESXi, créez des réseaux virtuels (VLAN 10, 20…) associés à des bridges. Branchez les VMs honeypots et IoT sur les VLANs correspondants. Par exemple, choisissez VLAN 100 pour DMZ/honeypots et VLAN 200 pour IoT. Dans pfSense, créez les interfaces VLAN correspondantes liées à votre interface physique LAN.</p>
+</li>
+<li>
+<p><strong>Honeypots</strong> : par exemple, lancez Cowrie dans un conteneur Docker sur le réseau VLAN 100 (DMZ). C’est simple avec la commande Docker officielle :  <code>docker run -d --name cowrie -p 2222:2222 cowrie/cowrie:latest</code>. De même, vous pouvez déployer d’autres honeypots (Glastopf pour piège web, Dionaea pour SMB/TFTP, Caméléon multi-honeypot, etc.) sur le même VLAN isolé. Dans pfSense, créez une règle qui n’autorise par défaut aucune connexion du WAN vers ce VLAN, sauf peut-être les ports spécifiés (1:1 NAT ou forwarding pour rendre le honeypot accessible de l’extérieur). Idéalement, chaque honeypot a une IP privée fixe dans le VLAN DMZ.</p>
+</li>
+<li>
+<p><strong>Serveurs internes</strong> : VMs Windows/Linux sur le VLAN interne (ex. VLAN 1 LAN). Installez sur chacun des agents de collecte de logs (Filebeat/Winlogbeat) afin d’alimenter la plateforme de SIEM. Vous pouvez aussi héberger un serveur de simulation d’entreprise (Active Directory, base de données) sur ce réseau isolé.</p>
+</li>
+<li>
+<p><strong>Suricata / IDS</strong> : installez Suricata soit directement sur pfSense (package) soit sur une VM dédiée en mode tap/mirroring. Configurez-le pour surveiller le trafic entrant. Les alertes seront envoyées au SIEM.</p>
+</li>
+<li>
+<p><strong>SIEM et visualisation</strong> : déployez une stack ELK/Graylog/Wazuh dans le LAN pour collecter et analyser les logs (y compris ceux générés par les honeypots et Suricata). Par exemple, Graylog peut ingérer les fichiers JSON de Cowrie pour les requêtes SSH. Kibana/Wazuh offre des dashboards de conformité pour visualiser les alertes.</p>
+</li>
+</ul>
+<p>Cette architecture peut être construite avec des conteneurs Docker : pfSense ne s’exécute pas en container, mais ses équivalents peuvent (ex. OPNsense). En pratique, on utilisera souvent pfSense sur une VM et tout le reste en conteneurs. Des solutions  <em>prepackaged</em>  existent : par exemple le stack Docker (contenant aussi souvent Filebeat). Ainsi, en quelques  <code>docker-compose up</code>, on obtient un environnement complet.</p>
+<h2 id="recommandations-et-bonnes-pratiques">Recommandations et bonnes pratiques<a class="headerlink" href="#recommandations-et-bonnes-pratiques" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Defense en profondeur</strong> : gardez un principe « deny by default ». N’ouvrez que les ports indispensables entre zones. Par exemple, isoler la DMZ: du réseau interne on peut autoriser l’administration SSH/VPN du pfSense, mais en aucun cas laisser la DMZ initier des connexions vers le LAN.</p>
+</li>
+<li>
+<p><strong>Matériel et ressources</strong> : même pour un homelab, privilégiez de la RAM et du SSD rapide. Suricata et Elasticsearch sont gourmands en mémoire. pfSense avec IDS et VPN requiert au moins 2 Go de RAM, mieux 4 Go. Suricata bénéficiera de cœurs CPU multiples pour l’inspection. Un hôte de 8 Go de RAM peut suffire pour un petit lab.</p>
+</li>
+<li>
+<p><strong>Mises à jour et maintenance</strong> : tenez à jour vos listes de règles Suricata/Snort (EmergingThreats, Snort VRT). Mettez régulièrement à jour Cowrie (pour ne pas être identifié comme honeypot obsolète). Sauvegardez la config de pfSense (préférer la sauvegarde automatique). Surveillez l’occupation disque (les logs peuvent rapidement croître ; purgez ou archivez régulièrement).</p>
+</li>
+<li>
+<p><strong>Sécurité interne</strong> : même les honeypots doivent être durcis pour éviter d’être compromis et servir de tremplin. Par exemple, utilisez un honeypot non routé vers le LAN, ou en mode « console only ». Suricata et le firewall de l’hôte doivent empêcher toute connexion sortante non gérée. Activez TLS/SSL pour pfSense et tout accès admin, et appliquez l’authentification à deux facteurs si possible.</p>
+</li>
+<li>
+<p><strong>Formation et exercices</strong> : profitez de ce lab pour pratiquer des scénarios Blue Team. Par exemple, simulez une infection sur l’hôte Honeypot et vérifiez que Suricata la détecte. Orchestrez des attaques (port scans, bruteforce SSH) pour tester l’alerte et la réponse automatisée (playbooks Ansible ou scripts de remédiation). L’environnement GOAT Lab d’Orange (un lab d’entrainement offensif) illustre ce principe : chaque outil (pfSense, honeypot, IDS) y joue un rôle afin d’enseigner à l’ingénieur le cycle détection-réponse.</p>
+</li>
+</ul>
+<p>En résumé, pour un homelab défensif orienté Blue Team, on combinera  <strong>pare-feu segmenté (pfSense + VLAN)</strong>,  <strong>IDS/IPS (Suricata)</strong>  et  <strong>honeypots (Cowrie, etc.)</strong>  dans un réseau compartimenté. Cette combinaison permet de collecter de façon fiable les journaux de sécurité et de générer des alertes pertinentes. L’accent est mis sur la fiabilité de la collecte et la clarté des alertes. Chaque segment doit être isolé et les flux strictement contrôlés. Comme le préconise l’OWASP : la segmentation réseau, alliée au principe du moindre privilège, est un moyen de  <strong>construire une architecture sécurisée où chaque segment reste aussi isolé que possible</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

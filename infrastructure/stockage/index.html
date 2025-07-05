@@ -1,0 +1,1751 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../proxmox/">
+      
+      
+        <link rel="next" href="../reseau/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Stockage - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gestion-du-stockage-dans-un-homelab-securise" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Stockage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#comparatif-des-systemes-de-fichiers-zfs-vs-btrfs-vs-ext4-vs-xfs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparatif des systèmes de fichiers : ZFS vs Btrfs vs EXT4 vs XFS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Comparatif des systèmes de fichiers : ZFS vs Btrfs vs EXT4 vs XFS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ext4-le-pilier-stable-et-eprouve" class="md-nav__link">
+    <span class="md-ellipsis">
+      EXT4 – Le pilier stable et éprouvé
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xfs-le-moteur-de-performance-evolutif" class="md-nav__link">
+    <span class="md-ellipsis">
+      XFS – Le moteur de performance évolutif
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#btrfs-linnovateur-riche-en-fonctionnalites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Btrfs – L’innovateur riche en fonctionnalités
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zfs-le-gardien-de-lintegrite-des-donnees" class="md-nav__link">
+    <span class="md-ellipsis">
+      ZFS – Le gardien de l’intégrité des données
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redondance-et-tolerance-aux-pannes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redondance et tolérance aux pannes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Redondance et tolérance aux pannes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raid-niveaux-materiel-vs-logiciel" class="md-nav__link">
+    <span class="md-ellipsis">
+      RAID : niveaux, matériel vs logiciel
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snapshots-restauration-instantanee-et-limites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snapshots : restauration instantanée et limites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sauvegardes-strategies-locales-vs-cloud-outils-open-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sauvegardes : stratégies locales vs cloud, outils open source
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-dun-nas-et-stockage-centralise-avec-proxmox" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration d’un NAS et stockage centralisé avec Proxmox
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intégration d’un NAS et stockage centralisé avec Proxmox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#truenas-vs-synology-vs-openmediavault-solutions-nas-comparees" class="md-nav__link">
+    <span class="md-ellipsis">
+      TrueNAS vs Synology vs OpenMediaVault : solutions NAS comparées
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrer-un-nas-a-proxmox-ve-nfs-smb-iscsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégrer un NAS à Proxmox VE (NFS, SMB, iSCSI)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grille-daide-au-choix-du-stockage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grille d’aide au choix du stockage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gestion-du-stockage-dans-un-homelab-securise"><strong>Gestion du stockage dans un homelab sécurisé</strong><a class="headerlink" href="#gestion-du-stockage-dans-un-homelab-securise" title="Permanent link">&para;</a></h1>
+<h2 id="comparatif-des-systemes-de-fichiers-zfs-vs-btrfs-vs-ext4-vs-xfs"><strong>Comparatif des systèmes de fichiers : ZFS vs Btrfs vs EXT4 vs XFS</strong><a class="headerlink" href="#comparatif-des-systemes-de-fichiers-zfs-vs-btrfs-vs-ext4-vs-xfs" title="Permanent link">&para;</a></h2>
+<p>Dans un homelab, le choix du système de fichiers impacte directement la  <strong>fiabilité des données</strong>  et les fonctionnalités disponibles (snapshots, RAID, compression…). Les systèmes de fichiers traditionnels comme  <strong>EXT4</strong>  et  <strong>XFS</strong>  offrent stabilité et performance de base, tandis que  <strong>Btrfs</strong>  et  <strong>ZFS</strong>  intègrent des fonctions avancées (copie sur écriture, somme de contrôle, etc.) pour améliorer l’intégrité des données. Voici un comparatif détaillé de leurs caractéristiques, avantages, inconvénients et cas d’usage.</p>
+<h3 id="ext4-le-pilier-stable-et-eprouve"><strong>EXT4 – Le pilier stable et éprouvé</strong><a class="headerlink" href="#ext4-le-pilier-stable-et-eprouve" title="Permanent link">&para;</a></h3>
+<p><strong>EXT4</strong>  (Fourth Extended Filesystem) est le système de fichiers par défaut de nombreuses distributions Linux depuis 2008. Évolution du EXT3, il est réputé pour sa  <strong>stabilité</strong>  et sa  <strong>performance équilibrée</strong>, avec un journal assurant une récupération rapide en cas de crash. Il fonctionne bien dans presque tous les scénarios généraux.</p>
+<ul>
+<li>
+<p><strong>Avantages :</strong>  Mature et ultra-stable (plus de 10 ans d’usage intensif)  . Large compatibilité (supporté nativement par la plupart des OS Linux et outils). Bonnes performances générales en lecture/écriture, y compris sur des disques de grande capacité. Utilise un  <strong>journaling</strong>  qui améliore la résilience en cas de panne système  .</p>
+</li>
+<li>
+<p><strong>Inconvénients :</strong>  Pas de fonctionnalités avancées intégrées – absence de snapshots, de compression transparente ou de mécanisme de RAID interne  . Protection d’intégrité limitée : pas de  <strong>somme de contrôle des données</strong>  (seulement journal des métadonnées), donc pas de détection automatique de corruption. Évolutivité suffisante pour la plupart des cas, mais en théorie moins extensible que Btrfs/ZFS.</p>
+</li>
+<li>
+<p><strong>Cas d’usage recommandés :</strong>  Systèmes Linux généraux (PC, serveurs web, etc.) où la  <strong>simplicité et la fiabilité éprouvée</strong>  priment  . Parfait pour les partitions système ou le stockage de données non critiques dans un homelab, lorsque l’on n’a pas besoin des fonctionnalités avancées des systèmes modernes.</p>
+</li>
+</ul>
+<h3 id="xfs-le-moteur-de-performance-evolutif"><strong>XFS – Le moteur de performance évolutif</strong><a class="headerlink" href="#xfs-le-moteur-de-performance-evolutif" title="Permanent link">&para;</a></h3>
+<p><strong>XFS</strong>  est un système de fichiers journalisé 64 bit, créé à l’origine pour SGI IRIX (années 90) et adopté dans le monde Linux (c’est le choix par défaut de Red Hat Enterprise Linux, par ex.). Il est réputé pour sa  <strong>haute performance en I/O</strong>(surtout sur les gros fichiers et les opérations parallèles) et son excellente  <strong>scalabilité</strong>  sur de très grandes volumétries.</p>
+<ul>
+<li>
+<p><strong>Avantages :</strong>  Très  <strong>performant en débit</strong>  séquentiel et pour les fichiers de grande taille  . Supporte des systèmes de fichiers massifs (jusqu’à 8 exabytes) et gère efficacement les charges intensives (grandes bases de données, streaming vidéo, etc.). Stable et éprouvé en production, avec des fonctionnalités comme la défragmentation à chaud et le journaling pour protéger les métadonnées.</p>
+</li>
+<li>
+<p><strong>Inconvénients :</strong>  Moins efficace avec d’innombrables petits fichiers ou des charges très métadonnées (le design privilégie les grands flux)  . N’intègre  <em>pas</em>  de snapshots, compression ou chiffrement natifs (il faut s’appuyer sur LVM ou des solutions externes pour ces besoins)  . De plus, XFS ne permet pas de  <strong>réduire</strong>  la taille d’un système de fichiers (on peut l’agrandir, mais pas le shrink).</p>
+</li>
+<li>
+<p><strong>Cas d’usage recommandés :</strong>  Serveurs de fichiers volumineux, stockage de médias et de vidéos,  <strong>workstations de montage</strong>  vidéo, environnements avec gros fichiers (images disque, backups volumineux) ou  <strong>hôtes de virtualisation</strong>  gérant de nombreux fichiers VM de taille conséquente  . XFS excelle dès qu’il faut un débit maximal et une gestion efficace de très grandes capacités.</p>
+</li>
+</ul>
+<h3 id="btrfs-linnovateur-riche-en-fonctionnalites"><strong>Btrfs – L’innovateur riche en fonctionnalités</strong><a class="headerlink" href="#btrfs-linnovateur-riche-en-fonctionnalites" title="Permanent link">&para;</a></h3>
+<p><strong>Btrfs</strong>  (B-Tree FS, souvent prononcé “Butter FS”) est un système de fichiers moderne introduit en 2009, conçu pour apporter des fonctionnalités de niveau entreprise sur Linux (copy-on-write, snapshots, RAID logiciel…). Il est par exemple le système par défaut sur Fedora, openSUSE et utilisé par Synology sur certains NAS. Btrfs est souvent comparé à ZFS en termes d’objectifs, tout en étant intégré au noyau Linux.</p>
+<ul>
+<li>
+<p><strong>Fonctionnalités clés :</strong>  Btrfs prend en charge les  <strong>snapshots instantanés</strong>  (copies d’état du système de fichiers à un instant T) et les  <strong>subvolumes</strong>  (unités logiques séparées)  . Il propose un  <strong>RAID logiciel intégré</strong>  (niveaux 0, 1, 10 et 5/6 expérimentaux) sans nécessiter d’outil externe, ainsi que la  <strong>compression transparente</strong>  des données (algorithmes supportés : zlib, lzo, zstd) pour économiser de l’espace  . Surtout, Btrfs calcule des  <strong>checksums</strong>  sur les données et métadonnées pour détecter les corruptions, et peut réaliser une auto-réparation s’il y a redondance (RAID 1/10)  . On note aussi une grande flexibilité avec possibilité d’<strong>agrandir ou réduire</strong>  un volume en ligne, et une gestion fine des quotas et de la déduplication (via des outils externes).</p>
+</li>
+<li>
+<p><strong>Avantages :</strong>  <strong>Snapshots rapides</strong>  et peu coûteux en espace (on peut en prendre fréquemment pour tester des modifications et revenir en arrière facilement).  <strong>RAID logiciel</strong>  directement dans le système de fichiers (pas besoin de mdadm), avec tolérance aux pannes et auto-réparation (en modes mirroring)  .  <strong>Compression</strong>  et  <strong>déduplication</strong>(optionnelle) pour optimiser le stockage. Évolutivité et souplesse (ajout/retrait de disques dans un volume Btrfs, redimensionnement à la volée). En somme, Btrfs est un véritable  <strong>couteau suisse</strong>  du stockage, réunissant de nombreuses fonctionnalités avancées.</p>
+</li>
+<li>
+<p><strong>Inconvénients :</strong>  Moins mature qu’EXT4/XFS dans certaines situations critiques : toutes les distributions ne considèrent pas Btrfs aussi “production-ready” pour les workloads intensifs (bien qu’il s’améliore constamment)  . L’implémentation des modes RAID 5/6 est encore considérée  <em>expérimentale</em>  – des problèmes de fiabilité n’ont pas été totalement résolus à ce jour, ce qui déconseille leur usage en production  . De plus, Btrfs induit un léger  <strong>surcoût de performance</strong>  dû au copy-on-write et aux checksums (impact surtout visible sur du matériel plus ancien ou des charges lourdes en écriture)  . Enfin, l’<strong>administration</strong>  peut sembler complexe pour les débutants (subvolumes, équilibre du FS, etc.), même si des outils comme  btrfs-progs  ou Snapper facilitent la gestion.</p>
+</li>
+<li>
+<p><strong>Cas d’usage recommandés :</strong>  Idéal pour les  <strong>NAS auto-hébergés</strong>  et serveurs domestiques qui profitent de ses fonctionnalités (par ex. snapshots programmés pour les sauvegardes, ou utilisation de la compression pour stocker plus de données). Recommandé aussi pour les utilisateurs développeurs ou “power users” qui apprécient les  <strong>fonctionnalités avancées</strong>  et les options de rollback facile (ex: snapshots avant une mise à jour système). Btrfs convient bien également aux environnements de containers et machines de test où l’on veut cloner rapidement des environnements (subvolumes et snapshots) tout en bénéficiant de la sécurité des checksums.</p>
+</li>
+</ul>
+<h3 id="zfs-le-gardien-de-lintegrite-des-donnees"><strong>ZFS – Le gardien de l’intégrité des données</strong><a class="headerlink" href="#zfs-le-gardien-de-lintegrite-des-donnees" title="Permanent link">&para;</a></h3>
+<p><strong>ZFS</strong>  est souvent considéré comme le  <strong>Saint Graal de la fiabilité</strong>  des systèmes de fichiers. Conçu par Sun Microsystems et désormais développé via le projet open source OpenZFS, il combine un système de fichiers  <strong>et</strong>  un gestionnaire de volumes logiques. ZFS introduit des concepts révolutionnaires de  <strong>stockage en pool</strong>  (agrégation flexible de disques) et de  <strong>principe Copy-on-Write</strong>  généralisé garantissant une forte cohérence. Très utilisé dans les NAS professionnels (TrueNAS, etc.) et les infrastructures exigeant une haute intégrité, ZFS est aussi supporté sous Linux (via module DKMS) et intégré nativement à FreeBSD.</p>
+<ul>
+<li>
+<p><strong>Fonctionnalités clés :</strong>  ZFS offre un éventail complet de fonctionnalités: système Copy-on-Write avec  <strong>snapshots et clones</strong>  natifs (snapshots instantanés et clones modifiables)  ,  <strong>vérification d’intégrité</strong>  continue avec  <strong>checksums sur chaque bloc de données</strong>  et  <strong>auto-réparation</strong>  en cas de corruption grâce aux copies redondantes  , compression transparente (algorithme LZ4 par défaut, ZSTD possible),  <strong>deduplication</strong>  optionnelle des données, et bien sûr son propre système de  <strong>RAID avancé (RAID-Z)</strong>  équivalent aux RAID 5/6/7 mais sans les écueils classiques (pas de  <em>write hole</em>, reconstruction plus sûre)  . ZFS gère également le  <strong>chiffrement natif</strong>  (depuis OpenZFS 2.0) et la réplication de snapshots vers d’autres systèmes ZFS. Enfin, il est notoirement  <strong>scalable</strong>  à des échelles énormes (pouvant adresser des pétaoctets à l’aise, bien au-delà des besoins d’un homelab).</p>
+</li>
+<li>
+<p><strong>Avantages :</strong>  <strong>Intégrité des données inégalée</strong>  – chaque lecture est vérifiée par checksum, et en cas d’erreur ZFS peut automatiquement corriger en lisant une copie saine (sur un miroir ou RAID-Z)  .  <strong>Stockage unifié en pools</strong>  : on peut agréger les disques en vdevs (simple, miroir, RAID-Z…) au sein d’un même pool et créer des systèmes de fichiers ou volumes à la volée, ce qui simplifie la gestion comparé à LVM.  <strong>Snapshots et clones</strong>  efficaces pour les backups et tests, intégrés directement (on peut par exemple snapshotter une VM en un instant et la cloner pour testing).  <strong>Compression</strong>  et  <strong>dedup</strong>  économisent de l’espace (au prix de ressources CPU/RAM supplémentaires)  .  <strong>Évolutivité et performance</strong>  : ZFS peut exploiter de grandes quantités de RAM comme cache (ARC) pour accélérer les accès, et il supporte le cache SSD (L2ARC) et le log séparé (ZIL/SLOG) pour booster les performances d’écriture sync. Conçu initialement pour de l’entreprise, ZFS  <strong>monte en puissance</strong>  avec le matériel – plus on lui donne de la RAM et des disques rapides, mieux il se comporte, du petit NAS jusqu’au stockage de datacenter  .</p>
+</li>
+<li>
+<p><strong>Inconvénients :</strong>  <strong>Gourmand en ressources</strong>  : il est recommandé d’avoir de la RAM en quantité (souvent on suggère ~1 Go par To de stockage, bien que cela dépende des fonctions activées)  . Sur du matériel limité (petit homelab avec 2 Go de RAM par ex), ZFS peut ne pas donner la pleine mesure de ses avantages. De plus, sous Linux, ZFS n’est pas intégré au noyau pour des raisons de licence (CDDL incompatible GPL), il faut donc l’installer séparément (module DKMS ou kernel custom) – cela ajoute un peu de complexité aux mises à jour système  . La  <strong>complexité</strong>  générale de ZFS peut être déroutante pour un débutant : de nombreux concepts (pool, vdevs, dataset, zvol, etc.) et options de réglage. Cela peut sembler  <em>overkill</em>  pour de petites configurations, où un système plus simple suffirait. Enfin, notons que l’<strong>expansion d’un pool ZFS</strong>  peut être contraignante selon la configuration (on ne peut pas encore, au 21, étendre facilement un vdev RAID-Z en ajoutant un disque, sans recréer le vdev – bien que la fonctionnalité d’extension RAID-Z soit en développement actif).</p>
+</li>
+<li>
+<p><strong>Cas d’usage recommandés :</strong>  ZFS brille dans les scénarios où la  <strong>préservation des données</strong>  est critique. Pour un homelab sécurisé, si vous hébergez des  <strong>machines virtuelles</strong>  ou des  <strong>conteneurs</strong>, ZFS (intégré dans Proxmox VE, par exemple) permet d’avoir des  <strong>snapshots cohérents</strong>  et d’éviter la corruption silencieuse des images disque grâce aux checksums. Idéal aussi pour un  <strong>NAS maison</strong>  où l’on veut un maximum de fiabilité (par exemple un serveur de sauvegarde centralisé, un stockage pour photos/vidéos précieuses) – ZFS assure que vos backups ne se dégradent pas avec le temps (protection contre le  <em>bitrot</em>). En entreprise ou pour les utilisateurs avancés, ZFS est le choix de prédilection pour les  <strong>appliances de stockage</strong>  (NAS TrueNAS, serveurs de fichiers critiques, etc.) grâce à son mélange de performance et de sécurité des données  . En résumé, si vos besoins requièrent la  <strong>sûreté maximale des données</strong>  et que vous disposez du matériel adéquat, ZFS est un allié de poids.</p>
+</li>
+</ul>
+<h2 id="redondance-et-tolerance-aux-pannes"><strong>Redondance et tolérance aux pannes</strong><a class="headerlink" href="#redondance-et-tolerance-aux-pannes" title="Permanent link">&para;</a></h2>
+<p>Même dans un homelab, il est essentiel de prévoir les défaillances matérielles. Disques qui tombent en panne, erreurs humaines, ransomware – une bonne stratégie de stockage  <em>sécurisé</em>  repose sur plusieurs couches :  <strong>redondance en temps réel</strong>  (RAID, mirroring…),  <strong>points de restauration</strong>  (snapshots) et  <strong>sauvegardes externes</strong>. Nous allons passer en revue les options de RAID, l’utilisation des snapshots et les stratégies de sauvegarde, spécialement adaptées à un homelab.</p>
+<h3 id="raid-niveaux-materiel-vs-logiciel"><strong>RAID : niveaux, matériel vs logiciel</strong><a class="headerlink" href="#raid-niveaux-materiel-vs-logiciel" title="Permanent link">&para;</a></h3>
+<p>L’acronyme  <em>RAID</em>  (Redundant Array of Independent Disks) décrit les solutions combinant plusieurs disques pour améliorer soit la performance, soit la tolérance de panne – souvent les deux. Il existe plusieurs  <strong>niveaux de RAID</strong>courants, chacun avec ses caractéristiques :</p>
+<ul>
+<li>
+<p><strong>RAID 0 (Striping)</strong> : données réparties (enchaînées) sur plusieurs disques pour augmenter le débit. Offre des  <strong>performances maximales</strong>, idéal quand la vitesse prime, mais  <strong>sans aucune redondance</strong>  – la panne d’un seul disque entraîne la perte de toutes les données  . À réserver aux usages non critiques (cache, rendu vidéo temporaire, etc.).</p>
+</li>
+<li>
+<p><strong>RAID 1 (Mirroring)</strong> : les données sont  <strong>dupliquées en miroir</strong>  sur deux disques (ou plus). Fournit une  <strong>excellente tolérance aux pannes</strong>  (on peut perdre un disque sans perte de données) mais au prix d’une capacité réduite de moitié (2 To + 2 To en RAID 1 = 2 To utiles)  . Performances en lecture élevées (on lit sur deux disques en parallèle), écriture un peu plus lente qu’un seul disque. Recommandé pour stocker des données importantes sur peu de disques (2 disques) ou comme miroir du système.</p>
+</li>
+<li>
+<p><strong>RAID 5</strong> : utilise un  <strong>parity striping</strong>  distribué – les données sont réparties sur  <em>n-1</em>  disques et sur le disque restant est stockée une information de parité (calculée) permettant de reconstruire les données d’un disque manquant. Ce niveau offre un  <strong>équilibre entre performance, capacité et redondance</strong>  : la lecture est rapide (plusieurs disques en parallèle) et la capacité utilisée est optimisée (seulement l’équivalent d’un disque est “sacrifié” pour la parité)  .  <strong>Tolérance de panne : 1 disque</strong>. Inconvénients : performances d’écriture un peu moindres (calcul de la parité) et surtout reconstruction longue en cas de crash d’un disque. Si un second disque flanche pendant la reconstruction, les données sont perdues. RAID 5 convient aux espaces de stockage importants où on veut un compromis capacité/sécurité raisonnable, mais on lui préfère souvent RAID 6 aujourd’hui.</p>
+</li>
+<li>
+<p><strong>RAID 6</strong> : variante de RAID 5 avec  <strong>deux blocs de parité</strong>  répartis, pouvant tolérer la panne  <strong>simultanée de 2 disques</strong>. La sécurité est renforcée au prix d’une capacité utilisable légèrement inférieure (l’équivalent de 2 disques sert de parité). C’est une solution robuste pour les baies de disques de grande capacité, au cas où un second disque lâche lors de la reconstruction du premier. Les performances sont un peu en deçà du RAID 5 en écriture (parité double à calculer) mais restent acceptables en lecture et adaptées aux environnements exigeant une haute redondance  .</p>
+</li>
+<li>
+<p><strong>RAID 10 (ou 1+0)</strong> : combinaison du mirroring et du striping. On associe des paires de disques en miroir (RAID 1) puis on agrége ces miroirs en RAID 0 (striping entre les miroirs). On obtient ainsi  <strong>d’excellentes performances</strong>(équivalentes à RAID 0 sur lecture/écriture)  <strong>ET une tolérance aux pannes élevée</strong>  (chaque paire peut tolérer une panne)  . Le RAID 10 nécessite au minimum 4 disques (et un nombre pair) et n’utilise que 50% de l’espace total (puisque mirroring). C’est une solution prisée pour les applications critiques nécessitant à la fois débit et fiabilité (par ex. un serveur de base de données dans un homelab). Coût plus élevé en nombre de disques, mais reconstruction rapide en cas de panne (on recopie simplement un miroir).</p>
+</li>
+<li>
+<p><strong>JBOD (Just a Bunch Of Disks)</strong> : techniquement pas un RAID, le JBOD permet de concaténer des disques indépendants l’un à la suite de l’autre, ou simplement de les présenter individuellement. Il n’y a  <strong>pas de gain de performance ni de redondance</strong>  – c’est juste un moyen d’utiliser plusieurs disques comme un seul grand volume, ou comme disques séparés. Utile éventuellement pour maximiser la capacité de stockage brute quand la tolérance de panne n’est  <em>pas</em>  une priorité  .</p>
+</li>
+</ul>
+<p><strong>RAID matériel vs RAID logiciel :</strong>  Le RAID peut être géré  <strong>soit par du matériel dédié (carte contrôleur RAID)</strong>, soit par le  <strong>système d’exploitation (RAID logiciel)</strong>. En RAID  <em>matériel</em>, un contrôleur se charge de toutes les opérations de gestion des disques de manière autonome (souvent avec sa propre mémoire cache, parfois protégée par batterie). Cela offre typiquement de meilleures performances sur des charges lourdes et soulage le CPU principal  . Le RAID matériel apporte aussi souvent des options avancées (ex. certains niveaux RAID supplémentaires) et une indépendance vis-à-vis du système (le contrôleur présente un seul volume logique, utilisable par n’importe quel OS)  . En contrepartie, ces cartes sont coûteuses et introduisent une dépendance : si la carte tombe en panne, il faut idéalement la même pour récupérer l’array.</p>
+<p>Le  <strong>RAID logiciel</strong>, lui, s’appuie sur la puissance de calcul du processeur hôte pour gérer le RAID (ex: via mdadm/Linux ou Storage Spaces sous Windows). De nos jours, avec des CPU performants, le RAID logiciel offre des performances très honorables – l’impact est négligeable pour des niveaux simples (RAID 1, 0)  , et reste raisonnable pour RAID 5/6 sur un homelab. L’avantage principal est le  <strong>coût nul</strong>  (pas de matériel additionnel) et une flexibilité accrue (migration possible d’un OS à un autre dans certains cas, ajout de disques parfois plus souple)  . Cependant, le RAID logiciel peut être un peu  <strong>plus lent</strong>  dans certains scénarios intensifs car il doit partager le CPU avec le reste du système  . Il est aussi lié au logiciel : par exemple, un RAID logiciel Windows ne sera pas lisible sous Linux et vice-versa, ce qui peut compliquer une migration.</p>
+<p>En résumé, pour un  <strong>homelab</strong>, un RAID logiciel (mdadm, espace de stockage ZFS/Btrfs, etc.) est souvent préférable pour éviter les frais et la complexité matérielle – les performances sont largement suffisantes dans un contexte domestique. Le RAID matériel se justifie surtout si vous avez déjà une carte (serveur de récup) ou pour des cas très spécifiques (besoin d’un cache protégé par batterie, compatibilité multi-OS sur du dual-boot, etc.). Dans tous les cas,  <strong>RAID ≠ backup</strong>  : même avec redondance, une erreur humaine ou un ransomware peut détruire les données, d’où l’importance des snapshots et sauvegardes que nous abordons ci-dessous.</p>
+<h3 id="snapshots-restauration-instantanee-et-limites"><strong>Snapshots : restauration instantanée et limites</strong><a class="headerlink" href="#snapshots-restauration-instantanee-et-limites" title="Permanent link">&para;</a></h3>
+<p>Les  <strong>snapshots</strong>  sont des points de restauration instantanés d’un volume ou système de fichiers, parfois appelés  <em>“photographies”</em>  de l’état des données à un instant  <em>t</em>. Beaucoup de solutions de stockage modernes (ZFS, Btrfs, LVM, VMware, etc.) les proposent. Ils offrent la capacité de revenir en arrière rapidement après un problème : par exemple, si une VM ou un dossier a été modifié par erreur, on peut restaurer le snapshot précédent en quelques secondes. Le principal avantage d’un snapshot par rapport à une sauvegarde traditionnelle est la  <strong>rapidité</strong>  et la fréquence : on peut en créer très souvent (par exemple toutes les heures) sans trop d’impact, ce qui procure de nombreux points de restauration granulaires  . En cas d’incident, redémarrer une VM ou restaurer un fichier à partir d’un snapshot local est quasi immédiat, alors qu’une restauration depuis une backup complète peut prendre beaucoup plus de temps.</p>
+<p><strong>Limites des snapshots :</strong>  un snapshot n’est  <strong>pas une sauvegarde indépendante</strong>. Contrairement à une vraie copie de sauvegarde, un snapshot dépend du stockage principal : il stocke généralement seulement les différences (blocs modifiés) et pointe vers les blocs inchangés. Si le volume principal est perdu (panne hardware grave) ou corrompu, les snapshots sont perdus avec lui  . De plus, les snapshots consomment de l’espace sur le stockage d’origine pour conserver les anciennes versions des blocs – plus on en garde, plus on utilise d’espace (ils sont souvent auto-nettoyés au bout de X jours/heures pour éviter de saturer le stockage). Il faut donc les voir comme des  <strong>outils complémentaires</strong>  pour la restauration rapide, et non comme une solution de backup autonome. La  <strong>bonne pratique</strong>  est d’ailleurs de combiner snapshots  <em>et</em>  sauvegardes  : les snapshots fournissent des points de reprise fréquents (par ex. horaires) sur le stockage principal, et les sauvegardes externes assurent la récupération en cas de perte totale du système (points de restauration quotidiens, hebdomadaires, conservés hors du système principal)  .</p>
+<p><strong>Outils de snapshots :</strong>  Pour en bénéficier dans un homelab, on peut s’appuyer sur ZFS (commandes  zfs snapshot, ou outils comme sanoid/syncoid pour automatiser), sur Btrfs (btrfs subvolume snapshot  et l’outil Snapper pour la gestion automatisée). LVM propose aussi des snapshots de volumes logiques LVM qui peuvent servir à prendre une image cohérente d’une partition ext4/xfs avant backup, par exemple. Sur Windows/VMware, on retrouve des fonctionnalités similaires (Volume Shadow Copy, snapshots VMware). Attention à l’impact performance : la méthode de copy-on-write peut  <strong>ralentir les écritures</strong>  en présence de snapshots nombreux (ce fut un problème avec Btrfs, et même ZFS subit un léger impact au-delà de centaines de snapshots). Il faut surveiller et purger les snapshots obsolètes.</p>
+<p>En somme, les snapshots sont  <strong>formidables pour annuler une bêtise</strong>  rapidement ou tester des mises à jour, mais ils ne dispensent pas de faire de vraies sauvegardes sur un stockage séparé. Utilisez-les comme première ligne de défense (récupération quasi instantanée) en complément de vos backups.</p>
+<h3 id="sauvegardes-strategies-locales-vs-cloud-outils-open-source"><strong>Sauvegardes : stratégies locales vs cloud, outils open source</strong><a class="headerlink" href="#sauvegardes-strategies-locales-vs-cloud-outils-open-source" title="Permanent link">&para;</a></h3>
+<p>La sauvegarde est le pilier ultime d’un homelab sécurisé. Elle garantit qu’en cas de sinistre majeur (panne de plusieurs disques, vol ou incendie, erreur de manipulation irréversible), vos données pourront être restaurées. On conseille souvent la règle du  <strong>3-2-1</strong>  : 3 copies des données, sur au moins 2 supports différents, dont 1 copie  <em>offsite</em>  (hors site). Pour un homelab, cela peut se traduire par exemple par un NAS local + une sauvegarde sur disques externes + une réplication chiffrée vers le cloud.</p>
+<p><strong>Sauvegardes locales (on-site) :</strong>  Elles offrent l’avantage de la  <strong>vitesse</strong>  et du contrôle. Il peut s’agir d’un disque USB de backup, d’un second NAS chez vous, ou même d’une autre machine sur le réseau local qui reçoit des backups. L’outil de base souvent utilisé est  <strong>rsync</strong>  (ou son dérivé  rsnapshot  pour gérer des rotations). Par exemple, on peut programmer un rsync quotidien de son dossier de documents vers un disque externe. Pour des solutions plus élaborées et efficaces en espace, on se tournera vers des logiciels de sauvegarde dédupliqués comme  <strong>BorgBackup</strong>  ou  <strong>restic</strong>. Ces outils open source permettent de sauvegarder des données (localement ou vers un serveur distant) en ne stockant qu’une seule fois les blocs identiques (déduplication), en compressant et en chiffrant les backups. Ils gèrent en plus un système de rétentions (ex: garder 7 daily, 4 weekly, 6 monthly, etc.). D’après les retours de la communauté,  <em>Restic</em>  et  <em>Borg</em>  font partie des solutions les plus fiables actuellement (fiabilité primant sur la vitesse)  . Borg fonctionne en mode “push” (on peut lancer la sauvegarde depuis la source vers un repo distant via SSH), Restic également et propose en plus un mode “serveur REST”. Ce sont deux excellents choix pour un homelab, avec une légère préférence pour Restic si l’on veut quelque chose de simple et efficace en ligne de commande (ou Borg pour ses performances en local/SSH)  .</p>
+<p>Pour les environnements virtualisés, l’outil  <em>Proxmox Backup Server (PBS)</em>  mérite d’être mentionné. Il s’agit d’une solution de sauvegarde  <strong>open source</strong>  dédiée aux VMs/CTs Proxmox, qui stocke de façon  <strong>incrémentale et dédupliquée</strong>  les données afin d’économiser énormément d’espace  . PBS utilise en plus une compression ZSTD rapide et un chiffrement authentifié côté client, ce qui le rend très efficace pour sauvegarder des machines virtuelles entières en quelques minutes avec très peu de données transférées après la première fois  . Dans un homelab, on peut par exemple avoir un petit serveur (ou VM) PBS qui réceptionne les sauvegardes de toutes les VM/CT Proxmox régulièrement. L’interface web PBS permet la restauration facile de VMs complètes ou de fichiers individuels à partir de ces backups.</p>
+<p><strong>Sauvegardes distantes (cloud/off-site) :</strong>  Pour se protéger des risques locaux (incendie, dégât des eaux, vol), il est recommandé d’avoir au moins une copie des données  <em>hors de chez vous</em>. Plusieurs approches s’offrent à un homelab : utiliser un service de cloud public (p.ex. stockage objet type Backblaze B2, AWS S3, Wasabi… ou même un stockage chiffré sur Google Drive, etc.), ou bien synchroniser vers un autre site (par ex, un NAS chez un ami/famille). Les outils comme  <strong>restic</strong>  brillent ici car ils supportent nativement de nombreuses destinations cloud (Backblaze, AWS, Azure, rclone, etc.) et chiffrent tout automatiquement.  <strong>Duplicati</strong>  est une autre solution populaire avec une interface graphique web, permettant de sauvegarder chiffré vers divers clouds (c’est un logiciel libre qui segmente les fichiers et gère versions/chiffrement). On peut aussi citer  <strong>Rclone</strong>  qui, couplé à un cryptage, permet de synchroniser dossiers et backups vers des clouds comme on le ferait avec un rsync (sans gestion de versions toutefois).</p>
+<p><strong>Stratégie recommandée :</strong>  En homelab, on peut combiner un NAS local pour les sauvegardes rapides et un envoi cloud hebdomadaire/mensuel des données critiques chiffrées. Par exemple, backups quotidiens sur un disque local ou NAS via Borg, puis une fois par semaine, on envoie les nouvelles archives Borg sur un stockage cloud (Borg peut utiliser rclone pour cela). Ainsi on a une sauvegarde locale pour les urgences, et une copie externe pour le pire cas. Le versioning de plusieurs générations est important pour pouvoir récupérer même en cas de fichiers corrompus ou chiffrés par un ransomware (on restaure une version plus ancienne propre). Enfin,  <strong>tester les restaurations</strong>  régulièrement est crucial – une sauvegarde non testée ne peut pas être considérée comme fiable !</p>
+<p>En résumé,  <em>snapshot, RAID et backup forment un trio complémentaire</em>. Dans un homelab sécurisé, on configurera idéalement un RAID pour parer la panne d’un disque, des snapshots fréquents pour rattraper immédiatement les erreurs/logiques, et des sauvegardes déportées pour se prémunir contre les catastrophes majeures. Cela peut sembler complexe, mais de nombreux outils libres sont là pour automatiser ces tâches et rendre votre stockage quasiment aussi robuste que dans un environnement pro 😉.</p>
+<h2 id="integration-dun-nas-et-stockage-centralise-avec-proxmox"><strong>Intégration d’un NAS et stockage centralisé avec Proxmox</strong><a class="headerlink" href="#integration-dun-nas-et-stockage-centralise-avec-proxmox" title="Permanent link">&para;</a></h2>
+<p>Beaucoup de hobbyistes disposent d’un  <strong>NAS</strong>  (Network Attached Storage) à la maison pour centraliser les fichiers, les sauvegardes ou même héberger des médias. Intégrer ce NAS avec votre serveur de virtualisation (tel que  <strong>Proxmox VE</strong>) permet d’offrir un stockage mutualisé aux VMs/containers, voire de  <em>booter</em>  des machines depuis le NAS. Dans cette section, nous comparons brièvement les solutions NAS populaires et expliquons comment les lier à Proxmox.</p>
+<h3 id="truenas-vs-synology-vs-openmediavault-solutions-nas-comparees"><strong>TrueNAS vs Synology vs OpenMediaVault : solutions NAS comparées</strong><a class="headerlink" href="#truenas-vs-synology-vs-openmediavault-solutions-nas-comparees" title="Permanent link">&para;</a></h3>
+<p><strong>TrueNAS (Core ou Scale)</strong>  – Solution logicielle NAS open-source dérivée de FreeNAS. TrueNAS Core est basé sur FreeBSD, TrueNAS Scale sur Debian Linux, mais les deux utilisent  <strong>ZFS</strong>  en système de fichiers principal. TrueNAS offre une interface web riche et des fonctionnalités avancées (support natif de SMB, NFS, iSCSI, snapshots ZFS, réplication, plugins/VMs sur la version Scale). C’est une solution  <strong>puissante mais un peu complexe</strong>  à maîtriser, orientée utilisateurs techniques. Son point fort est d’embarquer ZFS nativement, avec tout ce que cela implique (intégrité, RAID-Z, etc.) – aucun autre FS n’est proposé. TrueNAS convient à ceux qui veulent tirer le maximum de leur NAS sur du matériel choisi par leurs soins.</p>
+<p><strong>Synology DSM</strong>  – Système propriétaire qu’on retrouve préinstallé sur les NAS Synology commerciaux. DSM est réputé pour sa  <strong>convivialité</strong>  et son écosystème logiciel (de nombreuses apps intégrées : gestion photos, vidéos, cloud sync, etc.). Côté stockage, les NAS Synology supportent selon les modèles EXT4 ou Btrfs (sur les modèles + récents, Btrfs apporte les snapshots, la détection de corruption et la compression). Synology propose des  <strong>RAID classiques et propriétaires (SHR)</strong>  pour faciliter l’utilisation de disques de tailles variées. Les protocoles pris en charge incluent SMB/CIFS, NFS, AFP (pour Mac) et iSCSI (souvent sur les gammes Plus/enterprise). Le gros avantage de Synology est le  <strong>“tout-en-un prêt à l’emploi”</strong>  : on branche, on a une interface limpide, et c’est parti. La contrepartie est la dépendance à l’écosystème Synology (matériel dédié, OS fermé). Pour un homelab, un NAS Synology convient si on privilégie la simplicité et la fiabilité éprouvée d’une solution commerciale, quitte à sacrifier un peu de souplesse. D’ailleurs, pour un usage home, Synology DSM a globalement plus d’atouts prêts à l’emploi (simplicité, applis) qu’une solution DIY comme TrueNAS  . Un NAS Synology clé en main est souvent  <strong>le meilleur choix “home use”</strong>  lorsque l’objectif n’est pas de bricoler le hardware ou d’avoir absolument ZFS  . La présence de Btrfs sur de nombreux modèles Synology offre déjà un niveau de sécurité (snapshots locaux, auto-réparation en RAID 1) suffisant pour beaucoup d’usages domestiques.</p>
+<p><strong>OpenMediaVault (OMV)</strong>  – Distribution NAS open-source basée sur Debian. OMV fournit une interface web légère pour configurer des services de partage (SMB, FTP, NFS, Rsync, etc.), gérer des utilisateurs et plugins. Contrairement à TrueNAS, OMV n’impose pas ZFS : on peut utiliser EXT4, XFS ou Btrfs sur les volumes (et on peut ajouter le plugin ZFS si on souhaite). OMV se veut  <strong>simple et extensible</strong>  via des plugins (par ex, plugin pour activer iSCSI, plugin pour docker, etc.). C’est sans doute la solution qui se rapproche le plus d’un “NAS maison minimaliste” – idéale pour recycler un vieux PC ou un Raspberry Pi en NAS. Niveau fonctionnalités, de base c’est plus  <em>sobre</em>  que TrueNAS ou Synology : pas de snapshots sans plugin (Btrfs ou ZFS), pas de gestion poussée de volumes hors RAID logiciel standard (mdadm). En somme,  <strong>OMV est fonctionnel mais minimal</strong>  en standard, ce qui implique parfois de mettre la main à la pâte ou d’installer des plugins/shell pour des besoins avancés  . Son point fort reste la  <strong>flexibilité</strong>  (on a un Debian sous le capot, donc on peut installer tout ce qu’on veut à côté, y compris Portainer, etc.) et une empreinte relativement légère.</p>
+<p><strong>Comparatif rapide</strong> : TrueNAS et OMV sont comparables (solutions libres à installer soi-même), alors que Synology est une solution commerciale complète. TrueNAS mise sur ZFS et l’approche enterprise, OMV sur la simplicité Debian. Synology, de son côté, offre une expérience utilisateur polie mais plus fermée. Si l’on compare TrueNAS vs OMV : TrueNAS est plus  <strong>puissant mais requiert une courbe d’apprentissage plus raide</strong>, OMV est plus simple mais avec moins de fonctionnalités prêtes à l’emploi  . Entre TrueNAS et Synology : Synology l’emporte en  <strong>ergonomie</strong>  et intégration clé-en-main (idéal si vous ne voulez pas “tinkerer”), TrueNAS l’emporte en  <strong>contrôle et performances brutes</strong>(vous choisissez votre matériel, vous avez ZFS et pouvez tout tuner)  . D’après un comparatif,  <em>“DSM (Synology) a plus d’avantages globalement pour un usage maison, alors que TrueNAS s’adresse à ceux qui veulent construire leur NAS eux-mêmes pour profiter spécifiquement des capacités de ZFS”</em>  . Enfin, toutes ces solutions supportent les  <strong>protocoles standard</strong>  de partage :  <strong>SMB/CIFS</strong>  (partages Windows),  <strong>NFS</strong>  (partage Unix), et souvent  <strong>iSCSI</strong>  (cible disque en réseau) – sur OMV il faudra un plugin pour iSCSI, TrueNAS et Synology le gèrent nativement. On peut donc s’attendre à pouvoir monter les volumes du NAS sur à peu près n’importe quel système, y compris Proxmox.</p>
+<h3 id="integrer-un-nas-a-proxmox-ve-nfs-smb-iscsi"><strong>Intégrer un NAS à Proxmox VE (NFS, SMB, iSCSI)</strong><a class="headerlink" href="#integrer-un-nas-a-proxmox-ve-nfs-smb-iscsi" title="Permanent link">&para;</a></h3>
+<p>Proxmox VE, la plateforme de virtualisation, permet d’ajouter des stockages externes (dits  <em>Storage</em>) pour y loger soit des images de disques VM/CT, soit des ISO, templates ou backups. Un NAS est un candidat idéal pour cela, afin de  <strong>centraliser le stockage</strong>  accessible par plusieurs hôtes Proxmox éventuellement.</p>
+<p>Les deux méthodes les plus courantes pour attacher un NAS à Proxmox sont  <strong>NFS</strong>  (partage de fichiers en réseau) et  <strong>iSCSI</strong>(partage de bloc disque en réseau). SMB/CIFS est parfois utilisé aussi, mais Proxmox ne propose pas de backend SMB natif dans l’interface (on peut toujours monter un CIFS via fstab ou autre, mais ce n’est pas “first-class citizen”). On privilégiera donc NFS pour du partage de fichiers, ou iSCSI pour présenter un  <strong>disque réseau</strong>.</p>
+<p><em>Exemple d’ajout d’un stockage NFS dans l’interface Proxmox 
+VE.</em></p>
+<p>Dans l’interface web Proxmox, il suffit d’aller dans  <strong>Datacenter -&gt; Storage -&gt; Add -&gt; NFS</strong>  pour déclarer un partage NFS exporté par le NAS. On renseigne l’IP du NAS, le chemin exporté et on choisit le type de contenu (par ex.  VZDump backup files  pour y stocker les sauvegardes, ou  Disk image  pour y mettre des images de VM). Ce montage NFS sera ensuite visible comme un stockage dans Proxmox. L’intérêt est qu’un NFS étant accessible depuis plusieurs nœuds, on peut s’en servir pour  <strong>partager des ISOs</strong>  ou permettre la  <strong>migration de VM</strong>  entre hôtes sans avoir à déplacer leurs disques (si tous les Proxmox montent le même stockage NFS centralisé). Côté NAS, on veillera aux permissions (autoriser l’IP du serveur Proxmox). Un partage NFS est idéal pour stocker des backups ou des modèles de VM, voire des disques de VM si la performance réseau est suffisante.</p>
+<p>Pour des performances optimales sur des  <strong>disques VM</strong>  however, le  <strong>iSCSI</strong>  est souvent préféré. Le iSCSI permet de présenter un volume de bloc distant que Proxmox traite comme un disque physique. On peut ainsi, sur le NAS, créer une  <em>LUN iSCSI</em>  (volume logique) et la connecter à Proxmox (<strong>Add -&gt; iSCSI</strong>  dans l’interface). Proxmox verra alors un disque et pourra soit l’utiliser tel quel pour une VM, soit – plus généralement – le formater en LVM pour y créer de multiples volumes VM. L’approche classique est :  <strong>cible iSCSI</strong>  sur le NAS -&gt;  <strong>Initiateur iSCSI</strong>  côté Proxmox qui se connecte -&gt; on crée un  <strong>Volume Group LVM</strong>  sur la LUN iSCSI -&gt; Proxmox peut y créer des volumes logiques pour chaque VM. Cette configuration offre des performances proches d’un stockage local (surtout en multipath 10 Gb/s, etc.) et convient bien pour des VM exigeantes en IOPS. D’après les retours,  <em>“iSCSI est meilleur pour les IOPS, tandis que NFS se débrouille bien en débit séquentiel”</em>  sur des NAS TrueNAS  . Par exemple, pour héberger des  <strong>VMs de base de données</strong>  sur le NAS, iSCSI sera un bon choix.</p>
+<p>Une autre option, si votre NAS gère ZFS (ex: TrueNAS), est d’utiliser le plugin  <strong>ZFS over iSCSI</strong>  de Proxmox. Ce plugin va en fait orchestrer la création de volumes ZFS (zvol) sur le NAS via SSH, et les exposer en iSCSI. Ainsi, chaque disque de VM correspondra à un  <strong>zvol ZFS</strong>  sur le NAS, bénéficiant des snapshots ZFS, etc.  . Proxmox supporte plusieurs cibles (par exemple istgt pour FreeBSD/TrueNAS Core, ou LIO pour Linux/TrueNAS Scale). À noter toutefois, de base Proxmox ne supporte pas directement l’API TrueNAS, il faut souvent configurer en mode “Manual + target LIO/istgt” ou utiliser des scripts tiers  . L’effort en vaut la chandelle si on veut combiner la  <strong>souplesse de Proxmox</strong>  (créer/supprimer VMs) et les  <strong>avantages ZFS</strong>  côté NAS (cohérence et sauvegardes côté stockage). Veillez dans ce cas à ce que votre NAS ZFS soit fiable et bien sauvegardé, car il devient un point central (une panne du NAS rendrait tous ces volumes indisponibles – penser à la redondance du NAS lui-même !).</p>
+<p>En résumé,  <strong>intégrer un NAS à Proxmox</strong>  se fait bien via NFS ou iSCSI. Utilisez NFS pour les contenus file (sauvegardes, iso) ou même des VM peu critiques (petits services, lab). Pour des charges plus intensives ou une intégration fine, iSCSI est tout indiqué, éventuellement couplé à LVM ou ZFS-over-iSCSI. Proxmox offre ainsi une grande flexibilité pour tirer parti d’un NAS existant et centraliser le stockage de votre homelab.</p>
+<h2 id="grille-daide-au-choix-du-stockage"><strong>Grille d’aide au choix du stockage</strong><a class="headerlink" href="#grille-daide-au-choix-du-stockage" title="Permanent link">&para;</a></h2>
+<p>Enfin, comment choisir physiquement ses supports de stockage dans un homelab sécurisé ? Disques durs magnétiques traditionnels (HDD) ou mémoire flash (SSD/NVMe) ? Ou un mélange des deux ? La décision dépend de  <strong>plusieurs critères</strong>  : le  <strong>budget par Go</strong>, les besoins de  <strong>performances</strong>  (IOPS, latence, débit), la  <strong>fiabilité/longévité</strong>  attendue, et bien sûr le  <strong>type de données</strong>  stockées (base de données VM très active, archives media peu accédées, etc.). Le tableau suivant résume les options principales avec leurs atouts et limites, ainsi que des scénarios types où elles brillent.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Solution de stockage</strong></th>
+<th><strong>Coût</strong> <strong>(≈ €/To)</strong></th>
+<th><strong>Performances</strong> <strong>(débit / IOPS)</strong></th>
+<th><strong>Longévité &amp; endurance</strong></th>
+<th><strong>Scénarios d’usage typiques</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Disque dur (HDD)</strong></td>
+<td>🟢  <strong>Faible</strong>  – Le plus économique par To. Ex: ~15–20 € par To pour des disques de 8–14 To.</td>
+<td>🔴  <strong>Faibles IOPS</strong>, latence élevée. Débit séquentiel modéré (~80–160 Mo/s typique pour 7200 tpm)  . Adapté aux gros fichiers, moins aux accès aléatoires rapides.</td>
+<td>🟠  <strong>Usure faible</strong>  (pas de limite d’écriture comme les SSD, mais pièces mécaniques sensibles). Durée de vie variable (5–10 ans typiques), attention à la casse mécanique.</td>
+<td>Stockage de masse économique :  <strong>archives, sauvegardes, médias</strong>  (films, photos) non critiques en latence. Ex: NAS de sauvegarde ou serveur multimédia (Plex) stockant des vidéos -&gt; un HDD de grande capacité convient.</td>
+</tr>
+<tr>
+<td><strong>SSD SATA / NVMe</strong></td>
+<td>🔴  <strong>Élevé</strong>  – Plus cher par Go. Ex: ~100 € par To pour SSD SATA grand public, encore plus pour NVMe haute perf.</td>
+<td>🟢  <strong>Très bonnes performances</strong>. Débit SATA 500+ Mo/s, NVMe &gt;3–5 Go/s  . Surtout, IOPS et latences excellents (100× un HDD). Idéal pour accès concurrents, OS et bases de données.</td>
+<td>🟡  <strong>Endurance limitée</strong>  : chaque cellule flash supporte un nombre fini d’écritures (TBW donné par le fabricant). Durée de vie ~5 ans grand public, plus en gamme pro. Pas de pièces mobiles (plus robuste aux chocs).</td>
+<td>Données nécessitant  <strong>vitesse et réactivité</strong>  :  <strong>disque système</strong>  (VM/OS),  <strong>VMs et containers</strong>  actifs, bases de données, cache d’application. Ex: stockage principal d’un  <strong>serveur de virtualisation</strong>  (Proxmox) -&gt; privilégier un bon SSD/NVMe pour les disques VM afin d’assurer des IOPS élevées aux machines.</td>
+</tr>
+<tr>
+<td><strong>Hybride (SSD cache + HDD)</strong></td>
+<td>🟡  <strong>Moyen</strong>  – Combine un SSD (petite capacité) et des HDD (grande capacité). Coût total intermédiaire (on ajoute le prix d’un SSD cache au coût des HDD).</td>
+<td>🟠  <strong>Performances mixtes</strong>  : Le SSD sert de  <strong>cache</strong>  en lecture (et parfois en écriture) pour accélérer l’accès aux données « chaudes ». Les lectures fréquentes viennent du SSD (très rapide), le reste sur HDD (lent). En écriture, selon config, le SSD peut absorber puis déstager. Performance  <strong>hétérogène</strong> : excellente sur données en cache, médiocre sur accès direct disque.</td>
+<td>🟡  <strong>Endurance variable</strong>  : le SSD cache encaisse beaucoup d’I/O (risque d’usure si utilisation intensive, préférer un SSD endurant). Les HDD derrière subissent moins de sollicitations aléatoires (plutôt séquentielles lors du vidage de cache). L’ensemble reste tributaire des disques mécaniques pour la fiabilité générale.</td>
+<td><strong>Compromis capacitié/performance</strong>  : idéal quand on a beaucoup de données peu souvent accédées, et un sous-ensemble « chaud » fréquemment utilisé. Ex: un  <strong>NAS Plex/Emby</strong>  avec SSD cache pour les index et les vidéos récemment lues, couplé à des HDD pour stocker la vaste bibliothèque. Autre exemple : un  <strong>stockage Ceph</strong>  dans un homelab qui utilise des SSD NVMe comme accélérateurs (DB/WAL) pour des OSD sur HDD.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Remarques finales :</strong>  Le choix peut être  <strong>combinatoire</strong>  – par exemple un homelab bien équipé pourra utiliser un  <strong>SSD NVMe comme cache ou tier</strong>  pour accélérer un pool principal en HDD (via L2ARC/ZIL de ZFS, cache SSD sur un NAS Synology, ou bcache sous Linux). On peut aussi adopter une approche par type de données : les données “chaudes” (VM en cours d’exécution, base SQL) sur du SSD rapide, les données “froides” (backups, archives médias) sur du HDD à haute capacité. Pensez également à la  <strong>consommation et au bruit</strong>  : un HDD consomme ~5–10 W et peut être bruyant, contre ~1–2 W silencieux pour un SSD. Dans un homelab à la maison, cela peut compter.</p>
+<p>Enfin, concernant la  <strong>longévité</strong>, les études montrent que les SSD n’ont plus grand-chose à envier aux HDD en usage courant – leurs taux de panne convergent et dépassent rarement 1–2% par an. Les SSD actuels, s’ils sont dimensionnés correctement en capacité par rapport aux écritures (éviter de remplir à 100% et choisir un modèle avec TBW suffisant), tiendront plusieurs années sans souci. Les HDD, eux, doivent être surveillés (SMART) pour anticiper les secteurs défectueux et les pannes mécaniques. Dans tous les cas, une infrastructure de stockage sécurisée doit accepter qu’un support finira  <em>forcément</em>  par faillir : d’où l’importance du  <strong>RAID</strong>  pour la continuité de service, et des  <strong>sauvegardes</strong>  pour la récupération des données. Avec ces bonnes pratiques et un choix judicieux de technologies adapté à vos besoins (et votre budget), votre homelab pourra allier  <strong>performance, capacité et sérénité</strong>  quant à la protection de vos précieuses données.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

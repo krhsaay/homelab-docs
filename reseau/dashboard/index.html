@@ -1,0 +1,1688 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../../infrastructure/lxc-vs-vm/">
+      
+      
+        <link rel="next" href="../dns/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Dashboards - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#comparatif-des-dashboards-auto-heberges-glance-homarr-heimdall-co" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Dashboards
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#apercu-des-principaux-dashboards-generalistes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Aperçu des principaux dashboards généralistes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Aperçu des principaux dashboards généralistes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Glance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#homarr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Homarr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#heimdall" class="md-nav__link">
+    <span class="md-ellipsis">
+      Heimdall
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dashy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#homepage-ben-phelps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Homepage (Ben Phelps)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#homer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Homer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flame" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flame
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sui" class="md-nav__link">
+    <span class="md-ellipsis">
+      SUI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fenrus" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fenrus
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organizr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Organizr
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yal-yet-another-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      Yal (Yet Another Landing page)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dashboards-specialises-domotique-supervision-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dashboards spécialisés (domotique, supervision, etc.)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparaison-technique-performance-personnalisation-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparaison technique (performance, personnalisation, intégrations…)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quel-dashboard-choisir-recommandations-finales" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quel dashboard choisir ? (Recommandations finales)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="comparatif-des-dashboards-auto-heberges-glance-homarr-heimdall-co"><strong>Comparatif des dashboards auto-hébergés (Glance, Homarr, Heimdall &amp; co.)</strong><a class="headerlink" href="#comparatif-des-dashboards-auto-heberges-glance-homarr-heimdall-co" title="Permanent link">&para;</a></h1>
+<p>Les  <strong>dashboards auto-hébergés</strong>  sont des pages d’accueil personnalisées permettant de regrouper et d’accéder d’un coup d’œil à tous vos services self-hosted (auto-hébergés). Ils servent de  <strong>portail centralisé</strong>  pour votre homelab, facilitant le lancement d’applications web, la surveillance de certaines métriques, ou l’affichage de contenus (flux RSS, météo, etc.). Ce comparatif passe en revue les solutions généralistes les plus populaires – notamment  <strong>Glance</strong>,  <strong>Homarr</strong>  et  <strong>Heimdall</strong>  – en les comparant sur des critères techniques clés (<em>performance</em>,  <em>personnalisation</em>,  <em>intégrations</em>, etc.), et mentionne également d’autres alternatives intéressantes. Enfin, nous proposerons quelques recommandations selon les besoins (meilleur choix pour débutant, pour les utilisateurs avancés, etc.).</p>
+<h2 id="apercu-des-principaux-dashboards-generalistes"><strong>Aperçu des principaux dashboards généralistes</strong><a class="headerlink" href="#apercu-des-principaux-dashboards-generalistes" title="Permanent link">&para;</a></h2>
+<h3 id="glance"><strong>Glance</strong><a class="headerlink" href="#glance" title="Permanent link">&para;</a></h3>
+<p><strong>Glance</strong>  est un dashboard récent qui se distingue par son approche type  <em>« journal »</em>, agrégeant de nombreux  <strong>widgets dynamiques</strong>  sur une page. Plutôt qu’une simple liste d’icônes, Glance peut afficher en temps réel des contenus variés : flux RSS, posts Reddit, météo, vidéos YouTube récentes, cours de marchés boursiers, statut de conteneurs Docker, statistiques système du serveur, etc.  . Il supporte de  <strong>nombreuses pages et onglets</strong>  et offre une  <strong>vaste customisation</strong>  du tableau de bord (choix de dispositions en colonnes, thèmes, styles, CSS personnalisé)  . Écrit en Go, Glance est réputé  <strong>léger et performant</strong> : le binaire Docker fait moins de 20 Mo et la page se charge en ~1 seconde (selon le nombre de widgets)  . En contrepartie, sa configuration se fait via des fichiers YAML, ce qui conviendra surtout aux utilisateurs à l’aise avec l’édition de fichiers de config (il n’y a pas d’interface graphique pour ajouter des widgets). Glance est idéal si vous souhaitez un tableau de bord riche en informations  <em>« à consulter d’un coup d’œil »</em>  plutôt qu’un simple lanceur de liens.</p>
+<h3 id="homarr"><strong>Homarr</strong><a class="headerlink" href="#homarr" title="Permanent link">&para;</a></h3>
+<p><strong>Homarr</strong>  est un dashboard  <strong>moderne et intuitif</strong>, privilégiant la configuration via une interface web soignée plutôt que par fichiers. Une fois Homarr déployé, on peut organiser ses tuiles d’application en  <strong>glisser-déposer</strong>  très facilement  . L’ajout de nouveaux services se fait dans le navigateur : Homarr propose une liste de modèles (icônes prédéfinies) et peut même  <strong>récupérer automatiquement le logo</strong>  d’une application dès qu’on tape son nom (par ex. “Plex”)  . On configure l’URL cible, le comportement du clic (nouvel onglet ou non), et éventuellement un  <strong>ping de surveillance</strong>  ou une  <strong>intégration API</strong>si le service est compatible  . Homarr intègre quelques  <em>widgets</em>  utiles comme la météo, un bloc-notes Markdown, un calendrier ou des iframes  . Il offre aussi des  <strong>intégrations natives</strong>  pour certaines applications populaires (ex : Plex, Sonarr, Radarr, Pi-hole, etc.) afin d’afficher des informations directement sur le dashboard  . Côté personnalisation visuelle, Homarr permet de modifier le thème, les couleurs et la disposition (nombre de colonnes selon la taille d’écran) très simplement via le menu des paramètres  . En somme, Homarr vise un bon équilibre entre simplicité et fonctionnalités. Après une période bêta active fin 2024, il a gagné en fluidité et stabilité.  <strong>Attention</strong>  toutefois, Homarr n’est pas encore pleinement optimisé pour mobile (l’interface n’est pas très réactive sur petit écran)  . Il convient particulièrement à ceux qui veulent un tableau de bord élégant, configurable sans toucher de fichiers, et couvrant l’essentiel (liens, quelques widgets et intégrations basiques).</p>
+<h3 id="heimdall"><strong>Heimdall</strong><a class="headerlink" href="#heimdall" title="Permanent link">&para;</a></h3>
+<p><strong>Heimdall</strong>  est un des tableaux de bord auto-hébergés les plus connus, souvent recommandé pour sa  <strong>simplicité</strong>  et sa robustesse. C’est un  <strong>dashboard “no-frills”</strong>  – comprenez par là qu’il se concentre sur l’essentiel : fournir une page d’accueil avec des tuiles menant à vos applications web, sans s’encombrer de fonctionnalités avancées  . L’interface est épurée, avec de gros boutons/icônes pour chaque service. La configuration se fait intégralement via l’UI : un bouton “Add Application” permet d’ajouter un lien en choisissant parmi une  <strong>longue liste de modèles pré-définis</strong>  (avec icône et nom du service)  . Chaque tuile peut être personnalisée (URL, libellé, couleur, icône…) et, pour certaines applications prises en charge en mode  <em>« Enhanced Apps »</em>, Heimdall peut afficher une petite information dynamique (par ex. la vitesse de download actuelle d’un Speedtest, le statut d’un torrent, etc.) en configurant l’API ou un identifiant utilisateur  . Heimdall intègre également un  <strong>champ de recherche</strong>  optionnel sur la page d’accueil (Google, Bing ou DuckDuckGo) pour servir de page de démarrage navigateur  . Techniquement, Heimdall est très léger en ressources (application PHP/MySQL ou en image Docker Linuxserver) et fonctionne immédiatement après installation. Il offre quelques options de personnalisation (fond d’écran, thèmes sombres/clair) mais reste  <strong>moins flexible</strong>  que d’autres – par exemple, pas de widgets multiples ni de modifications poussées du layout  . C’est un choix recommandé pour les  <strong>débutants</strong>  ou ceux qui recherchent une  <strong>solution simple et fonctionnelle</strong>  pour centraliser leurs liens d’applications auto-hébergées, sans config complexe ni maintenance.</p>
+<h3 id="dashy"><strong>Dashy</strong><a class="headerlink" href="#dashy" title="Permanent link">&para;</a></h3>
+<p><strong>Dashy</strong>  se présente comme un  <strong>dashboard très complet et personnalisable</strong>. Écrit en Node/React, il propose une interface moderne avec de nombreuses  <strong>fonctionnalités avancées</strong>  : vérification de statut des services,  <strong>widgets variés</strong>  (météo, horloge, cours des crypto, scores sportifs, etc.), thèmes et pack d’icônes multiples, éditeur visuel intégré, etc.  . Sa grande force est la  <strong>flexibilité de configuration</strong>  : on peut configurer Dashy via un fichier YAML (méthode la plus fiable), ou utiliser l’éditeur JSON intégré, voire un éditeur visuel glisser-déposer directement dans le navigateur  . Cette richesse a toutefois un coût en termes de  <strong>performance</strong>. En effet, Dashy génère un build statique à chaque modification majeure, ce qui fait que le conteneur peut prendre du temps à (re)démarrer et consommer pas mal de RAM  . Des utilisateurs rapportent des lenteurs lors du chargement initial ou de l’enregistrement de modifications (plusieurs secondes, voire nécessité de recharger la page)  . En environnement limité (Raspberry Pi, petite VM), Dashy peut donc sembler  <strong>plus lourd</strong>que des alternatives plus simples. En contrepartie, une fois configuré, il offre parmi les  <strong>tableaux de bord les plus complets</strong>  : il supporte par exemple les flux RSS  , peut s’intégrer à l’outil de monitoring  <strong>Glances</strong>  pour afficher des métriques système détaillées  , et dispose d’une  <strong>communauté active</strong>  qui crée des thèmes et widgets supplémentaires. Dashy convient bien aux  <strong>utilisateurs avancés</strong>  et  <em>power users</em>  qui veulent un maximum de fonctionnalités et de la  <em>customisation</em>  poussée (quitte à sacrifier un peu de légèreté). Pour un usage optimal, il est recommandé de l’exécuter sur une machine aux ressources suffisantes et d’y consacrer du temps de configuration.</p>
+<h3 id="homepage-ben-phelps"><strong>Homepage (Ben Phelps)</strong><a class="headerlink" href="#homepage-ben-phelps" title="Permanent link">&para;</a></h3>
+<p><strong>Homepage</strong>  (par Ben Phelps) est un  <strong>tableau de bord très en vogue</strong>  depuis 2022  , apprécié pour son  <strong>équilibre entre simplicité et puissance</strong>. Visuellement, il offre un look soigné et minimaliste proche de Heimdall/Homer, mais sous le capot il propose une  <strong>panoplie d’intégrations via API</strong>  qui le rapprochent d’un Dashy ou Homarr. On déploie Homepage via Docker, puis on le configure en éditant quelques fichiers YAML (pas d’UI de configuration)  . Cette approche  <em>“Infrastructure as code”</em>  peut rebuter les débutants, mais elle s’avère efficace pour les utilisateurs techniques et bien documentée sur le site officiel. Homepage est hautement  <strong>personnalisable</strong>  : on peut définir ses sections de liens (signets statiques), ses services (applications avec icône, description, ping automatique, etc.), et surtout ajouter de nombreux  <strong>Widgets d’information</strong>  en haut de page (par exemple la météo, l’état d’un contrôleur Unifi, l’utilisation d’une instance Docker ou Kubernetes, etc.)  . Il intègre également des  <strong>Service Widgets</strong>  spécifiques à des logiciels (Plex, Sonarr, Pi-hole, etc.) permettant d’afficher directement des statistiques pertinentes via leurs API  . La liste des services compatibles est très large et sans cesse enrichie  . Côté personnalisation visuelle, tout se fait aussi en YAML (choix de thèmes, images de fond, couleurs…). Par exemple on peut ajuster les couleurs et fonds d’écran globalement ou par utilisateur  . Malgré l’absence de GUI, la majorité des utilisateurs trouvent Homepage relativement  <strong>simple à configurer</strong>  et  <strong>agréable à utiliser</strong>  au quotidien – y compris en mobilité, où son rendu responsive est bien géré (certains retours soulignent que d’autres dashboards ont un affichage mobile moins consistant)  . En résumé, Homepage est un excellent choix  <strong>intermédiaire</strong> : plus  <strong>léger</strong>  que Dashy (pas de rebuild lourd à chaque modification) tout en offrant une  <strong>grande richesse fonctionnelle</strong>, à condition d’être à l’aise avec la configuration via fichiers.</p>
+<h3 id="homer"><strong>Homer</strong><a class="headerlink" href="#homer" title="Permanent link">&para;</a></h3>
+<p><strong>Homer</strong>  est un autre dashboard populaire, connu pour être  <strong>simple, statique et rapide</strong>. Il s’agit d’une  <strong>single-page app</strong>  en HTML/JS entièrement statique – ce qui signifie qu’une fois généré, le dashboard peut être servi par n’importe quel serveur web sans backend lourd. La configuration se fait dans un fichier  config.yml  où l’on définit ses catégories et liens  . Homer permet d’organiser les applications en  <strong>groupes</strong>  (catégories) avec un nom et une icône pour chaque groupe  , et à l’intérieur chaque entrée peut avoir un logo personnalisé, un sous-titre, des mots-clés pour la recherche, etc.  . Il est également possible d’ajouter des tags de couleur sur les tuiles pour indiquer le type (ex:  <em>app</em>,  <em>outil</em>, etc.)  . Visuellement, Homer propose une esthétique un peu  <strong>« cartoon »</strong>  par défaut (icônes plates et vives)  , mais celle-ci est  <strong>hautement personnalisable</strong>  : on peut modifier le thème (couleurs HEX), le fond d’écran, et surtout choisir n’importe quelles icônes/images pour représenter ses services  . D’ailleurs, la communauté fournit de nombreux packs d’icônes prêts à l’emploi pour Homer. Quelques  <strong>widgets simples</strong>  existent (par exemple un widget d’heure, une vignette pour afficher le statut d’un service via URL/ping, etc.), mais Homer ne va pas aussi loin que Homepage ou Dashy en matière d’intégrations d’API – il reste avant tout un  <strong>lanceur de services</strong>  élégant. Grâce à sa nature statique, Homer est  <strong>ultra-léger</strong>  et tourne très bien sur de petits matériels (il consomme à peine quelques mégaoctets de RAM). Il convient à ceux qui veulent un dashboard sobre, rapide, et qui n’ont pas peur d’éditer manuellement un fichier de config pour le mettre à jour.</p>
+<h3 id="flame"><strong>Flame</strong><a class="headerlink" href="#flame" title="Permanent link">&para;</a></h3>
+<p><strong>Flame</strong>  est un dashboard open-source qui a été  <strong>fortement inspiré de SUI</strong>  (Startpage minimaliste, voir plus bas) mais en y ajoutant une interface de configuration intégrée  . L’objectif de Flame est d’être  <strong>le plus simple possible à installer et configurer</strong>  : on lance le conteneur Docker et tout se gère via le front-end web. Aucune édition de fichier n’est requise, tout passe par des formulaires conviviaux. En pratique, Flame permet d’ajouter des applications (liens) et des signets via un  <strong>éditeur graphique</strong>  très facile d’approche  . On peut télécharger ou choisir des icônes, organiser les liens en catégories, et même ajouter un  <strong>widget météo</strong>  ou un  <strong>moteur de recherche</strong>  sur la page  . L’interface est épurée, avec un style proche de SUI/Homer (icônes Material Design pour les services) et une mise en page très sobre – ce qui le rend  <strong>clair et lisible</strong>. Grâce à sa philosophie minimaliste, Flame est également  <strong>léger</strong>  et tourne sans effort sur un NAS ou Raspberry Pi. En contrepartie, il ne propose pas d’intégrations complexes ni de widgets avancés (hormis la météo et l’heure). Flame est souvent cité comme un des meilleurs choix  <strong>pour les débutants</strong>  ou ceux qui veulent un  <strong>tableau de bord fonctionnel en 5 minutes</strong>  sans sacrifier l’esthétique. Si vos besoins se limitent à un joli  <em>homepage</em>  pour vos liens, Flame fait parfaitement l’affaire  . À noter que Flame et SUI partagent un schéma d’icônes (Material Design Icons), ce qui facilite la migration de l’un à l’autre  .</p>
+<h3 id="sui"><strong>SUI</strong><a class="headerlink" href="#sui" title="Permanent link">&para;</a></h3>
+<p><strong>SUI</strong>  (pour  <em>Server User Interface</em>) est un  <strong>dashboard minimaliste</strong>  qui a servi de base à Flame. C’est essentiellement une  <strong>landing page statique</strong>  avec une liste d’applications et de signets, configurable via de simples fichiers JSON. Aucune base de données ou backend n’est requis, il suffit de cloner le dépôt et d’éditer  apps.json  et  links.json  pour définir vos applications et vos favoris  . En termes de fonctionnalités, SUI se limite au strict nécessaire : des icônes cliquables pour lancer vos services, la possibilité de changer rapidement le thème (mode clair/sombre et quelques couleurs prédéfinies)  , et c’est tout. Il  <strong>ne supporte pas les widgets</strong>  ni les intégrations externes (pas de météo, pas de stats systèmes, etc.)  . L’intérêt de SUI réside dans sa  <strong>simplicité extrême</strong>  et son côté  <strong>“fichier statique”</strong>  : aucune configuration serveur complexe, très peu de ressources consommées, et une vitesse de chargement imbattable. En revanche, dès que l’on souhaite le moindre dynamisme ou une configuration à la volée, on sera limité – c’est pourquoi Flame a émergé pour offrir une expérience similaire mais administrable depuis le navigateur. On recommande SUI uniquement si vous cherchez le minimalisme absolu  <em>et</em>  que l’édition manuelle de JSON ne vous fait pas peur. Pour la plupart des utilisateurs débutants, Flame sera préféré car plus accessible.</p>
+<h3 id="fenrus"><strong>Fenrus</strong><a class="headerlink" href="#fenrus" title="Permanent link">&para;</a></h3>
+<p><strong>Fenrus</strong>  est un dashboard moins connu que les précédents, mais qui mérite l’attention pour ses fonctionnalités avancées. Développé initialement en Node puis réécrit en .NET (Blazor Server)  , Fenrus vise à être un  <strong>portail tout-en-un</strong>  pour votre homelab. Il prend en charge la  <strong>gestion multi-utilisateurs</strong> : dès la première connexion, vous créez un compte admin, et pouvez ensuite désactiver les inscriptions ouvertes ou créer d’autres comptes si vous voulez un dashboard par utilisateur  . Chaque utilisateur peut avoir son propre tableau de bord personnalisé, ce qui est un gros avantage pour un usage familial ou partagé. Fenrus propose une configuration via  <strong>interface web complète</strong> : après login, l’ajout de liens se fait via une UI intuitive, avec là aussi une liste de  <strong>presets d’apps intégrés (avec icônes)</strong>  pour accélérer la configuration  . Il supporte également la notion de  <strong>“smart apps”</strong> : ce sont des applications pour lesquelles Fenrus va aller récupérer des informations supplémentaires à afficher (par exemple, le statut d’un service, des métriques de Pi-hole comme le nombre de pubs bloquées, etc.)  . Cela rappelle les  <em>Enhanced Apps</em>  de Heimdall mais en plus poussé. Fenrus permet même d’<strong>imbriquer des dashboards entre eux</strong>  (on peut créer des tuiles renvoyant vers d’autres pages de dashboard, pratique pour organiser par thèmes ou sites)  . En termes de design, Fenrus offre un look moderne avec fonds animés (désactivables)  et widgets repositionnables. Il est aussi possible de lancer des  <strong>terminaux Docker/SSH</strong>  depuis Fenrus et de surveiller la disponibilité de services (uptime) – des fonctions relativement uniques dans ce domaine  . Côté ressources, l’image Docker pèse autour de 100 Mo (car inclut .NET runtime)  et la consommation en mémoire reste modérée pour un usage standard. Fenrus s’adresse aux utilisateurs voulant un  <strong>hub unifié puissant</strong>, avec contrôle d’accès par utilisateurs, intégrations et administration 100% via interface. Il peut être un peu plus complexe à auto-héberger (technologie .NET) et son interface est en anglais, mais il apporte des atouts précieux pour qui a des besoins multi-user ou de  <em>dashboard</em>  évolué.</p>
+<h3 id="organizr"><strong>Organizr</strong><a class="headerlink" href="#organizr" title="Permanent link">&para;</a></h3>
+<p><strong>Organizr</strong>  est une solution plus ancienne et différente dans son approche, souvent utilisée par les  <strong>communautés de partage de serveurs media</strong>. Plus qu’un simple tableau de bord de liens, Organizr est un  <strong>portail web complet</strong>  avec système d’authentification utilisateur, gestion de  <strong>groupes et permissions</strong>, et une interface en  <strong>onglets</strong>. Il permet par exemple de créer des comptes (ou de lier l’authentification aux comptes Plex des utilisateurs) puis de présenter des onglets accessibles selon les droits de chacun (exemple : onglet  <em>Media</em>  pour Plex/Sonarr/Radarr visible par la famille, onglet  <em>Admin</em>  visible seulement par l’administrateur)  . Organizr excelle dans l’intégration d’applications via des  <strong>iframes</strong> : au lieu d’ouvrir un nouveau navigateur, on peut afficher l’interface de Sonarr, Radarr, etc., directement à l’intérieur d’un onglet Organizr  . Cela donne vraiment l’impression d’une  <strong>application unifiée</strong>  plutôt qu’une collection de liens. Organizr propose de nombreuses  <strong>options de personnalisation dans son interface</strong>  (thèmes, disposition) et prend en charge divers  <strong>plugins</strong>  et intégrations (notifications, monitoring basique, etc.)  . En revanche, il est plus lourd à faire tourner (stack PHP/SQL avec plusieurs fonctionnalités) et sa configuration initiale peut être fastidieuse comparée aux autres dashboards. Il reste toutefois très  <strong>personnalisable via l’UI</strong>  (pas de fichiers manuels à éditer, tout se fait dans le panneau d’admin)  . Si votre objectif est de fournir à plusieurs utilisateurs un  <strong>point d’accès centralisé et sécurisé</strong>  à tout un écosystème d’apps (type serveur multimédia partagé), Organizr est une excellente solution. Mais pour un usage homelab purement personnel, sa complexité n’est souvent pas nécessaire face à des outils plus simples.</p>
+<h3 id="yal-yet-another-landing-page"><strong>Yal (Yet Another Landing page)</strong><a class="headerlink" href="#yal-yet-another-landing-page" title="Permanent link">&para;</a></h3>
+<p><strong>Yal</strong>  est un petit nouveau dans la catégorie des homepages minimalistes. Comme son nom l’indique, c’est « encore une page de démarrage », focalisée sur la  <strong>présentation de liens</strong>  de manière élégante. Yal se démarque par sa  <strong>simplicité</strong>  et son souci de  <strong>sécurité</strong> : il tourne avec les privilèges minimum et sert essentiellement de  <strong>hub de liens avec fonction de recherche intégrée</strong>  . L’interface est basique mais on peut la  <strong>personnaliser visuellement</strong>  assez facilement (ajout du logo/branding, choix de couleurs). En revanche, Yal n’offre pas de widget, pas d’intégration d’API – c’est vraiment pour avoir une page d’accueil jolie et rapide regroupant vos favoris et services, avec une barre de recherche. Par sa légèreté extrême, Yal peut convenir aux contextes très contraints ou à ceux qui veulent un projet simple à auditer (son code étant réduit au minimum).</p>
+<p><em>(D’autres projets existent encore – par ex. des forks ou variantes comme</em> <strong><em>Dashy Lite</em></strong><em>,</em> <strong><em>HomerCE</em></strong><em>, etc. – mais la liste ci-dessus couvre les options les plus discutées et éprouvées à ce jour.)</em></p>
+<h2 id="dashboards-specialises-domotique-supervision-etc"><strong>Dashboards spécialisés (domotique, supervision, etc.)</strong><a class="headerlink" href="#dashboards-specialises-domotique-supervision-etc" title="Permanent link">&para;</a></h2>
+<p>Outre les portails généralistes ci-dessus, il existe des  <strong>tableaux de bord dédiés à des usages spécifiques</strong>  – qui peuvent être auto-hébergés également. Quelques exemples notables :</p>
+<ul>
+<li>
+<p><strong>Dashboards domotique (smart home)</strong> : le plus connu est sans doute l’interface  <strong>Lovelace</strong>  de Home Assistant. Home Assistant est une solution complète de domotique auto-hébergée, et inclut un tableau de bord hautement personnalisable pour contrôler les appareils de la maison connectée. On peut y afficher des tuiles pour les lumières, thermostats, caméras, etc., avec des retours d’état en temps réel. C’est excellent pour piloter son foyer, mais détourné en tant que homepage généraliste cela demanderait du travail (quoique certains l’ont fait via des cartes Markdown et boutons Home Assistant)  . D’autres exemples de dashboards domotique :  <strong>Domoticz</strong>  (interface web incluse pour la maison intelligente),  <strong>Jeedom</strong>, etc. Ces outils ne sont à considérer que si votre objectif principal est la domotique ; pour un usage portail d’applications web classiques, mieux vaut s’orienter vers les solutions généralistes précédentes.</p>
+</li>
+<li>
+<p><strong>Dashboards de supervision système</strong> : pour la surveillance de serveurs, systèmes et conteneurs, on retrouve des outils spécialisés comme  <strong>Grafana</strong>,  <strong>Glances</strong>,  <strong>Netdata</strong>,  <strong>Zabbix</strong>, etc. Par exemple,  <strong>Glances</strong>  est un utilitaire écrit en Python qui fournit un tableau de bord en console ou web affichant en temps réel l’utilisation CPU, RAM, E/S disque, réseau et divers composants du système  . On peut l’exposer via une interface web et même l’intégrer à un dashboard comme Dashy pour remonter ces infos.  <strong>Grafana</strong>, quant à lui, excelle dans l’affichage de tableaux de bord de métriques sous forme de graphiques (CPU, trafic, températures…) en se branchant sur des bases de données de séries temporelles (Prometheus, InfluxDB, etc.). C’est l’outil de choix pour qui veut de jolis graphes et alertes, mais il nécessite plus de configuration.  <strong>Netdata</strong>  offre un tableau de bord temps-réel pour une machine donnée, avec énormément de détails (jusqu’au monitoring des processus, E/S, etc.) sans configuration préalable.  <strong>Zabbix</strong>  est une solution d’entreprise plus lourde pour superviser un parc entier de machines et services. En résumé, ces dashboards de monitoring sont parfaits pour suivre la  <strong>santé technique</strong>  de vos serveurs et applications. Vous pouvez soit les consulter séparément, soit parfois les  <strong>intégrer dans votre dashboard principal</strong>  via des iframes ou des widgets/API (exemple : intégrer un graph Grafana dans Homepage, ou un widget “health” qui interroge l’API de Pi-hole, etc.).</p>
+</li>
+</ul>
+<p>En règle générale,  <strong>les dashboards spécialisés sont complémentaires</strong>  des dashboards généralistes. Il est courant d’utiliser par exemple Heimdall ou Homarr pour lancer les applications, puis Grafana/Glances pour surveiller les ressources, ou d’avoir Home Assistant pour la domotique et un autre dashboard pour les autres services. Veillez simplement à ce que tout soit bien  <strong>sécurisé</strong>  (ces interfaces exposent beaucoup d’infos, mettez de l’authentification ou limitez l’accès au réseau local).</p>
+<h2 id="comparaison-technique-performance-personnalisation-integrations"><strong>Comparaison technique (performance, personnalisation, intégrations…)</strong><a class="headerlink" href="#comparaison-technique-performance-personnalisation-integrations" title="Permanent link">&para;</a></h2>
+<p>Pour mieux guider le choix, examinons quelques  <strong>critères de comparaison clés</strong>  et voyons comment se positionnent ces différents dashboards auto-hébergés :</p>
+<ul>
+<li>
+<p><strong>Performance et légèreté</strong> : Les solutions purement statiques ou minimales comme  <strong>Homer</strong>,  <strong>SUI</strong>,  <strong>Yal</strong>  ou  <strong>Heimdall</strong>sont les plus légères – elles consomment très peu de RAM/CPU et chargent instantanément (idéal pour Raspberry Pi, NAS peu puissant, etc.).  <strong>Glance</strong>  malgré ses widgets reste très optimisé (Go lang) et affiche aussi des temps de chargement ~1 seconde seulement  .  <strong>Flame</strong>  et  <strong>Homarr</strong>  ont une empreinte raisonnable (quelques centaines de Mo de RAM au plus) grâce à une conception légère ou à l’optimisation récente du code Homarr.  <strong>Homepage</strong>  (Ben Phelps) utilise Node/React mais sans recompilation fréquente, il demeure relativement fluide en runtime. À l’inverse,  <strong>Dashy</strong>  est connu pour être plus lourd : son conteneur fait un rendu React et doit reconstruire le site en cas de modification, ce qui se traduit par un  <strong>temps de démarrage plus long</strong>  et une consommation mémoire notable  . Sur un petit serveur, plusieurs utilisateurs ont observé des  <strong>ralentissements avec Dashy</strong>  (chargements initiaux lents, interface saccadée) là où Homepage ou Homarr restaient fluides  .  <strong>Fenrus</strong>  embarquant .NET se situe entre deux : un peu plus lourd qu’un Heimdall, mais il a été optimisé lors de la réécriture (le rendu serveur Blazor est plus rapide que l’ancienne version Node)  .  <strong>Organizr</strong>  est aussi relativement lourd (application PHP complète avec base de données) et peut charger plus lentement qu’un simple Homer, mais cela peut être acceptable en multi-usages. En somme, si votre priorité est la  <strong>légèreté</strong>  absolue, orientez-vous vers Homer/SUI/Heimdall (voire Homepage qui reste assez light) et évitez Dashy à moins d’avoir des ressources confortables.</p>
+</li>
+<li>
+<p><strong>Facilité d’installation et de configuration</strong> : Sur ce critère, les dashboards offrant une  <strong>configuration via interface graphique</strong>  l’emportent clairement pour les débutants.  <strong>Heimdall</strong>  se distingue par sa simplicité “plug-and-play” : on l’installe et on ajoute les liens via le web sans lire de documentation.  <strong>Flame</strong>  et  <strong>Homarr</strong>  également brillent par leur  <strong>simplicité de configuration</strong>  : tout se fait via de jolis formulaires intégrés, ce qui permet de construire son dashboard sans jamais éditer de fichiers  .  <strong>Fenrus</strong>  propose aussi une config 100% Web (avec en plus la gestion des comptes utilisateurs) – malgré sa richesse, son interface reste intuitive selon les retours  .  <strong>Organizr</strong>  a une interface d’admin complète, mais l’ampleur des réglages possibles peut dérouter un nouveau venu. Du côté des outils à configuration  <strong>fichier</strong>  (YAML/JSON), on retrouve  <strong>Homer</strong>,  <strong>Homepage</strong>,  <strong>SUI</strong>,  <strong>Glance</strong>,  <strong>Dashy</strong>  (optionnellement) et consorts. Ceux-ci demandent de lire la documentation et de manipuler des fichiers de config, ce qui peut être un frein initial. Toutefois, parmi eux,  <strong>Homepage</strong>  est souvent cité pour sa  <strong>bonne documentation et sa relative facilité</strong>même en YAML, comparé par exemple à un Dashy dont la config YAML est plus complexe et fragmentée  . Dashy essaie de compenser avec ses éditeurs intégrés, mais ceux-ci peuvent parfois être instables ou moins pratiques que prévu  .  <strong>Homer</strong>  et  <strong>SUI</strong>  ont l’avantage d’une structure de fichier simple et d’exemples par défaut qu’il suffit d’adapter. En résumé : pour un  <strong>débutant complet</strong>, Heimdall ou Flame/Homarr sont conseillés. Pour un  <strong>utilisateur intermédiaire</strong>  ne craignant pas de mettre les mains dans YAML, Homepage ou Homer restent simples. Pour un  <strong>expert</strong>  qui veut tout peaufiner, Dashy ou Glance offrent de grandes possibilités mais demandent plus d’effort initial.</p>
+</li>
+<li>
+<p><strong>Personnalisation de l’interface</strong> : Tous ces dashboards permettent, à des degrés divers, de  <strong>personnaliser l’apparence</strong>  et l’organisation. Les plus  <strong>limités</strong>  de ce point de vue sont Heimdall et SUI – ils offrent seulement quelques thèmes ou fonds d’écran, sans pouvoir vraiment changer la disposition des éléments (grid fixe) ni les styles au-delà de l’essentiel. À l’opposé,  <strong>Dashy</strong>,  <strong>Glance</strong>  et  <strong>Homepage</strong>  sont extrêmement  <strong>personnalisables</strong>  : choix de mise en page (colonnes, sections pliables…), multitude de  <strong>thèmes disponibles</strong>  ou personnalisables, possibilité d’ajouter du CSS personnalisé  , etc.  <strong>Homarr</strong>  et  <strong>Flame</strong>  offrent un bon compromis : on peut changer les couleurs, le fond, le nombre de colonnes, classer par catégories, mais on reste sur un design global préétabli (par exemple Homarr occupe toute la largeur avec des catégories empilées verticalement qu’on ne peut pas redimensionner librement)  .  <strong>Homer</strong>  permet de personnaliser chaque icône/service individuellement (logos, sous-titres, couleurs de tag) et de modifier entièrement la palette de couleurs de l’UI, ce qui permet d’obtenir un rendu très personnalisé malgré une structure figée  .  <strong>Fenrus</strong>  et  <strong>Organizr</strong>  proposent aussi pas mal d’options visuelles (Organizr a des thèmes CSS, Fenrus a un fond animé par défaut, etc.), tout en guidant l’utilisateur avec un style prédéfini. Si votre objectif est d’avoir un  <strong>design vraiment unique</strong>, Dashy est probablement le plus modulable (on peut même changer la mise en page en horizontal, vertical, tableau, etc., et créer des vues très originales). Glance offre un style unique type “journal” qui change des grilles classiques. En revanche, si vous aimez les  <strong>interfaces sobres façon matériel design</strong>, Flame/SUI/Homer/Homepage vous donneront satisfaction dès l’installation, avec seulement des retouches mineures pour adapter à votre thème préféré.</p>
+</li>
+<li>
+<p><strong>Fonctionnalités et intégrations</strong> : C’est sans doute le critère qui différencie le plus ces solutions. Du côté des fonctionnalités  <strong>basiques communes</strong> : tous savent afficher des liens d’applications avec icône, éventuellement des signets (liens externes), et parfois un champ de recherche.  <strong>Heimdall, Flame, SUI, Yal</strong>  restent globalement sur ce niveau de base (Heimdall ajoutant une search bar et quelques tuiles “améliorées” pour deux ou trois services).  <strong>Homer</strong>  ajoute la recherche par mots-clés et quelques  <em>badges</em>, mais pas de contenu dynamique. Pour des  <strong>widgets dynamiques</strong>  (ex : météo, RSS, tâches, notes, etc.), il faut se tourner vers  <strong>Homarr, Homepage, Dashy, Glance</strong>. Par exemple, Homarr inclut un petit module météo et un bloc-notes  , Homepage permet d’afficher des infos Docker, réseau, météo, etc., tout en haut de la page  , Dashy propose une bibliothèque de widgets très étendue (y compris des intégrations tierces comme afficher les scores sportifs, les cours boursiers, etc.)  .  <strong>Glance</strong>  est conçu nativement pour agréger des contenus externes sur votre page (actus RSS, Reddit, vidéos YouTube…)  . Du côté des  <strong>intégrations d’applications</strong> :  <strong>Homepage</strong>  et  <strong>Homarr</strong>  offrent des intégrations API avec beaucoup de services homelab (Plex, Sonarr/Radarr, Jellyfin, Ombi, Pi-hole, Traefik, etc.), ce qui permet d’avoir par exemple le nombre de torrents actifs, l’état d’un téléchargement, le nombre de pubs bloquées ou le prochain épisode à diffuser, directement sur la tuile du service.  <strong>Heimdall</strong>  propose aussi une liste limitée d’<em>Enhanced Apps</em>  avec des champs de configuration API pour quelques services courants  .  <strong>Fenrus</strong>  pousse encore plus loin avec ses  <strong>“smart apps”</strong>  qui enrichissent les tuiles avec des informations contextuelles automatiquement  .  <strong>Organizr</strong>  permet des choses différentes (ex : intégrer un lecteur de musique ou de vidéo via plugins, ou utiliser Organizr comme source d’authentification unique pour vos applications grâce au support SSO)  . Il est important de cerner vos besoins : si vous souhaitez juste un  <strong>lanceur d’apps simple</strong>, beaucoup de fonctionnalités ne vous seront pas utiles – un Heimdall ou Flame suffiront. Si au contraire vous voulez exploiter à fond les  <strong>APIs de vos services</strong>  pour tout visualiser au même endroit, optez pour Homepage, Homarr, Fenrus ou Dashy qui sont conçus pour cela. Notons que  <strong>certaines intégrations peuvent dupliquer ce que font d’autres outils</strong>  : par ex., afficher les graphes de CPU dans Dashy est possible, mais un outil dédié comme Grafana le fera mieux ; avoir un widget météo est sympa, mais votre téléphone le fait aussi, etc. L’essentiel est de trouver le juste milieu qui vous convient entre  <strong>simplicité</strong>  et  <strong>“tout dans un seul écran”</strong>.</p>
+</li>
+<li>
+<p><strong>Support multi-utilisateurs</strong> : La plupart des dashboards listés sont pensés pour un usage personnel, et  <strong>ne gèrent pas nativement plusieurs utilisateurs avec des sessions séparées</strong>. Par défaut, Homarr, Homer, Heimdall, Dashy, etc., n’ont pas de concept de comptes utilisateurs (on peut éventuellement mettre un login unique via un proxy ou partager le lien du dashboard en lecture seule, mais pas de pages distinctes par user). Si vous avez besoin de  <strong>tableaux de bord distincts ou d’accès restreints par utilisateur</strong>, deux solutions se démarquent :  <strong>Fenrus</strong>  (multi-user intégré, chaque compte ayant son dashboard isolé)  , et  <strong>Organizr</strong>  (multi-user avec rôles et accès différenciés aux onglets)  . Organizr permet même de synchroniser les comptes avec Plex, ce qui est pratique dans un contexte de serveur média partagé  . Une autre approche consiste à déployer plusieurs instances de dashboards différents – par exemple, un Homepage pour la famille (avec les services grand public) et un autre pour l’admin – c’est ce que font certains utilisateurs  . Mais cela reste du bricolage. Donc si le besoin multi-user est  <strong>critique</strong>, privilégiez Fenrus ou Organizr. Sinon, considérez tous ces outils comme des  <em>« pages d’accueil personnelles »</em>  (quitte à les sécuriser par un mot de passe global si vous le souhaitez).</p>
+</li>
+<li>
+<p><strong>Compatibilité et maintenance dans le temps</strong> : Un dernier point à comparer est la  <strong>santé des projets open-source</strong>correspondants. Tous ceux mentionnés ici sont open-source et disponibles sur GitHub (souvent maintenus par des passionnés). Certains sont très actifs avec des mises à jour fréquentes (par ex.  <strong>Homepage</strong>  a une forte communauté depuis 2022,  <strong>Homarr</strong>  a eu une refonte majeure en 2024,  <strong>Dashy</strong>  est activement développé avec de nombreuses releases,  <strong>Homer</strong>  et  <strong>Heimdall</strong>  sont stables depuis des années). D’autres sont plus ou moins figés (SUI n’a plus beaucoup de maj depuis que Flame a pris le relais).  <strong>Fenrus</strong>  est développé par un seul auteur, avec des updates ponctuelles.  <strong>Organizr</strong>  est également stable mais son rythme de développement a ralenti. Avant de s’engager sur un dashboard, il peut être utile de jeter un œil au repo GitHub (nombre de contributeurs, fréquence des commits) et à la communauté (Discord, Reddit) pour estimer la  <strong>pérennité</strong>. Ceci dit, même un projet non mis à jour reste utilisable s’il répond à vos besoins actuels – ce sont des applications assez simples en termes de dépendances.</p>
+</li>
+</ul>
+<h2 id="quel-dashboard-choisir-recommandations-finales"><strong>Quel dashboard choisir ? (Recommandations finales)</strong><a class="headerlink" href="#quel-dashboard-choisir-recommandations-finales" title="Permanent link">&para;</a></h2>
+<p>Pour conclure, voici quelques  <strong>suggestions de choix</strong>  en fonction de profils ou critères spécifiques :</p>
+<ul>
+<li>
+<p><strong>Meilleur choix pour un débutant (installation “en un clic”)</strong>  :  <em>Heimdall</em>  est recommandé pour sa mise en route instantanée et son usage ultra-simple  . Si vous voulez un peu plus de personnalisation visuelle tout en restant novice,  <em>Flame</em>  est une excellente alternative grâce à son interface utilisateur conviviale  . Ces deux solutions permettent d’obtenir un résultat propre sans écrire une seule ligne de config.</p>
+</li>
+<li>
+<p><strong>Le plus léger pour un petit serveur</strong>  :  <em>Homer</em>  ou  <em>SUI</em>  seront imbattables en termes de légèreté – ils ne consomment quasiment rien et restent très rapides.  <em>Heimdall</em>  et  <em>Yal</em>  sont également très peu gourmands. Évitez  <em>Dashy</em>  sur de trop faibles machines, car son empreinte est supérieure  .</p>
+</li>
+<li>
+<p><strong>Le plus personnalisable et riche en fonctionnalités</strong>  :  <em>Dashy</em>  remporte la palme de la flexibilité (widgets, thèmes, agencement libre) et  <em>Homepage</em>  n’est pas loin derrière avec ses intégrations et widgets extensibles  .  <em>Homarr</em>  offre aussi un bon panel de personnalisations (couleurs, tuiles redimensionnables, widgets de base) via l’UI, tandis que  <em>Glance</em>  propose un style unique très informatif. Si vous adorez bricoler et ajouter toujours plus de données sur votre dashboard, Dashy ou Homepage vous combleront.</p>
+</li>
+<li>
+<p><strong>Meilleures intégrations d’applications</strong>  :  <em>Homepage</em>  et  <em>Homarr</em>  supportent nativement de nombreuses intégrations (APIs Plex, Sonarr, Radarr, etc.) pour enrichir vos tuiles de service  .  <em>Heimdall</em>  en fournit quelques-unes en “Enhanced Apps”.  <em>Fenrus</em>  permet également d’intégrer des infos (par ex. Pi-hole, uptime, etc.) via ses  <em>smart apps</em>  . Si l’objectif est d’avoir un  <strong>aperçu d’état</strong>  de vos services (ex : torrent en cours, nombre de fichiers à télécharger, etc.), Homarr ou Homepage seront d’excellents choix.</p>
+</li>
+<li>
+<p><strong>Pour une utilisation mobile (smartphone/tablette)</strong>  :  <em>Homepage</em>  est signalé pour bien fonctionner sur mobile (responsive design soigné)  .  <em>Heimdall</em>  et  <em>Homer</em>  s’en sortent correctement vu leur simplicité.  <em>Dashy</em>  et  <em>Homarr</em>  ont parfois quelques soucis d’affichage responsive (tuiles qui dépassent, etc., même si Homarr s’améliore). Si l’accès mobile est important, testez le rendu de la démo de chaque dashboard sur votre téléphone. De plus, préférez une interface épurée (moins de colonnes, pas trop de widgets lourds) pour un usage mobile fluide.</p>
+</li>
+<li>
+<p><strong>Usage multi-comptes ou partagé</strong>  :  <em>Fenrus</em>  ou  <em>Organizr</em>  sont tout indiqués si vous avez besoin de comptes séparés et de pages dédiées par utilisateur  . Par exemple, pour un serveur familial ou un petit intranet d’entreprise, Organizr pourra gérer les connexions et droits, et Fenrus fournir un dashboard perso à chacun. En l’absence de ces besoins, restez sur les solutions classiques mono-user, vous éviterez une complexité inutile.</p>
+</li>
+<li>
+<p><strong>Look &amp; Feel spécifique</strong>  : Ce critère est subjectif, mais pour donner des tendances :  <em>Heimdall</em>  a un look très sobre “classique”,  <em>Homer</em>  un style coloré retro-cartoon,  <em>Flame/SUI</em>  un design minimaliste moderne,  <em>Homarr</em>  une esthétique “material design” élégante,  <em>Dashy</em>  une présentation plus originale avec sections à la carte,  <em>Glance_ressemble à une page de magazine remplie de contenus,  _Organizr</em>  reprend l’aspect d’un portail avec menu latéral,  <em>Fenrus</em>  a un style par défaut plutôt futuriste. N’hésitez pas à consulter des  <strong>captures d’écran/demo</strong>  de chacun pour voir lequel vous plaît le plus – tous offrent des options de thèmes pour ajuster ensuite, mais l’agencement de base diffère. Le meilleur dashboard est aussi celui qu’on prend plaisir à regarder et utiliser au quotidien.</p>
+</li>
+</ul>
+<p>En définitive,  <strong>le choix du dashboard dépendra de vos priorités personnelles</strong>. Ce comparatif a montré qu’aucune solution n’est “parfaite” sur tous les plans : par exemple, le plus simple (Heimdall) est aussi le moins extensible, le plus complet (Dashy) est plus lourd, etc. Prenez en compte la puissance de votre machine, le temps que vous êtes prêt à investir dans la configuration, et les fonctionnalités indispensables à vos yeux. L’avantage, c’est que tous ces projets étant gratuits et open-source, vous pouvez en tester plusieurs relativement facilement (beaucoup proposent des conteneurs Docker mono-fichier pour un essai rapide). Pourquoi ne pas commencer simple avec un Heimdall ou un Flame pour apprivoiser le concept, puis évoluer vers un Homarr ou Homepage si vous en ressentez les limites ?  <strong>Quel que soit votre choix, avoir un dashboard auto-hébergé transformera votre expérience homelab</strong>  en centralisant vos outils et en donnant à votre serveur une véritable page d’accueil sur mesure.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

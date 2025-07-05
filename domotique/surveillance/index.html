@@ -1,0 +1,1634 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../zigbee/">
+      
+      
+        <link rel="next" href="../../monitoring/grafana/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Vidéosurveillance (Frigate) - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#videosurveillance-opensource-pour-homelab" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Vidéosurveillance (Frigate)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-comparaison-frigate-vs-shinobi-vs-zoneminder" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Comparaison : Frigate vs Shinobi vs ZoneMinder
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-cas-dusage-typiques-en-homelab-securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Cas d’usage typiques en homelab (sécurité)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-google-coral-edge-tpu-accelerateur-ia" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Google Coral Edge TPU : accélérateur IA
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-choix-des-cameras-compatibles-onvif-rtsp-poe-wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Choix des caméras compatibles (ONVIF, RTSP, PoE, Wi‑Fi)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-installation-et-optimisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Installation et optimisation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="videosurveillance-opensource-pour-homelab"><strong>Vidéosurveillance open‐source pour homelab</strong><a class="headerlink" href="#videosurveillance-opensource-pour-homelab" title="Permanent link">&para;</a></h1>
+<p>Dans un environnement homelab (auto-hébergé) orienté cybersécurité, on privilégie des solutions de vidéosurveillance respectueuses de la vie privée, légères et extensibles. Trois solutions courantes sont  <strong>Frigate</strong>,  <strong>Shinobi</strong>  et  <strong>ZoneMinder</strong>. Elles sont toutes open source et permettent de traiter localement les flux caméras. Ce document compare leurs performances, facilité de configuration, compatibilité matérielle et capacités de détection d’objet par IA. Il détaille également des cas d’usage typiques (surveillance périmétrique, détection d’intrusion, alertes), l’utilisation des accélérateurs matériels Google Coral (USB, M.2/PCIe), le choix de caméras (ONVIF/RTSP, PoE/Wi‑Fi, qualité vs budget) et donne des instructions d’installation (Docker, LXC), d’intégration avec Home Assistant et d’optimisation (zones, objets, alertes).</p>
+<h2 id="1-comparaison-frigate-vs-shinobi-vs-zoneminder"><strong>1. Comparaison : Frigate vs Shinobi vs ZoneMinder</strong><a class="headerlink" href="#1-comparaison-frigate-vs-shinobi-vs-zoneminder" title="Permanent link">&para;</a></h2>
+<p>TABLEAU</p>
+<p>En résumé,  <strong>Frigate</strong>  est centré sur la détection d’objets IA locale avec accélérateur (Coral, GPU)  , son interface est sobre mais l’intégration dans Home Assistant est native.  <strong>Shinobi</strong>  mise sur la performance brute et la flexibilité (gestion multi‑flux, clustering, support CUDA/Jetson)  .  <strong>ZoneMinder</strong>  est la solution historique ultra‑complet, plus lourde en CPU et requérant des extensions pour l’IA  , mais proposant de riches possibilités de configuration de détection, d’alertes et de stockage. Les choix dépendent des besoins : Frigate pour une détection IA simple et rapide, Shinobi pour une solution légère et évolutive, Zoneminder pour un contrôle granulaire et des scénarios d’entreprise.</p>
+<h2 id="2-cas-dusage-typiques-en-homelab-securite"><strong>2. Cas d’usage typiques en homelab (sécurité)</strong><a class="headerlink" href="#2-cas-dusage-typiques-en-homelab-securite" title="Permanent link">&para;</a></h2>
+<p>Dans un homelab d’ingénieur cybersécurité, la vidéosurveillance sert avant tout à  <strong>sécuriser les locaux</strong>  et  <strong>compléter la détection d’intrusion</strong>. Exemples de scénarios :</p>
+<ul>
+<li>
+<p><strong>Surveillance périmétrique</strong>  : caméras extérieures montées sur la façade, grillage ou clôture, couvrant l’accès principal. Détection de mouvements d’intrus en bordure de propriété (personne, véhicule). On déclenche des alertes lors d’un franchissement de zone dangereuse (zone interdite). Frigate/Shinobi déclencheront une notification push ou e-mail quand un humain/voiture entre dans la zone surveillée.</p>
+</li>
+<li>
+<p><strong>Caméras intérieures (zone sensible)</strong>  : surveillance de la salle serveurs ou local réseau. Détection de présence non autorisée (biométrique ou objet suspect comme sac à dos). Par exemple, si quelqu’un essaie de pénétrer dans l’armoire serveur, on veut une  <strong>alerte immédiate</strong>  (via Telegram/HA). Les systèmes peuvent associer la détection d’intrusion à des scripts (verrouillage, sirène, enregistrement vidéo).</p>
+</li>
+<li>
+<p><strong>Détection d’intrusion générale</strong>  : lorsqu’un capteur de mouvement (ou un IDS réseau) signale une anomalie, la caméra valide visuellement. Frigate, Shinobi ou ZoneMinder peuvent être couplés à des capteurs tiers (via MQTT/API) : une alerte de type  <em>présence</em>  ne déclenche un enregistrement ou une alarm qu’après vérification video (ex: un objet humain détecté par IA). On peut aussi utiliser la reconnaissance de plaque ou de visage pour identifier les véhicules/personnes autorisés.</p>
+</li>
+<li>
+<p><strong>Alertes cybersécurité via liaison physique</strong>  : en cas d’alarme logicielle (attaque, ransomware) on peut déclencher une brève surveillance renforcée (par exemple augmenter la sensibilité ou prendre en compte de nouveaux objets comme « tentative d’ouverture de baie » si un capteur magnétique s’active). L’idée est de corréler les événements réseau avec la vidéo.</p>
+</li>
+<li>
+<p><strong>Rétention vidéo et preuves</strong>  : configurer un enregistrement 24/7 (ou circulaire) et extraire automatiquement les rushes quand un événement IA survient  . Par exemple, Frigate peut ne conserver que les segments vidéo où un « objet voulu » (personne, véhicule, animal, etc.) a été détecté, réduisant le stockage.</p>
+</li>
+</ul>
+<p>Ces usages sont gérés via des réglages de zones et d’objets pour limiter les fausses alertes (ex : configurer Frigate pour n’alerter que si une personne entre dans l’allée de parking)  . Le système peut alors envoyer des notifications (e-mail, webhook, MQTT, Home Assistant) en cas d’intrusion détectée. Par exemple, Frigate envoie chaque détection via MQTT pour s’intégrer facilement dans HA  .</p>
+<h2 id="3-google-coral-edge-tpu-accelerateur-ia"><strong>3. Google Coral Edge TPU : accélérateur IA</strong><a class="headerlink" href="#3-google-coral-edge-tpu-accelerateur-ia" title="Permanent link">&para;</a></h2>
+<p>Le  <strong>Coral Edge TPU</strong>  de Google est un coprocesseur ASIC spécialisé pour l’inférence d’IA (TensorFlow Lite) en périphérie. Il existe en trois formats :  <em>USB</em>,  <em>mini PCIe</em>  (format court) et  <em>M.2 E-key</em>  (format 2230). Tous contiennent le même circuit Edge TPU, capable d’environ  <strong>4 TOPS</strong>  (téra-opérations int8) chacun, soit environ  <em>400 images/sec</em>  sur un modèle MobileNet V2, avec ~2 W de consommation  . La version M.2 “Dual Edge TPU” intègre deux de ces co-processeurs en parallèle (8 TOPS total)  . Concrètement, cela permet de traiter de nombreux flux vidéos en temps réel sans charger le CPU, par exemple Frigate peut dépasser 100 fps par flux avec un Coral tout en gardant un usage CPU très bas  .</p>
+<ul>
+<li>
+<p><strong>Version USB</strong>  : dongle USB3.0 (Type-C) facile à installer sur tout système Linux/Windows/Mac (dont Raspberry Pi)  . Tendance au prototypage ou usage ponctuel.  <strong><em>Limitation</em></strong>  : sous forte charge ou sur certains Linux (RPi), on préfère souvent le M.2/PCIe pour la stabilité et la vitesse.</p>
+</li>
+<li>
+<p><strong>Versions M.2 / Mini PCIe</strong>  : modules internes que l’on insère sur une carte mère offrant un slot M.2 E-key ou mini PCIe. Ils nécessitent le driver PCIe d’EdgeTPU (guide Coral) et offrent le même Edge TPU, voire en double (8 TOPS)  . Ces versions sont recommandées pour les déploiements permanents : « la version M.2 ou mini PCIe est conseillée plutôt que USB, car l’USB est plutôt pour le prototypage, pas la production »  . Par exemple, dans Docker Frigate on passe le périphérique Coral avec  --device /dev/bus/usb:/dev/bus/usb  pour l’USB, ou  /dev/apex_0:/dev/apex_0  pour le PCIe (cf. docs)  .</p>
+</li>
+</ul>
+<p><strong>Avantages</strong>  : l’Edge TPU accélère massivement l’inférence sans alourdir le CPU ni consommer beaucoup d’énergie. On peut alors multiplier les détections IA (personnes, véhicules…) sur plusieurs caméras simultanées. Par exemple, deux Edge TPU permettent de doubler les inférences (en parallèle ou en pipeline)  . Dans Frigate ou Shinobi, un Coral supprime le goulot d’étranglement CPU de l’analyse vidéo, rendant la détection d’objets IA  <em>vraiment temps réel</em>  . Sans accélérateur, on peut utiliser un GPU Nvidia (TensorRT) ou Hailo, mais le Coral est simple, peu coûteux (~$60) et largement supporté.</p>
+<h2 id="4-choix-des-cameras-compatibles-onvif-rtsp-poe-wifi"><strong>4. Choix des caméras compatibles (ONVIF, RTSP, PoE, Wi‑Fi)</strong><a class="headerlink" href="#4-choix-des-cameras-compatibles-onvif-rtsp-poe-wifi" title="Permanent link">&para;</a></h2>
+<p>Pour un homelab, on préfère des caméras  <strong>IP ouvertes</strong>  supportant ONVIF ou RTSP pour une intégration facile dans Frigate/Shinobi/ZoneMinder. Quelques recommandations :</p>
+<ul>
+<li>
+<p><strong>Protocole</strong>  : ONVIF assure l’interopérabilité (découverte, PTZ) tandis que RTSP fournit le flux vidéo. Frigate/Shinobi préfèrent des flux H.264+AAC (bons pour la compatibilité)  . Shinobi, par exemple, gère HTTP/HTTPS, RTP/RTSP et ONVIF nativement  , ce qui le rend compatible avec la plupart des caméras IP. ZoneMinder accepte tout protocole supporté (MJPEG, FFmpeg, ONVIF, RTSP…)  .</p>
+</li>
+<li>
+<p><strong>Qualité d’image</strong>  : privilégiez un capteur de taille moyenne/grande (1/2”, 1/1.8”) pour de bonnes performances en faible luminosité. Exemples courants : caméras Dahua/Hikvision ou leurs répliques (Amcrest, Hikvision “ColorVu” pour vision de nuit en couleur) offrent 2–4 MP et bonne IR  . Les caméras 4K (8 MP) peuvent sembler attractives, mais attention : la documentation Frigate note que les modèles 4K, notamment chez Reolink, posent souvent problème (flux instable) et conseille de rester sur du 5 MP ou moins  .</p>
+</li>
+<li>
+<p><strong>Budget vs gamme</strong> :</p>
+<ul>
+<li>
+<p><em>Entrée de gamme (&lt; 50 €)</em>  : caméras Wi‑Fi (Tapo, TP-Link, Wyze, etc.) ou PoE bon marché (Reolink 4 MP, Dahua basique). Elles font le job en jour, mais ont souvent un SoC limité (faible perf. en nuit). Certains modèles Wi‑Fi nécessitent d’activer RTSP manuellement (ex : caméras Ezviz par défaut désactivent RTSP).</p>
+</li>
+<li>
+<p><em>Milieu de gamme (50–150 €)</em>  : caméras PoE à capteur plus grand (Reolink 5 MP, Amcrest 4 MP, HIK-IP 4 MP), avec support ONVIF complet. Elles combinent image correcte, fiabilité réseau et aisance d’installation (PoE).</p>
+</li>
+<li>
+<p><em>Haut de gamme (150 €+)</em>  : Axis, Bosch, Dahua 4K, etc. Offrent du 4K ou plus, meilleur capteur, optical zoom/PTZ, mais à coût élevé. Pour un homelab, ce niveau n’est pas toujours nécessaire.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Connectivité</strong>  : la  <strong>PoE</strong>  (Power over Ethernet) est à privilégier pour les caméras fixes extérieures/intérieures : elle fournit courant et données sur un seul câble, garantissant stabilité et reach (jusqu’à 100 m). L’Ethernet dédié réduit les risques d’interférences. Le Wi‑Fi peut être utilisé pour des caméras mobiles ou en repeater, mais il est  <em>moins fiable</em>  (pertes de paquets)  . Frigate déconseille d’ailleurs les caméras Wi‑Fi pour cette raison. Des caméras 4G LTE existent (D-link, Reolink Argus) mais restent chères et dépendent d’un opérateur.</p>
+</li>
+<li>
+<p><strong>Recommandations spécifiques</strong>  : les docs Frigate suggèrent les marques  <strong>Dahua, Hikvision, Amcrest</strong>  pour leur fiabilité et leurs sous-flux multiples  . Par exemple :</p>
+<ul>
+<li>
+<p><em>Dahua IPC-T5xx</em>  (5 MP, PoE) ou  <em>Hikvision DS-2CD</em>  (4 MP, PoE) pour extérieur, IR.</p>
+</li>
+<li>
+<p><em>Amcrest 4 MP</em>  (PoE) ou  <em>Reolink RLC-410/RLC-811</em>  (PoE) comme bons compromis qualité/prix.</p>
+</li>
+<li>
+<p><em>Caméra Wi-Fi intérieur</em>  : Tapo C200 (1080p) ou Reolink E1 Pro (2K) – pratique mais limiter le nombre.</p>
+</li>
+<li>
+<p>Éviter les caméras « cloud only » (Nest, Arlo, etc.) sans RTSP/ONVIF, car elles ne fonctionnent pas sur Frigate/Shinobi.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>En résumé, choisissez des caméras H.264 compatible ONVIF/RTSP avec des connecteurs RJ45 PoE pour la fiabilité. Vérifiez la documentation pour activer RTSP si nécessaire. Un tableau récapitulatif peut être utilisé :</p>
+<p>TABLEAU</p>
+<p><em>(Les prix sont indicatifs en 2025. Les marques citées sont exemplaires – de nombreuses autres respectent les normes ONVIF/RTSP.)</em></p>
+<h2 id="5-installation-et-optimisation"><strong>5. Installation et optimisation</strong><a class="headerlink" href="#5-installation-et-optimisation" title="Permanent link">&para;</a></h2>
+<p><strong>Déploiement (Docker/LXC)</strong>  – Frigate et Shinobi proposent des images Docker officielles. L’installation recommandée pour Frigate est via Docker Compose (voir exemple ci-dessous)  . On passe les volumes (config, stockage médias) et les périphériques pour le TPU : par exemple  --device /dev/bus/usb:/dev/bus/usb  pour une clé Coral USB, ou  /dev/apex_0:/dev/apex_0  pour un Coral PCIe  . On n’oublie pas les ports (Frigate : 8554 pour RTSP, 8971 pour l’interface). En LXC (Proxmox ou autre), le passage d’USB/Passthrough est délicat ; beaucoup optent pour une VM si on veut utiliser un Coral USB. Shinobi a aussi une image Docker (requiert Node, MySQL). ZoneMinder est souvent installé via paquet Linux (apt install zoneminder) ou Docker (image dlandon/Zoneminder), ce qui simplifie la mise à jour.</p>
+<p><em>Exemple d’extrait</em> <em>docker-compose.yml</em> <em>pour Frigate</em>  (GHCR stable)  :</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">frigate</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/blakeblackshear/frigate:stable</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frigate</span>
+<span class="w">    </span><span class="nt">privileged</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">          </span><span class="c1"># nécessaire pour le passthrough</span>
+<span class="w">    </span><span class="nt">shm_size</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;512mb&quot;</span>
+<span class="w">    </span><span class="nt">devices</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/bus/usb:/dev/bus/usb</span><span class="w">    </span><span class="c1"># Coral USB</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/apex_0:/dev/apex_0</span><span class="w">      </span><span class="c1"># Coral PCIe (voir guide)</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/dri/renderD128:/dev/dri/renderD128</span><span class="w">  </span><span class="c1"># HW accel Intel</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/config:/config</span><span class="w">    </span><span class="c1"># config YML de Frigate</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/media:/media/frigate</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tmpfs</span>
+<span class="w">        </span><span class="nt">target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/cache</span>
+<span class="w">        </span><span class="nt">tmpfs</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000000000</span><span class="w">  </span><span class="c1"># cache en RAM (1GB)</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8554:8554&quot;</span><span class="w">   </span><span class="c1"># RTSP entrées</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8971:8971&quot;</span><span class="w">   </span><span class="c1"># UI web</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">FRIGATE_RTSP_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mon_motdepasse&quot;</span>
+</code></pre></div>
+<p>On adaptera bien sûr les chemins, devices et ressources selon son matériel.</p>
+<p><strong>Intégration Home Assistant</strong>  – Frigate dispose d’un add-on officiel (« Frigate NVR ») à installer depuis le dépôt GitHub de Blake Blackshear. Cet add-on facilite le lancement sans Docker manuel et crée automatiquement les entités caméra et détection dans HA. Notez toutefois les limites de HA OS : le stockage média réseau n’était pas supporté avant 2023, et les GPU externes (Nvidia, AMD) ne sont pas reconnus dans les add-ons  . En contrepartie, l’intégration fournie (basée MQTT) expose tous les événements de détection, les entités de classes d’objets détectés et les snapshots/vignettes. Pour Shinobi/ZM, on utilise le plugin  <a href="https://github.com/pliablepixels/zmeventnotification">zmeventnotifications</a>  (pour ZM) ou  <a href="https://github.com/tchellomello/ha-shinobi">Home Assistant Integration pour Shinobi</a>  afin de récupérer les alertes via MQTT ou webhook.</p>
+<p><strong>Optimisation des détections</strong>  – Pour éviter les fausses alertes, configurez dans le fichier de configuration :</p>
+<ul>
+<li>
+<p><strong>Zones de détection</strong>  : délimitez par polygones les zones critiques (ex : allée, porte) et ne déclenchez une alerte que si un objet pénètre cette zone  . Par exemple, dans Frigate on liste  required_zones  sous  alerts  pour n’alerter qu’à l’intérieur de “jardin_entier”  .</p>
+</li>
+<li>
+<p><strong>Filtrage par objet</strong>  : spécifiez les classes d’objets à surveiller dans chaque zone. On peut par exemple n’autoriser que les  person  dans la zone entrée et les  car  sur l’allée de garage  . Seuls ces objets déclencheront les enregistrements/alertes dans leurs zones respectives.</p>
+</li>
+<li>
+<p><strong>Détection de mouvement légère</strong>  : Frigate/Shinobi effectuent d’abord une détection de mouvement basique pour limiter la charge (n’appellent l’analyse IA que si du mouvement est détecté)  . Ajustez la sensibilité (bruit, objets animaliers) via les masques ou seuils.</p>
+</li>
+<li>
+<p><strong>Rétention et lecture</strong>  : configurez la rétention vidéo basée sur les détections (ex : n’enregistrer en totalité qu’en cas de détection et conserver X jours). Par défaut Frigate peut enregistrer 24/7, mais on optimise en conservant uniquement les événements importants  .</p>
+</li>
+</ul>
+<p>Enfin, reliez les alertes IA aux notifications : Frigate envoie les événements (classe de l’objet, minuteur) via MQTT  , permettant à Home Assistant d’envoyer des push (Telegram, e-mail, mobile) ou de déclencher des automatismes (sirène, envoi d’une vue caméra).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

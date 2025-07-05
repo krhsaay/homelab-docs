@@ -1,0 +1,1633 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../reseau/">
+      
+      
+        <link rel="next" href="../../reseau/dashboard/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>LXC vs VM - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lxc-vs-vm-choix-techniques-selon-les-cas-dusage" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              LXC vs VM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#machines-virtuelles-vm-virtualisation-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      Machines virtuelles (VM) : virtualisation complète
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conteneurs-linux-lxc-et-ecosysteme-des-conteneurs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conteneurs Linux (LXC) et écosystème des conteneurs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-efficacite-et-densite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance, efficacité et densité
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isolation-et-securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Isolation et sécurité
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintenance-et-gestion-operationnelle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maintenance et gestion opérationnelle
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-quel-choix-pour-quel-besoin" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage : quel choix pour quel besoin ?
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="lxc-vs-vm-choix-techniques-selon-les-cas-dusage"><strong>LXC vs VM : choix techniques selon les cas d’usage</strong><a class="headerlink" href="#lxc-vs-vm-choix-techniques-selon-les-cas-dusage" title="Permanent link">&para;</a></h1>
+<h2 id="introduction"><strong>Introduction</strong><a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<p>Dans le domaine de l’infrastructure informatique, deux approches de virtualisation coexistent : les  <strong>machines virtuelles (VM)</strong>  d’un côté, et les  <strong>conteneurs Linux (LXC, Docker)</strong>  de l’autre. Ces technologies permettent toutes deux d’isoler des environnements et des applications, mais selon des mécanismes différents. Le choix entre déployer un service dans une VM ou dans un conteneur dépend de nombreux critères (performances, sécurité, maintenance) et du cas d’usage visé. En tant que professionnel IT spécialisé en cybersécurité, il est crucial de comprendre ces différences afin de choisir la solution la plus adaptée à chaque contexte (hébergement web, laboratoire de test, base de données sensible, etc.).
+<strong>Machines virtuelles vs conteneurs :</strong>  Sur le plan technique, une machine virtuelle embarque un système d’exploitation complet pour chaque instance, tournant sur un hyperviseur, tandis qu’un conteneur partage le noyau de l’OS hôte et isole seulement l’espace utilisateur et les processus  . Ce contraste est illustré ci-dessus : chaque VM inclut son propre OS invité, alors que plusieurs conteneurs peuvent partager un même OS hôte. En conséquence, les VM offrent une isolation très forte (émulation du matériel, OS indépendant), au prix d’une  <strong>surcharge de ressources</strong>  plus importante. Les conteneurs, eux, sont bien plus  <strong>légers</strong>  et rapides, puisque l’OS n’est pas dupliqué – mais cette efficacité s’accompagne d’une isolation moins complète, toutes les instances partageant le même noyau. Il ne s’agit donc pas de solutions concurrentes à sens unique : chacune a ses avantages et ses inconvénients qu’il convient d’examiner en détail  .</p>
+<p>Dans cet article, nous définirons d’abord brièvement ces deux technologies (VM et conteneurs LXC, en évoquant aussi Docker/Kubernetes), puis nous comparerons leurs mérites selon plusieurs critères  <em>clés</em>  –  <strong>performance</strong>,  <strong>sécurité</strong>,  <strong>maintenance</strong>  – avant d’illustrer  <strong>les cas d’usage types</strong>  pour un professionnel de la cybersécurité.</p>
+<h2 id="machines-virtuelles-vm-virtualisation-complete"><strong>Machines virtuelles (VM) : virtualisation complète</strong><a class="headerlink" href="#machines-virtuelles-vm-virtualisation-complete" title="Permanent link">&para;</a></h2>
+<p>Une  <strong>machine virtuelle</strong>  est un environnement isolé qui émule un matériel complet via un hyperviseur (par ex. KVM, VMware ESXi, Hyper-V). Chaque VM tourne avec  <strong>son propre système d’exploitation</strong>  invité, indépendant de l’hôte. En pratique, une VM fonctionne comme un “ordinateur dans l’ordinateur” : le système invité croit tourner sur du matériel réel, ignorant qu’il est simulé par l’hyperviseur  .</p>
+<p><strong>Atouts des VM :</strong>  L’isolation est maximale, car chaque VM est totalement séparée des autres et de l’OS hôte au niveau kernel. Cela permet d’exécuter  <strong>n’importe quel OS</strong>  (Linux, Windows, BSD…) et des configurations logicielles variées sur une même machine physique  . Cette indépendance garantit une excellente compatibilité applicative : tout logiciel qui fonctionne sur un serveur physique fonctionnera de même dans une VM équivalente, sans modifications  . Les VM conviennent bien aux applications legacy ou spécifiques, par exemple un ancien système nécessitant un kernel particulier ou un OS obsolète – cas dans lesquels la VM est souvent la seule option viable  . De plus, les VM offrent la  <strong>sauvegarde facile</strong>  d’un serveur entier sous forme d’image unique (snapshot), pouvant être déplacée ou dupliquée aisément pour de la reprise d’activité ou des tests  . Enfin, côté sécurité, la forte isolation limite les interactions : un crash ou une compromission dans une VM a peu de chances d’affecter l’hôte ou les autres VM.</p>
+<p><strong>Inconvénients des VM :</strong>  Cette isolation et flexibilité ont un coût en  <strong>ressources</strong>. Chaque VM embarquant un OS complet, elle consomme plus de CPU, de RAM et d’espace disque qu’un conteneur équivalent  . Les VMs sont  <strong>lourdes</strong>  (plusieurs gigaoctets souvent) et démarrent plus lentement qu’un conteneur, car il faut booter tout un OS invité  . Malgré les progrès de la virtualisation matérielle (hyperviseurs optimisés), il y a une légère surcharge par rapport à l’exécution directe sur l’hôte – typiquement une VM est un peu plus lente qu’un processus natif, même si la différence est aujourd’hui minime grâce aux optimisations CPU (VT-x/AMD-V)  . Enfin, utiliser des VM multiplie les environnements à  <strong>maintenir</strong>  : chaque machine virtuelle nécessite une administration propre, des mises à jour système, des correctifs de sécurité, etc., ce qui complexifie la gestion lorsqu’on en déploie beaucoup  . Nous reviendrons sur ces aspects de maintenance.</p>
+<h2 id="conteneurs-linux-lxc-et-ecosysteme-des-conteneurs"><strong>Conteneurs Linux (LXC) et écosystème des conteneurs</strong><a class="headerlink" href="#conteneurs-linux-lxc-et-ecosysteme-des-conteneurs" title="Permanent link">&para;</a></h2>
+<p>Un  <strong>conteneur Linux</strong>  (LXC) est une forme de virtualisation au niveau du système d’exploitation. Plutôt que d’émuler un matériel complet, un conteneur s’appuie sur le  <strong>noyau Linux de l’hôte</strong>  et isole uniquement les applications dans un espace dédié (via les  <em>namespaces</em>  et  <em>cgroups</em>  du kernel). On parle souvent de  <em>virtualisation légère</em>  : un conteneur n’inclut pas de kernel propre, il partage celui de l’hôte, ce qui le rend beaucoup plus  <strong>léger et rapide</strong>  à instancier qu’une VM  . On obtient ainsi un environnement clos (avec son système de fichiers, ses processus et utilisateurs isolés), mais dépendant du noyau de l’hôte.</p>
+<p><strong>Atouts des conteneurs LXC :</strong>  La  <strong>performance</strong>  et l’efficience sont les principaux avantages. Comme il n’y a pas besoin de dupliquer un OS entier, la consommation en CPU, mémoire et stockage est drastiquement réduite par rapport à une VM  . On peut faire tourner un grand nombre de conteneurs sur le même serveur physique (<em>haute densité</em>) là où seulement quelques VM lourdes auraient tenu  . Le démarrage est quasi-instantané (quelques secondes tout au plus), contre plusieurs dizaines de secondes pour booter un OS complet dans une VM  . Les applications tournent quasiment à la vitesse native du fait de l’absence d’hyperviseur intermédiaire – on parle de performance  <em>near-native</em>  . LXC permet ainsi de  <strong>maximiser l’utilisation des ressources</strong>  matérielles disponibles en mutualisant le kernel entre instances. Par ailleurs, les conteneurs offrent une isolation suffisante pour que des services différents cohabitent sans interférer : chaque conteneur a ses propres processus, réseau, utilisateurs, montages… Une faille ou un crash dans un conteneur ne doit pas affecter les autres (en théorie), ce qui assure une certaine stabilité globale  . En somme, LXC constitue un moyen flexible et peu gourmand d’isoler des applications ou micro-services sur un même hôte. Il est par exemple courant d’héberger  <strong>plusieurs sites web</strong>sur un seul serveur en créant un conteneur par site, assurant à chacun son environnement dédié en termes de ressources et de configuration  .</p>
+<p><strong>Limitations des conteneurs LXC :</strong>  L’isolation, bien que réelle (via l’isolement des processus), reste inférieure à celle d’une VM complète. Puisque tous les conteneurs partagent le noyau unique de l’hôte, une compromission de ce noyau aurait un impact sur  <em>tous</em>  les conteneurs. En cas de vulnérabilité kernel ou de mauvaise configuration de sécurité, un attaquant pourrait échapper au conteneur et accéder à l’hôte  . En pratique, un conteneur LXC non privilégié offre une bonne sécurité, mais il n’atteint pas le niveau d’étanchéité d’une VM où le kernel lui-même est isolé  . Autre contrainte : les conteneurs sont  <strong>dépendants de l’OS hôte</strong>. On ne peut exécuter dans un conteneur Linux  <em>que</em>  des applications compatibles Linux. Il est impossible de faire tourner un OS différent (pas de Windows dans un LXC sur noyau Linux, par exemple), ni un kernel divergent – les applications qui nécessitent un module kernel spécial ou une version précise du noyau imposent alors d’utiliser une VM  . Enfin, l’isolation étant au niveau user-space, certaines applications qui s’attendent à être en environnement « bare-metal » ou qui font des appels système étendus peuvent mal se comporter en conteneur. Il arrive aussi qu’on n’ait pas un  <strong>contrôle total du système</strong>  dans un conteneur (accès limité aux paramètres noyau, aux périphériques hardware, etc.), ce qui rend cette solution inadéquate pour certains besoins bas niveau  .</p>
+<p><strong>Docker et autres écosystèmes de conteneurs :</strong>  Il existe d’autres solutions de conteneurisation bâties sur le même principe d’OS partagés.  <strong>Docker</strong>  est la plateforme de conteneurs la plus populaire. Techniquement, Docker utilise aussi les fonctionnalités LXC/namespace du noyau Linux pour isoler les applications, mais il apporte tout un écosystème (format d’images standard, registres d’images Docker Hub, outils CLI, API) facilitant le packaging et le déploiement d’applications en conteneur  . Docker se concentre sur des conteneurs applicatifs éphémères (un processus principal par conteneur, approche  <em>microservices</em>). De son côté,  <strong>LXC/LXD</strong>  est souvent qualifié de conteneur « système » : on peut y faire tourner plusieurs processus comme dans une petite VM, et il est couramment utilisé sur des plateformes comme Proxmox ou LXD pour héberger des services de manière persistante. En résumé, Docker et LXC reposent sur des bases similaires, la différence tenant plus aux outils et à la philosophie (Docker pour la portabilité des apps et le DevOps, LXC pour administrer des environnements proches de la VM). À noter que Docker a initialement utilisé LXC en back-end, avant de développer son propre moteur (libcontainer). Aujourd’hui, les deux coexistent et répondent à des besoins voisins.</p>
+<p>Enfin, l’essor des conteneurs a entraîné l’apparition d’<strong>outils d’orchestration</strong>. En production, lorsqu’on gère des dizaines ou centaines de conteneurs, souvent répartis sur plusieurs serveurs, des orchestrateurs comme  <strong>Kubernetes</strong>  sont indispensables. Kubernetes automatise le déploiement, la montée en charge, la répartition et la résilience des conteneurs à grande échelle  . Il s’intègre bien avec Docker ou LXC pour assurer, par exemple, que si un conteneur tombe, un autre est relancé ailleurs, ou pour équilibrer la charge entre instances. Des outils comme  <strong>Portainer</strong>  offrent également une interface web unifiée pour gérer les environnements de conteneurs (Docker, Swarm, Kubernetes, Podman, etc.) de manière sécurisée et centralisée  . L’adoption de ces plateformes fait souvent partie des considérations techniques lorsqu’on choisit les conteneurs : pour les exploiter au mieux en entreprise, il faut prévoir la gestion centralisée et la sécurité de ces multiples instances.</p>
+<p>Après ce tour d’horizon, comparons plus en détail les VM et les conteneurs sur les aspects cruciaux de  <strong>performance</strong>, de  <strong>sécurité</strong>  et de  <strong>maintenance</strong>, avant de voir dans quels cas d’usage l’un prévaut sur l’autre.</p>
+<h2 id="performance-efficacite-et-densite"><strong>Performance, efficacité et densité</strong><a class="headerlink" href="#performance-efficacite-et-densite" title="Permanent link">&para;</a></h2>
+<p>Du point de vue des performances pures et de l’empreinte sur les ressources, les conteneurs ont l’avantage sur les VM dans la plupart des scénarios. Voici les principales différences :</p>
+<ul>
+<li>
+<p><strong>Surcharge et utilisation des ressources :</strong>  Une VM nécessite de faire tourner un OS complet par instance, ce qui consomme une portion non négligeable de CPU, mémoire et stockage juste pour le système invité. À l’inverse, un conteneur mutualise le noyau et n’embarque que les bibliothèques et fichiers strictement nécessaires à l’application. Résultat : les conteneurs sont  <strong>beaucoup plus légers</strong>  – mesurés en quelques Mo pour une image de base – là où une VM se compte en Go  . Un conteneur utilise moins de RAM et met moins de pression sur le host, car il évite la redondance du système d’exploitation  . En pratique, on évalue souvent l’overhead d’un conteneur à seulement quelques pourcents (proche des perfs natives), alors qu’une VM a un surcoût un peu supérieur dû à l’hyperviseur et aux duplications d’OS. Les progrès récents (para-virtualisation, VirtIO, etc.) ont réduit ce surcoût VM à un niveau très acceptable  , mais il demeure légèrement plus élevé que pour un conteneur Linux équivalent.</p>
+</li>
+<li>
+<p><strong>Densité et scalabilité :</strong>  Grâce à leur légèreté, les conteneurs permettent une  <strong>haute densité</strong>  de déploiement. On peut lancer  <strong>bien plus d’instances</strong>  sur un même hôte physique comparé aux VM  . Par exemple, un serveur de 32 Go de RAM pourrait héberger des dizaines de conteneurs applicatifs, alors qu’il ne supporterait peut-être que 4 ou 5 VM classiques. Cette densité est particulièrement utile pour les architectures à microservices ou les environnements où l’on segmente beaucoup d’applications. L’efficacité des conteneurs en fait un choix privilégié pour maximiser l’utilisation d’un hardware coûteux ou pour gérer des pics de charge en multipliant rapidement les instances.  <em>Côté VM</em>, la densité est limitée par la mémoire et le CPU qu’il faut allouer à chaque machine virtuelle (souvent plusieurs Go de RAM chacun). On réserve typiquement des ressources fixes par VM, ce qui rend le scaling moins fluide. Les VM offrent cependant d’autres leviers (overcommitment de ressources, migration à chaud entre hôtes…) pour la scalabilité, mais ils restent plus lourds à gérer qu’une flottille de conteneurs orchestrés.</p>
+</li>
+<li>
+<p><strong>Démarrage et réactivité :</strong>  Un autre atout majeur des conteneurs est leur  <strong>rapidité de démarrage</strong>. Lancer un nouveau conteneur LXC ou Docker prend généralement  <strong>quelques secondes</strong>  tout au plus, car il s’agit simplement de démarrer un ou quelques processus dans l’espace isolé (le kernel étant déjà là). Au contraire, démarrer une VM implique de booter tout un OS invité (chargement du kernel, des services système, etc.), ce qui prend plus de temps – parfois  <strong>plusieurs minutes</strong>  selon le système  . Cette différence se fait sentir lorsqu’il faut scaler vite (par exemple monter de 5 à 50 instances sous forte charge) : les conteneurs permettront de répondre quasiment en temps réel, là où des VM pourraient mettre un certain temps à être toutes opérationnelles. Dans des environnements de CI/CD ou de test où l’on crée et détruit fréquemment des environnements isolés, la vélocité des conteneurs accélère énormément les cycles. Les VM sont plutôt privilégiées pour des charges de longue durée en production, où le temps de boot importe moins que la stabilité continue.</p>
+</li>
+</ul>
+<p>En somme, pour  <strong>l’efficience et la performance</strong>, avantage aux conteneurs dans la plupart des cas. Les conteneurs LXC consomment peu et délivrent des performances proches du natif grâce à l’absence d’abstraction matérielle lourde  . Les VM offrent des performances tout à fait honorables (notamment avec l’aide de la virtualisation matérielle) mais subissent un léger coût d’isolation en plus. Cela se justifie pleinement pour des besoins de sécurité ou de compatibilité, mais si l’objectif premier est d’exécuter  <em>le plus d’applications possible par serveur</em>  avec le moins de surcoût, la containerisation est souvent le choix technique gagnant  .</p>
+<h2 id="isolation-et-securite"><strong>Isolation et sécurité</strong><a class="headerlink" href="#isolation-et-securite" title="Permanent link">&para;</a></h2>
+<p>L’<strong>isolation</strong>  des environnements est un critère essentiel, notamment en cybersécurité. Ici, les machines virtuelles ont généralement la réputation d’offrir une sécurité plus robuste que les conteneurs, du fait de leur séparation plus franche. Examinons les différences :</p>
+<ul>
+<li>
+<p><strong>Couche d’isolation :</strong>  Une VM forme une  <strong>sandbox complète au niveau matériel</strong>. Chaque VM a son kernel propre et ne voit le matériel que via l’hyperviseur. Si un attaquant compromise une VM, il reste enfermé dans ce système invité – il lui faut ensuite casser l’hyperviseur pour atteindre l’hôte, ce qui est difficile et rare. En revanche, un conteneur repose sur le  <em>même noyau</em>  que l’hôte. Par conséquent, une compromission du noyau Linux de l’hôte signifie la chute de toutes les protections entre conteneurs. Un conteneur mal configuré (par exemple lancé en mode privilégié, ou avec des permissions larges) peut donner à un processus malveillant une voie pour escalader ses privilèges jusqu’à l’hôte.  <strong>En bref :</strong>  les VM offrent une isolation plus forte au niveau OS, tandis que les conteneurs ont une isolation au niveau processus moins étanche  . C’est pourquoi  <strong>pour des charges non fiables ou exposées</strong>(serveurs en zone DMZ, applications potentiellement vulnérables), on recommande souvent de privilégier des VM, ajoutant une couche de sécurité en profondeur  . Un expert Proxmox résume :  <em>“si la sécurité est une préoccupation, les VM sont mieux isolées… Un service web public devrait idéalement tourner dans sa propre VM”</em>  . De fait, les VM sont souvent utilisées comme  <strong>sandbox</strong>  pour du code non fiable (analyse de malware, honeypots…), car même si le conteneur Linux a fait de grands progrès en isolation (namespaces, seccomp, AppArmor/SELinux, etc.), le risque d’évasion de conteneur existe toujours plus que l’évasion d’hyperviseur.</p>
+</li>
+<li>
+<p><strong>Surface d’attaque et vulnérabilités :</strong>  Le revers de la médaille est que les VM ont une surface d’attaque plus large en termes de code : un hyperviseur est complexe, de même que les pilotes virtualisés. Des vulnérabilités dans KVM, VMware ou VirtualBox peuvent (rarement) permettre des  <em>VM escape</em>  également. Toutefois, ces composants étant plus petits que tout un kernel Linux, et souvent mieux cloisonnés, le consensus est que l’isolation VM est un peu plus robuste « par défaut ». Les conteneurs dépendent entièrement de la sécurité du kernel hôte : or le kernel Linux est énorme (des millions de lignes de code  ), donc potentiellement riche en failles exploitables si pas à jour. En pratique, pour sécuriser des conteneurs, on s’appuie sur des  <em>best practices</em>  : conteneurs non privilégiés, restriction des capacités Linux (<em>capabilities</em>), utilisation de SECCOMP pour limiter les appels système autorisés, etc.  . Bien appliquées, ces mesures rendent les conteneurs assez sûrs pour de nombreux usages. Mais un administrateur prudent considèrera qu’un conteneur reste une isolation  <em>logicielle</em>  moins fiable qu’une virtualisation  <em>matérielle</em>  via hyperviseur. Ainsi,  <strong>les charges de travail multi-locataires critiques</strong>  (ex : cloud public, hébergement de clients isolés) auront tendance à fonctionner sur VM pour éviter qu’une brèche chez un locataire n’affecte les autres  . A contrario, dans un environnement maîtrisé où tous les conteneurs sont sous le contrôle de la même équipe, le niveau de sécurité du container peut être jugé suffisant, ce qui permet de bénéficier de son efficience.</p>
+</li>
+<li>
+<p><strong>Permissions et interactions :</strong>  Dans un conteneur, on peut choisir très finement les ressources exposées : monter ou non certains volumes, autoriser l’accès réseau ou pas, limiter la mémoire, CPU, etc. Cette  <strong>granularité</strong>  permet de réduire l’impact d’une compromission (par exemple, un conteneur compromis n’aura accès qu’aux fichiers montés et aux ports réseau qu’on lui a donnés). De plus, les processus dans un conteneur tournent souvent avec un utilisateur restreint, et l’isolation par  <em>namespace</em>  les empêche de voir les autres processus systèmes  . C’est un atout des conteneurs : ils poussent à un paradigme de moindre privilège par défaut. Dans une VM, par contre, si un attaquant entre avec un compte root dans la VM, il a compromis l’intégralité de cette VM (mais pas l’hyperviseur). Donc l’impact horizontal est moindre, mais l’impact vertical dans la VM est total. En cybersécurité, on combine souvent ces approches : par exemple faire tourner chaque service critique dans un conteneur dédié (pour cloisonner les processus entre eux),  <em>et</em>  isoler ces conteneurs dans une VM spécifique (pour ajouter la barrière hyperviseur vis-à-vis de l’hôte principal). Cette approche  <em>défense en profondeur</em>  assure qu’une faille applicative donne accès au conteneur, mais doit encore franchir la VM pour atteindre le reste du système.</p>
+</li>
+<li>
+<p><strong>Images et supply chain security :</strong>  Un point souvent moins discuté mais important : la sécurité des  <strong>images de conteneurs</strong>. Docker et LXC encouragent l’utilisation d’images préconstruites (disponibles sur Docker Hub, etc.). Cela facilite énormément le déploiement, mais introduit un risque de confiance : une image publique peut contenir des malwares ou des portes dérobées si elle n’est pas officielle. Utiliser des images non vérifiées constitue une menace (ex. crypto-mineur caché dans une image MongoDB trafiquée). En environnement de production critique, il faut donc maintenir un registre d’images de confiance et mettre à jour régulièrement ces images pour corriger les failles applicatives. Avec des VM, ce risque se pose différemment : on installe un OS à partir d’une ISO officielle, puis des logiciels – le processus est plus contrôlé, même s’il peut y avoir des backdoors dans des templates VM aussi. En somme, l’approche conteneur impose une vigilance sur la  <strong>chaîne d’approvisionnement logicielle</strong>(DevSecOps, scan d’images) pour garantir l’intégrité et la mise à jour des composants embarqués.</p>
+</li>
+</ul>
+<p>En conclusion sur la sécurité : les  <strong>VM l’emportent pour une isolation maximale</strong>  et sont privilégiées pour exécuter des éléments non fiables ou fortement cloisonnés  . Les  <strong>conteneurs</strong>  offrent une isolation logicielle suffisamment solide pour de nombreux cas, surtout si l’on suit les bonnes pratiques de configuration ; ils présentent une surface d’attaque un peu plus large au niveau noyau partagé, mais restent  <em>séparés</em>  des autres conteneurs par les mécanismes Linux. En cybersécurité, on considère souvent les conteneurs adaptés aux environnements contrôlés et homogènes (services internes, microservices cloud natifs), tandis que les VM restent incontournables pour des besoins d’isolement strict (par exemple, émuler un poste utilisateur infecté, héberger des services de différents clients, ou se prémunir d’exploits kernel). Notons qu’idéalement, les deux peuvent être combinés pour cumuler avantages : par exemple déployer des conteneurs à l’intérieur de VM (beaucoup de stacks Kubernetes en production fonctionnent sur des nœuds eux-mêmes isolés dans des VM cloud, afin d’ajouter la couche de sécurité hyperviseur en plus de l’orchestrateur).</p>
+<h2 id="maintenance-et-gestion-operationnelle"><strong>Maintenance et gestion opérationnelle</strong><a class="headerlink" href="#maintenance-et-gestion-operationnelle" title="Permanent link">&para;</a></h2>
+<p>Le troisième axe de comparaison concerne la  <strong>maintenance</strong>, l’administration au quotidien et les efforts nécessaires pour garder l’infrastructure à jour et stable. Il y a ici des différences significatives entre VM et conteneurs :</p>
+<ul>
+<li>
+<p><strong>Mises à jour système :</strong>  Avec des machines virtuelles, chaque VM comporte un OS complet qu’il faut  <strong>maintenir individuellement</strong>. Autrement dit, si vous avez 10 VM Ubuntu, vous devrez appliquer les mises à jour de sécurité sur les 10 systèmes séparément (que ce soit manuellement ou via un outil type Ansible). Il en va de même pour les backups : chaque VM a son disque virtuel qu’il faut sauvegarder, surveiller, etc. Les conteneurs simplifient cet aspect en mutualisant l’OS :  <strong>seul l’OS de l’hôte</strong>  a besoin d’être patché pour couvrir le kernel de toutes les instances  . Par exemple, un correctif de sécurité du noyau Linux n’aura qu’une installation unique (sur l’hôte) au lieu d’être appliqué dans chaque VM. Ceci  <strong>réduit considérablement l’effort de maintenance</strong>  sur les mises à jour système  . Toutefois, il ne faut pas oublier que les conteneurs ont tout de même leur espace utilisateur : dans le cas de LXC, chaque conteneur est un mini-système fichier qui peut contenir des paquets applicatifs à mettre à jour (librairies, serveurs web, etc.). Dans une approche Docker, on reconstruit régulièrement les images pour embarquer les dernières versions logicielles – ce qui déporte l’effort de mise à jour vers le pipeline CI/CD plutôt que l’administration système classique. En somme, l’OS noyau est unique à gérer (avantage conteneur), mais les applications contenues peuvent être multiples à maintenir (d’où l’importance d’automatiser la  <em>build</em>  d’images et le déploiement continu pour garder les conteneurs à jour). À l’inverse, avec des VM, on peut éventuellement mutualiser certaines mises à jour via des templates et des outils d’orchestration, mais in fine chaque VM reste un entité séparée (<em>pets vs cattle</em>).</p>
+</li>
+<li>
+<p><strong>Gestion des configurations et déploiements :</strong>  Les conteneurs s’intègrent généralement dans des workflows DevOps modernes. On décrit l’environnement via un  <em>Dockerfile</em>  ou un fichier de config LXD, on peut recréer un conteneur à l’identique sur une autre machine très facilement. Cela apporte une  <strong>portabilité</strong>  et une reproductibilité accrues – utile pour passer de la dev à la prod sans surprises, ou pour déployer rapidement un service sur un nouveau serveur. Les VM sont moins portables (une image de VM est volumineuse, liée à un hyperviseur donné, etc., bien qu’il existe OVF et autres formats standards). De plus, chaque VM a souvent une configuration manuelle (sauf à utiliser massivement l’Infrastructure as Code pour tout automatiser, ce que peu d’équipes font complètement en pratique). Les conteneurs, eux, incitent à un déploiement automatisé stateless : on peut éliminer les divergences de configuration, ce qui  <strong>facilite la maintenance</strong>  applicative (moins de « fonctionne sur ma machine, pas en prod »). Par ailleurs, la  <strong>mise à l’échelle</strong>  ou la reconfiguration d’une application conteneurisée se gère souvent via l’orchestrateur (ex: changer une variable d’environnement et redéployer le conteneur). Avec des VM, changer la config d’une app implique de se connecter à la VM, d’éditer, etc., sauf outillage de gestion de configuration. En résumé, administrer 100 conteneurs via Kubernetes ou Portainer peut s’avérer plus simple qu’administrer 100 VM via SSH manuellement.</p>
+</li>
+<li>
+<p><strong>Sauvegardes et reprise :</strong>  Les VM ayant des disques virtuels dédiés, les backups sont plus segmentés – on peut sauvegarder une VM sans affecter une autre, et restaurer indépendamment. Pour les conteneurs, souvent on externalise les données persistantes hors du conteneur (volumes montés, bases de données externes) afin que le conteneur puisse être recréé à neuf si besoin. La maintenance d’un conteneur consiste parfois à  <em>détruire/recréer_plutôt qu’à faire des corrections in-situ. Cela correspond à la philosophie  _immutable infrastructure</em>  : on n’upgrade pas un serveur en place, on redéploie un nouveau conteneur à jour. Cette approche, couplée à un orchestrateur, donne une grande robustesse (rollbacks faciles, déploiements blue/green). Avec des VM traditionnelles, on peut également automatiser des redeploiements immuables (notamment dans le cloud avec des images), mais c’est moins intégré d’office. En cybersécurité, rendre les environnements éphémères (infrastructure immuable) est un atout pour éliminer la persistance des malwares, etc., ce qui plaide en faveur des conteneurs + orchestrateurs pour certaines infrastructures.</p>
+</li>
+<li>
+<p><strong>Complexité d’exploitation :</strong>  D’un côté, les conteneurs ajoutent une couche logicielle (le moteur de conteneurs, l’orchestrateur) qu’il faut maîtriser, ce qui peut complexifier le troubleshooting (il faut diagnostiquer non seulement l’OS hôte mais aussi les interactions conteneur, réseau overlay, etc.). De l’autre, les VM peuvent faire tourner des systèmes hétérogènes et plus lourds, ce qui peut aussi être complexe à dépanner (ex: un bug sur un Windows Server dans une VM sur un hôte Linux…). La maintenance des VM exige des compétences système sur chaque OS invité, tandis que la maintenance des conteneurs exige des compétences sur les outils de containerisation. Selon les équipes en place, l’un peut être plus aisé que l’autre.  <strong>Portainer</strong>, par exemple, vise à simplifier l’administration des conteneurs en offrant une interface web centralisée pour contrôler les containers Docker/Kubernetes (démarrer, arrêter, déployer de nouvelles images, monitorer la consommation, etc.)  . De même, des solutions comme Proxmox VE ou VMware vCenter facilitent la gestion centralisée des VM (modèles, migrations à chaud, etc.). On peut considérer que pour quelques instances, administrer quelques VM Linux classiques est plus simple que mettre en place tout un orchestrateur conteneur. Mais à grande échelle, les outils de conteneurs apportent une  <strong>automatisation</strong>très précieuse pour réduire la charge opérationnelle.</p>
+</li>
+</ul>
+<p>En synthèse, sur la maintenance :  <strong>les conteneurs réduisent l’overhead de maintenance système</strong>  en mutualisant l’OS et en s’intégrant bien dans les pipelines d’automatisation (DevOps)  . Ils permettent une approche “infra as code” plus aboutie, avec déploiements reproductibles et orchestrables.  <strong>Les VM demandent plus d’effort</strong>  car chaque instance est un système complet à gérer (mises à jour, config, etc.)  , mais elles restent indispensables pour certains besoins et peuvent être outillées via d’autres moyens. Pour un professionnel en sécurité, il est important de noter que la  <strong>gestion des correctifs de sécurité</strong>  peut être plus rapide via des conteneurs (puisqu’on redéploie des images à jour régulièrement) – à condition d’avoir un pipeline DevSecOps fiable. Avec des VM, il faut s’assurer d’appliquer les patches manuellement ou via WSUS/Ansible, etc., ce qui prend du temps et peut laisser des fenêtres de vulnérabilité plus longues si mal géré.</p>
+<h2 id="cas-dusage-quel-choix-pour-quel-besoin"><strong>Cas d’usage : quel choix pour quel besoin ?</strong><a class="headerlink" href="#cas-dusage-quel-choix-pour-quel-besoin" title="Permanent link">&para;</a></h2>
+<p>En pratique, le choix entre VM et conteneur se fait  <em>cas par cas</em>. Voici un panorama de différents scénarios typiques pour un professionnel IT (notamment en cybersécurité) et les recommandations associées :</p>
+<ul>
+<li>
+<p><strong>Hébergement de services web et applications :</strong>  Pour déployer des applications web (sites, API, microservices), les conteneurs sont très populaires. Ils permettent d’isoler chaque service, de le packager avec ses dépendances, et de le déployer uniformément de la dev à la prod. Un serveur web, par exemple Nginx ou Apache, tourne très bien en conteneur Docker ; cela facilite sa répartition sur plusieurs hôtes, sa scalabilité dynamique, et sa mise à jour (on remplace le conteneur par une nouvelle version)  . Les conteneurs sont quasiment conçus pour les architectures  <strong>microservices</strong>  : chaque microservice peut vivre dans son container, communicant avec les autres via le réseau, et Kubernetes peut orchestrer le tout. En cybersécurité, segmenter une application en conteneurs a aussi l’avantage de limiter l’impact d’une intrusion – p. ex., un attaquant compromettant le conteneur d’un microservice n’accède pas directement aux autres composants.  <strong>Quand privilégier les VM ?</strong>  Si votre application est monolithique, lourde, ou nécessite un environnement particulier, une VM peut être indiquée. Par exemple, l’hébergement d’un ancien site PHP sur Windows Server avec IIS sera plus simple dans une VM Windows, puisque Docker sur Windows est moins courant en production. De même, si chaque application doit être strictement séparée pour des raisons de conformité (clients différents), on pourra opter pour une VM par application/client afin de garantir qu’aucune fuite de données ne soit possible entre elles. En général toutefois, pour les services web modernes, la containerisation l’emporte grâce à la  <em>flexibilité</em>  et la  <em>scalabilité</em>  qu’elle offre.</p>
+</li>
+<li>
+<p><strong>Bases de données et systèmes de gestion de données :</strong>  Faut-il conteneuriser ses bases de données ? La question fait débat. D’un côté, des bases comme  <strong>MySQL, PostgreSQL, MongoDB</strong>  tournent tout à fait bien dans des conteneurs Docker – de nombreuses entreprises le font en production, notamment pour bénéficier de l’orchestration (par ex. déployer rapidement plusieurs nœuds de DB en cluster). Légèreté des conteneurs oblige, on peut les cloner pour du scaling horizontal, et les intégrer dans des solutions type  <em>Database as a Service</em>. D’un autre côté, une base de données a souvent besoin de stockage persistant et de performances IO optimales. Un conteneur ajoute une couche d’abstraction (système de fichiers copy-on-write, volumes montés…) qui peut introduire de la complexité pour la persistance et éventuellement un léger overhead.  <strong>Recommandation :</strong>  pour des bases distribuées ou in-memory (ex:  <em>Redis</em>  cache, base  <em>NoSQL</em>  horizontale), les conteneurs conviennent bien – on profite de leur portabilité, on peut orchestrer la montée en charge automatique, etc. En revanche, pour une base de données transactionnelle centrale (ex: un gros SQL Server ou Oracle), souvent on privilégie une  <strong>VM dédiée ou un serveur bare-metal</strong>, afin d’éviter toute instabilité. Une VM permet d’allouer clairement des ressources (vCPU, RAM, disque) à la base et de s’assurer que rien d’autre ne les consomme. C’est plus  <em>prévisible</em>  en termes de performance, ce qui est important pour une base de prod. De plus, la VM isolera la base des autres services – considérant que les BDD contiennent des données sensibles, c’est un plus niveau sécurité. En cybersécurité, le principe de segmentation forte s’applique souvent aux bases : on isolera la base de données critique dans sa VM (ou son cluster de VM) séparée du reste, pour qu’aucune compromission applicative n’entraîne un accès direct à la base. En somme : conteneur possible pour DB légères ou microservices  <em>stateful</em>, VM conseillée pour les bases critiques monolithiques (vertical scaling) qui requièrent stabilité et isolement. Notons que si on conteneurise une DB, il faut porter une attention particulière à la stratégie de  <strong>persistence</strong>  (volumes externes, sauvegardes hors conteneur) car les conteneurs sont par nature éphémères.</p>
+</li>
+<li>
+<p><strong>Laboratoires de sécurité, tests et sandboxing :</strong>  Dans un contexte de lab ou de test en cybersécurité, on a souvent besoin de reproduire des environnements vulnérables, de tester des exploits ou d’analyser des malwares.  <strong>Les machines virtuelles</strong>  sont ici l’outil classique : par exemple, on va faire tourner une VM Windows 10 infectée pour observer un ransomware, ou déployer une VM Metasploitable Linux pleine de failles pour s’entraîner. Les VM sont idéales car on peut prendre  <strong>des snapshots</strong>  avant/après attaque, isoler le réseau de la VM pour éviter toute propagation, et restaurer l’état initial facilement. De plus, on peut avoir besoin de systèmes non-Linux (Windows, etc.) que seul un hyperviseur peut fournir.  <strong>Les conteneurs</strong>, toutefois, trouvent aussi leur place en lab sécurité : il existe de nombreuses images Docker pré-construites pour s’entraîner (par ex. DVWA – Damn Vulnerable Web App – est disponible en image Docker, ce qui permet de la lancer en un seul  docker run  au lieu de configurer un LAMP vulnérable manuellement). Pour monter rapidement un environnement de CTF ou de pentest, les conteneurs sont très pratiques : on peut orchestrer via  docker-compose  plusieurs services vulnérables interconnectés, ce qui fait gagner du temps.  <strong>En résumé :</strong>  utilisez des VM pour tout ce qui est  <strong>simulation d’OS complet ou analyse de malware</strong>  (surtout Windows) – les VM offrent la flexibilité d’exécuter n’importe quel code dans un bac à sable réinitialisable. Utilisez des conteneurs pour des  <strong>scénarios applicatifs ciblés</strong>  (déployer en masse plusieurs instances vulnérables d’un service web, isoler des composants type challenges CTF, etc.). Et souvent, combiner les deux a du sens : exécuter Docker à l’intérieur d’une VM labo, ainsi si un conteneur est compromis, on peut jeter la VM entière après coup. Cela limite aussi l’impact sur l’hôte réel (ne jamais faire tourner des conteneurs vulnérables directement sur son poste sans isolation supplémentaire, par précaution).</p>
+</li>
+<li>
+<p><strong>Compatibilité OS et logiciels legacy :</strong>  Comme mentionné, si vous devez faire tourner un logiciel qui  <strong>n’est supporté que sur un certain OS</strong>, le choix est vite fait. Par exemple, un contrôleur de domaine Active Directory Windows Server  <em>doit</em>  tourner sur Windows – on utilisera donc une VM Windows si l’hôte est Linux (ou inversement, une VM Linux sur un host Windows, bien que Linux sur Windows puisse aussi se faire via WSL2 container maintenant, mais c’est un autre sujet). De même, si un logiciel nécessite un  <strong>accès bas niveau au matériel</strong>ou un module kernel spécifique, il ne fonctionnera pas dans un conteneur où l’accès au kernel est restreint. Une VM permet de charger des pilotes virtuels ou de faire du passthrough matériel (passer une carte PCI dans la VM, etc.), ce qui est impossible en LXC pur. Donc pour tout usage très spécifique (par ex. virtualiser un vieil OS 32-bit pour utiliser un ancien outil, ou tester un kernel module), la VM est l’option nécessaire. En revanche, si tout votre stack applicatif est Linux et moderne, les conteneurs pourront la supporter.  <strong>Cas particulier des environnements bureautiques isolés (VDI, sandbox utilisateur) :</strong>  on privilégie là des VM (voire des conteneurs de type  <em>application streaming</em>  mais c’est plus rare) afin de fournir un OS dédié par utilisateur, avec une grosse isolation pour éviter qu’un utilisateur malveillant n’accède à l’host.</p>
+</li>
+<li>
+<p><strong>Environnements multi-tenants et hébergement de clients :</strong>  Supposons que vous fournissiez un service hébergé à plusieurs clients avec des instances dédiées (par exemple, vous hébergez l’application web de plusieurs entreprises sur votre infrastructure). Deux approches :  <em>multitenant conteneurs</em>  ou  <em>multitenant VM</em>.  <strong>Approche VM :</strong>  créer une VM par client assure que les données et process de chaque client sont totalement séparés. Même en cas d’attaque, un client ne peut pas sortir de sa VM pour aller espionner un autre. C’est rassurant d’un point de vue contractualisation et isolation réseau (on peut mettre chaque VM dans un VLAN). En revanche, c’est coûteux en ressources si chaque client n’utilise qu’une fraction de sa VM – on gâche potentiellement de la RAM/CPU idle.  <strong>Approche conteneur :</strong>  on peut lancer un conteneur par client sur un même host, ce qui utilise beaucoup moins de ressources globalement, mais les clients partagent le noyau. S’il y a un risque d’hostilité entre clients (clients mutuellement non confiants), c’est délicat car une évasion de conteneur pourrait compromettre l’isolation. Néanmoins, pour des clients de confiance ou internes, c’est une option viable qui améliore la densité. En cybersécurité, la règle est de ne  <em>jamais mélanger</em>  des niveaux de confiance différents sur un même noyau. Donc on évitera de mettre en conteneurs sur le même OS un service front exposé à tous et un autre contenant des données ultra-sensibles. Soit on les sépare sur des hosts physiques distincts, soit au minimum sur des VM distinctes pour cloisonner. Ainsi, pour un hébergeur, la VM par client reste standard (ex: offre VPS). Par contre, pour un service cloud natif, on peut avoir du multi-tenant conteneur si l’architecture l’isole suffisamment (typiquement via Kubernetes avec  <em>Network Policies</em>, et en lancant les pods des clients dans des VM worker séparées, ce qui revient à combiner les deux mondes).</p>
+</li>
+<li>
+<p><strong>Dev/Test, CI/CD et flexibilité :</strong>  Dans les cycles de développement et test, les conteneurs se sont imposés car ils offrent un environnement jetable facile à recréer. Un développeur peut avoir besoin de tester une application sur différentes versions de dépendances : avec Docker, il peut tourner un conteneur avec telle version, puis le détruire, etc., sans polluer sa machine. Les pipelines d’intégration continue lancent fréquemment des conteneurs pour exécuter les tests unitaires ou builder une application dans un environnement isolé puis jettent le conteneur. Tout cela serait possible avec des VM mais serait nettement plus lent et lourd à orchestrer. Donc pour tout ce qui est  <strong>environnements transitoires</strong>,  <em>sandboxes de développement</em>, simulations courtes, les conteneurs sont idéaux. À l’opposé, si vous avez besoin d’un environnement de test qui reproduit exactement un système de production legacy (par ex. un serveur SAP sur Solaris…), vous utiliserez une VM (voire un émulateur). Mais c’est l’exception.</p>
+</li>
+<li>
+<p><strong>Infrastructure cloud et déploiements à grande échelle :</strong>  Aujourd’hui, le  <strong>cloud</strong>  propose les deux modèles : des  <em>VM cloud (IaaS)</em>  et des  <em>contener services (CaaS)</em>. Si vous construisez une plateforme scalable moderne, les conteneurs orchestrés sont souvent le choix par défaut (ex: déployer sur AWS EKS – Elastic Kubernetes Service – une application microservices). Cela permet une  <strong>meilleure utilisation des ressources</strong>  en payant seulement pour ce qui tourne, et une  <strong>élasticité</strong>  quasiment automatique. Les VM cloud conviennent mieux pour des charges stables ou des besoins spécifiques (installer son propre OS custom, isolation dédiée, etc.). Beaucoup d’architectures hybrides combinent VM et conteneurs : par exemple, on déploie un cluster Kubernetes sur 5 VM cloud, et à l’intérieur on gère des douzaines de conteneurs applicatifs. Cette stratégie permet de bénéficier de l’isolation des VM (chaque node du cluster est une VM séparée) et de l’efficacité des conteneurs pour les workloads. En tant que professionnel sécurité, il faudra penser à sécuriser à la fois le niveau VM (durcissement de l’OS hôte, pare-feu entre VM) et le niveau conteneur (politiques réseau Kubernetes, scans d’images, etc.). Le choix ici n’est pas exclusif, mais il est guidé par le modèle d’exploitation :  <strong>DevOps/cloud-native</strong>  ⟶ conteneurs ;  <strong>IT traditionnel/monolithique</strong>  ⟶ VM.</p>
+</li>
+</ul>
+<p>En résumé,  <strong>il n’y a pas de solution universellement meilleure</strong>, tout dépend du contexte d’utilisation et des priorités. Les recommandations générales suivantes peuvent être retenues :</p>
+<ul>
+<li>
+<p>Si la  <strong>priorité est la performance pure et l’efficacité</strong>  (exploiter au mieux le matériel, démarrer/arrêter fréquemment, gérer de multiples instances légères), les  <strong>conteneurs</strong>  sont à privilégier  .</p>
+</li>
+<li>
+<p>Si la  <strong>priorité est la sécurité et l’isolation totale</strong>  (gérer du code non fiable, des utilisateurs non approuvés, des environnements hétérogènes), les  <strong>VM</strong>  offrent un cloisonnement plus robuste out-of-the-box  .</p>
+</li>
+<li>
+<p>Pour des  <strong>besoins de compatibilité ou d’indépendance OS</strong>  (systèmes d’exploitation différents, applications legacy nécessitant un kernel particulier), la VM est la seule option viable  . Pour des  <strong>applications Linux cloud-native</strong>  et portables, les conteneurs suffisent et évitent la lourdeur des VM.</p>
+</li>
+<li>
+<p>En termes de  <strong>maintenance</strong>, si vous disposez d’une bonne chaîne DevOps et que vous souhaitez réduire l’overhead des mises à jour, les conteneurs vous simplifieront la vie (un seul OS hôte à gérer)  . Si au contraire votre organisation est plus à l’aise avec la gestion classique de serveurs, les VM resteront dans la continuité (mêmes outils d’admin qu’avec des serveurs physiques, mais en virtuel).</p>
+</li>
+<li>
+<p>Considérez enfin les  <strong>outils</strong>  à votre disposition : si vous envisagez d’utiliser Kubernetes, alors vous vous orientez clairement vers la containerisation à grande échelle. Si vous avez déjà une infrastructure VMware/Proxmox bien rodée, intégrer LXC à côté des VM peut être intéressant pour certains usages légers, mais vous garderez peut-être des VM pour le reste, selon vos besoins. Les deux approches ne sont pas mutuellement exclusives et peuvent cohabiter de manière complémentaire  .</p>
+</li>
+</ul>
+<p>En conclusion,  <em>LXC vs VM</em>  n’est pas un combat avec un gagnant unique, mais plutôt un choix d’outil selon l’objectif. Un professionnel de la cybersécurité saura évaluer le niveau d’isolation nécessaire, la surface d’attaque acceptable, et les contraintes de performance pour décider de la technologie appropriée. Maîtriser les deux approches permet d’<strong>allier la puissance de la virtualisation complète et la flexibilité de la containerisation</strong>  afin de construire des infrastructures à la fois efficaces, sécurisées et faciles à gérer  . En comprenant les avantages et limites de chacun, vous pourrez tirer le meilleur parti de ces solutions de virtualisation dans vos différents cas d’usage professionnels.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

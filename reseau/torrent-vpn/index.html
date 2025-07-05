@@ -1,0 +1,1589 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../ddns/">
+      
+      
+        <link rel="next" href="../../outils/gestion-fichiers/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>VPN et torrents - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vpn-et-torrent-airvpn-vs-gluetun-integration-isolement-reseau" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              VPN et torrents
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contexte-et-enjeux-de-la-protection-vpn-pour-le-torrent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contexte et enjeux de la protection VPN pour le torrent
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparatif-airvpn-vs-gluetun-et-autres-vpn-adaptes-au-torrent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comparatif : AirVPN vs Gluetun et autres VPN adaptés au torrent
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-des-clients-bittorrent-avec-gluetun" class="md-nav__link">
+    <span class="md-ellipsis">
+      Intégration des clients BitTorrent avec Gluetun
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-disolement-reseau-vlan-et-regles-de-pare-feu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schéma d’isolement réseau : VLAN et règles de pare-feu
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prevention-des-fuites-dns-kill-switch-et-gestion-des-logs-pour-lanonymat" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prévention des fuites DNS, kill switch et gestion des logs pour l’anonymat
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="vpn-et-torrent-airvpn-vs-gluetun-integration-isolement-reseau"><strong>VPN et Torrent : AirVPN vs Gluetun, Intégration &amp; Isolement réseau</strong><a class="headerlink" href="#vpn-et-torrent-airvpn-vs-gluetun-integration-isolement-reseau" title="Permanent link">&para;</a></h1>
+<h2 id="contexte-et-enjeux-de-la-protection-vpn-pour-le-torrent"><strong>Contexte et enjeux de la protection VPN pour le torrent</strong><a class="headerlink" href="#contexte-et-enjeux-de-la-protection-vpn-pour-le-torrent" title="Permanent link">&para;</a></h2>
+<p>Télécharger via BitTorrent sur un homelab  <em>self-hosted</em>  présente des risques en termes de confidentialité et de sécurité. Un VPN de qualité permet de chiffrer le trafic P2P et de masquer l’adresse IP publique réelle, évitant ainsi d’exposer son identité aux pairs du torrent et aux tiers malveillants. De plus, un bon VPN aide à contourner d’éventuelles restrictions de FAI sur le trafic P2P. Cependant, tous les services VPN ne se valent pas pour cet usage : il faut examiner la  <strong>performance</strong>(vitesse, stabilité), la  <strong>sécurité</strong>  (chiffrement, politique de logs), la  <strong>compatibilité P2P</strong>  (autorisation du torrent, support du port forwarding) et les moyens d’intégration technique (clients, conteneurs, etc.)  . Nous comparons ci-dessous AirVPN, Gluetun et d’autres services similaires, puis abordons l’intégration avec des clients BitTorrent et les bonnes pratiques d’isolement réseau (VLAN, pare-feu), sans oublier la prévention des fuites DNS, l’usage d’un  <em>kill switch</em>  et la question des logs.</p>
+<h2 id="comparatif-airvpn-vs-gluetun-et-autres-vpn-adaptes-au-torrent"><strong>Comparatif : AirVPN vs Gluetun et autres VPN adaptés au torrent</strong><a class="headerlink" href="#comparatif-airvpn-vs-gluetun-et-autres-vpn-adaptes-au-torrent" title="Permanent link">&para;</a></h2>
+<p><strong>AirVPN</strong>  est un fournisseur VPN réputé dans la communauté pour son sérieux technique et son respect de la vie privée. Basé en Italie, AirVPN applique une politique stricte de  <strong>no-log</strong>, ne conservant  <strong>aucune donnée</strong>  permettant de relier une IP et un horaire à un utilisateur  . Il autorise  <strong>BitTorrent sur tous ses serveurs</strong>  sans discrimination et fournit un service de  <strong>port forwarding (transmission de port entrant)</strong>  indispensable aux utilisateurs torrent  . En pratique, AirVPN permet à chaque client d’ouvrir plusieurs ports via son interface (par exemple pour améliorer le  <em>seeding</em>). Côté sécurité, son application  <em>Eddie</em>  (libre et multiplateforme) inclut la fonctionnalité  <strong>Network Lock</strong>, un  <em>kill switch</em>  qui bloque tout trafic hors VPN en cas de déconnexion et prévient les fuites IPv6/DNS ou WebRTC  . AirVPN supporte OpenVPN (chiffrements AES-256-GCM et CHACHA20-POLY1305) et WireGuard pour un meilleur débit  . En termes de  <strong>performance</strong>, AirVPN offre des débits corrects mais son réseau, plus restreint que certains concurrents, peut être légèrement moins rapide que les poids lourds du marché sur des tests globaux. Cependant, avec WireGuard et un serveur bien choisi, de nombreux utilisateurs parviennent à saturer leur bande passante sans problème dans un usage torrent normal. AirVPN se distingue enfin par un support de la communauté actif (forums techniques) et l’acceptation de nombreux moyens de paiement anonymes (cryptomonnaies comme Monero, etc.)  .</p>
+<p><strong>Gluetun</strong>  n’est pas un fournisseur VPN à proprement parler, mais un  <strong>client VPN léger en conteneur Docker</strong>  qui sert de passerelle pour d’autres applications. Il supporte de nombreux fournisseurs VPN en OpenVPN ou WireGuard (AirVPN, Mullvad, ProtonVPN, PIA, etc. sont pris en charge)  . L’idée est qu’au lieu d’utiliser l’application native du VPN, on utilise Gluetun comme point d’accès VPN dans un environnement auto-hébergé.  <strong>Performance</strong>  : Gluetun ajoute très peu de surcoût, car il se base sur OpenVPN/WireGuard en arrière-plan. Avec WireGuard (supporté pour la plupart des grands VPN dans Gluetun), on obtient généralement de meilleurs débits et une utilisation CPU réduite par rapport à OpenVPN, ce qui est idéal sur des matériels modestes (NAS, mini-PC)  .  <strong>Sécurité</strong>  : Gluetun intègre d’office un  <strong>pare-feu interne (kill switch)</strong>  ne laissant passer que le trafic nécessaire vers les serveurs VPN et éventuellement le LAN autorisé  . Ainsi, en cas de chute du VPN, les conteneurs connectés à Gluetun n’ont pas d’accès Internet direct, évitant les fuites. Gluetun configure également le  <strong>DNS sur TLS</strong>  (DNS chiffré) pour les conteneurs connectés, empêchant les fuites DNS en forçant les requêtes DNS à passer par le VPN  .  <strong>Compatibilité torrent</strong>  : Gluetun étant compatible avec AirVPN et consorts, on bénéficie des mêmes avantages (ex: port forwarding) selon le fournisseur choisi. Par exemple, si on utilise AirVPN via Gluetun, il suffit de renseigner les ports attribués par AirVPN dans la configuration (variable d’environnement  FIREWALL_VPN_INPUT_PORTS  de Gluetun et configuration du port dans le client torrent) afin d’accepter les connexions entrantes  . Gluetun facilite aussi le  <strong>partage de la connexion VPN</strong>  entre plusieurs applications : un seul conteneur Gluetun peut protéger plusieurs clients BitTorrent ou autres services (Sonarr, Radarr, etc.) en les joignant au réseau Docker de Gluetun  . En somme, Gluetun offre une solution  <strong>flexible</strong>  et  <strong>open source</strong>  pour intégrer un VPN dans un homelab, avec un contrôle fin (logs locaux minimalistes, paramètres modulables) – à condition bien sûr de disposer d’un compte chez un bon fournisseur VPN sous-jacent.</p>
+<p><strong>Autres services VPN à considérer</strong>  : plusieurs fournisseurs concurrents d’AirVPN sont appréciés des utilisateurs P2P, chacun avec ses atouts et limites. Parmi les plus recommandés figurent :</p>
+<ul>
+<li>
+<p><strong>Mullvad</strong>  (Suède) – Énorme réputation de confidentialité (audits publics, incident où aucun log n’a pu être saisi lors d’un mandat  ). Forfait simple à 5 €/mois, anonymat possible (compte numéro, paiement en liquide envoyé par courrier).  <strong>Inconvénient</strong>  en 2023 : Mullvad a supprimé le port forwarding  . Cela limite la connectivité entrante pour le torrent (pas idéal pour le  <em>seeding</em>  intensif ou des usages type serveur). Mullvad reste excellent en sécurité et a de bons débits en WireGuard, mais sans ouverture de ports, un torrent sera en mode passif (connectivité un peu réduite). À prendre en compte selon vos besoins.</p>
+</li>
+<li>
+<p><strong>ProtonVPN</strong>  (Suisse) – Service moderne orienté confidentialité (code client open source, audits), bénéficiant d’une infrastructure performante. ProtonVPN  <strong>autorise le P2P</strong>  sur des serveurs dédiés et propose du  <strong>port forwarding</strong>  (sur les offres payantes  <em>Plus/Visionary</em>)  . Leurs vitesses sont très élevées sur les serveurs récents (10 Gbit)  , souvent supérieures à Mullvad  . En contrepartie, ProtonVPN est un peu plus cher et son interface est moins technique qu’AirVPN. C’est un bon choix si la vitesse est prioritaire et que l’on veut un écosystème (ils offrent aussi mail sécurisé, etc.), tout en ayant les ports ouverts pour le torrent.</p>
+</li>
+<li>
+<p><strong>Private Internet Access (PIA)</strong>  – Fournisseur historique (désormais basé aux États-Unis, propriété du groupe Kape). PIA propose des tarifs attractifs, un large réseau de serveurs et  <strong>supporte le port forwarding</strong>  sur certains serveurs  . Ses clients intègrent un kill switch et sont open source. PIA a prouvé à plusieurs reprises en justice sa politique  <em>no-log</em>. Cependant, son appartenance à une entreprise ayant racheté de nombreux VPN (et anciennement associée à des adwares) fait que certains utilisateurs  <em>privacy</em>  restent méfiants. Niveau torrent, PIA fonctionne bien et autorise P2P sur tous les serveurs ne se trouvant pas dans des pays restrictifs. C’est une option « grand public » performante si l’on est à l’aise avec l’idée de faire confiance à sa politique de confidentialité.</p>
+</li>
+<li>
+<p><strong>IVPN</strong>  (Gibraltar) – VPN très éthique et transparent (membre de l’initiative Privacy Guides), axé sur la minimisation des données. Toutefois, IVPN est en train d’<strong>abandonner le port forwarding</strong>  également (décision similaire à Mullvad)  . Sans ports ouverts, IVPN est parfait pour la navigation anonyme, mais moins optimisé pour torrent (sauf usage purement en téléchargement sans seeding public). À noter qu’IVPN offre une fonctionnalité  <em>Multi-hop</em>  et des clients minimalistes orientés confidentialité maximale.</p>
+</li>
+<li>
+<p><strong>Windscribe</strong>  (Canada) – Service au positionnement un peu différent : il propose une version gratuite limitée et une version Pro flexible. Windscribe  <strong>peut fournir du port forwarding</strong>  mais seulement via l’achat d’une IP dédiée (<em>Static IP</em>  dans leurs options) ou l’utilisation de serveurs dits  <em>legacy</em>. L’avantage est qu’il intègre un pare-feu/kill switch permanent appelé  <em>Firewall</em>  côté client. Windscribe a une approche un peu moins formelle, mais la communauté tech le considère comme relativement fiable (pas de preuve de no-log publiée néanmoins). Utile pour ceux qui voudraient un plan très modulable ou des fonctions comme le proxy intégré.</p>
+</li>
+</ul>
+<p><em>(Bien sûr, d’autres VPN existent – par exemple</em> <strong><em>NordVPN</em></strong> <em>ou</em> <strong><em>Surfshark</em></strong> <em>offrent de très bons débits – mais ils n’autorisent pas le port forwarding et sont donc moins intéressants pour le torrent. Des services spécialisés comme</em> <strong><em>TorGuard</em></strong> <em>ou</em> <strong><em>Hide.me</em></strong> <em>proposent aussi le port forwarding et ciblent les power users, mais ils sont moins grand public. Dans ce comparatif, on se concentre sur les solutions éprouvées par la communauté auto-hébergement et confidentialité.)</em></p>
+<h2 id="integration-des-clients-bittorrent-avec-gluetun"><strong>Intégration des clients BitTorrent avec Gluetun</strong><a class="headerlink" href="#integration-des-clients-bittorrent-avec-gluetun" title="Permanent link">&para;</a></h2>
+<p>Une des forces de Gluetun est de simplifier l’intégration des applications de téléchargement en conteneur avec le VPN. Le principe est de faire tourner le client BitTorrent (par ex.  <strong>qBittorrent</strong>,  <strong>Transmission</strong>  ou autres) dans un conteneur Docker séparé, mais  <strong>connecté au réseau de Gluetun</strong>  plutôt qu’au réseau par défaut. Grâce à Docker Compose, on peut définir que le service qBittorrent utilise  network_mode: "service:gluetun"  afin que  <strong>tout son trafic passe par le conteneur VPN</strong>  . Dans ce scénario, qBittorrent n’a  <strong>aucune connectivité directe</strong>  hors VPN : il obtient une IP locale virtuelle du conteneur Gluetun et sort uniquement à travers le tunnel chiffré. C’est idéal pour garantir qu’aucun téléchargement ne fuite hors VPN.</p>
+<p>Concrètement, il faut d’abord lancer Gluetun avec les bonnes variables (identifiants VPN, choix du serveur, activation éventuelle du WireGuard, etc. comme vu précédemment). Ensuite, on lance le conteneur du client torrent en dépendance de Gluetun. Par exemple, voici un extrait de configuration Docker Compose typique :</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gluetun</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qmcgaw/gluetun</span>
+<span class="w">    </span><span class="nt">cap_add</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NET_ADMIN</span>
+<span class="w">    </span><span class="nt">devices</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/net/tun:/dev/net/tun</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VPN_SERVICE_PROVIDER=AIRVPN</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VPN_TYPE=wireguard</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WG_PRIVATE_KEY=&lt;clé privée WireGuard&gt;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SERVER_COUNTRIES=FR</span><span class="w"> </span><span class="c1"># ex: choisir un pays/serveur</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FIREWALL_VPN_INPUT_PORTS=51820</span><span class="w"> </span><span class="c1"># ex: port entrant attribué par le VPN</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FIREWALL_OUTBOUND_SUBNETS=192.168.0.0/24</span><span class="w"> </span><span class="c1"># accès LAN (à adapter ou vider pour isoler)</span>
+<span class="w">    </span><span class="c1"># ... autres variables (PUID, PGID, TZ, etc.) ...</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+
+<span class="w">  </span><span class="nt">qbittorrent</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">linuxserver/qbittorrent</span>
+<span class="w">    </span><span class="nt">network_mode</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;service:gluetun&quot;</span><span class="w">  </span><span class="c1"># utilise le réseau du VPN</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gluetun</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span><span class="w">  </span><span class="c1"># port web UI, exposé via VPN</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">WEBUI_PORT=8080</span>
+<span class="w">      </span><span class="c1"># ... PUID/PGID ...</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/torrents:/downloads</span><span class="w">  </span><span class="c1"># stockage des torrents</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</code></pre></div>
+<p>Dans cet exemple, qBittorrent utilisera l’interface réseau de Gluetun (tun0) et son adresse IP VPN. On peut accéder à son interface Web via le port 8080 redirigé, et ce trafic passera par le VPN. Si le VPN tombe, le port ne répondra plus (kill switch de Gluetun actif).  <strong>Intégration avec port forwarding</strong>  : si votre VPN (ex: AirVPN, PIA, ProtonVPN) vous fournit un port entrant, il faut le configurer côté VPN/routeur  <strong>et</strong>  dans le client torrent. Avec Gluetun, on utilise  FIREWALL_VPN_INPUT_PORTS  pour ouvrir le port dans son pare-feu interne  , puis dans qBittorrent on fixe ce même port comme port d’écoute. Ainsi, le trafic entrant depuis le serveur VPN sera transmis au client torrent  . Plusieurs guides et scripts existent pour automatiser cette synchronisation (par ex. mise à jour du port de qBittorrent via l’API de Gluetun sur Unraid  ), mais manuellement cela fonctionne bien une fois le port configuré.</p>
+<p><strong>Clients torrent compatibles</strong>  : qBittorrent est très répandu et se marie bien avec Gluetun. Transmission fonctionne également en conteneur, de même que Deluge ou d’autres – il suffit de les mettre sur le même  <em>service network</em>  que Gluetun. À noter que certains conteneurs “tout-en-un” existent (ex: l’image Docker  <em>haugene/transmission-openvpn</em>  qui combine un client torrent et un client OpenVPN). Cependant, l’approche modulaire avec Gluetun + qBittorrent est plus flexible : on peut y ajouter d’autres applications (Jackett, Sonarr, Radarr…) en les faisant passer par le même VPN. Il suffit de connecter ces conteneurs au réseau de Gluetun (option  network_mode: service:gluetun  ou via un réseau Docker partagé)  . Cela mutualise la connexion VPN de façon propre.</p>
+<p>Enfin, pour une sécurité renforcée, il est possible de  <strong>lier le client BitTorrent à l’interface VPN</strong>  même en dehors de Docker. Par exemple, si l’on exécute qBittorrent sur l’hôte directement, on peut spécifier dans ses options avancées de n’écouter que sur l’interface  tun0. Ainsi, s’il n’y a pas de VPN actif, qBittorrent ne pourra pas se connecter du tout. Cette précaution s’ajoute au kill switch du VPN pour éviter toute fuite accidentelle si un jour le client VPN était désactivé involontairement.</p>
+<h2 id="schema-disolement-reseau-vlan-et-regles-de-pare-feu"><strong>Schéma d’isolement réseau : VLAN et règles de pare-feu</strong><a class="headerlink" href="#schema-disolement-reseau-vlan-et-regles-de-pare-feu" title="Permanent link">&para;</a></h2>
+<p>Pour un ingénieur en sécurité, il est conseillé d’<strong>isoler le trafic torrent du reste du réseau local</strong>. L’idée générale est de créer un sous-réseau dédié (par exemple un VLAN distinct) pour la machine ou le conteneur qui télécharge, et d’appliquer des règles de pare-feu strictes entre ce VLAN et le LAN principal.</p>
+<ul>
+<li>
+<p><strong>VLAN dédié aux téléchargements</strong>  : On peut configurer un VLAN (par exemple VLAN 20) sur le routeur/commutateur, auquel sera connecté le serveur ou la VM/conteneur du client torrent. Ce VLAN n’aura accès qu’à Internet (de préférence, uniquement via le VPN). Les autres appareils du LAN résident sur VLAN 1 (par exemple) et n’ont pas de route vers VLAN 20. Ainsi, même si le client torrent est compromis, il ne pourra pas scanner ou atteindre les partages sensibles du LAN  .</p>
+</li>
+<li>
+<p><strong>Règles de pare-feu inter-VLAN</strong>  : Sur le routeur ou firewall, on met en place une règle bloquant  <strong>toute connexion initiée depuis le VLAN torrent vers le LAN principal</strong>. Seules les connexions nécessaires vers Internet sont autorisées. Par exemple, on autorisera VLAN20 -&gt; Internet  <em>UNIQUEMENT</em>  vers les adresses/IP des serveurs VPN et en passant par les ports du protocole VPN (UDP 1194/443 si OpenVPN, UDP 51820 si WireGuard, etc.). On peut également autoriser le trafic DNS du VLAN torrent, soit vers le résolveur VPN de Gluetun (DNS sur TLS), soit vers un DNS local selon le cas, mais généralement il vaut mieux que ces requêtes passent dans le tunnel chiffré. Toutes les autres tentatives (VLAN torrent vers 192.168.0.0/24, etc.) doivent être bloquées par défaut  . Inversement, on peut éventuellement autoriser depuis le LAN principal  <strong>l’accès entrant</strong>  à l’interface web du client torrent ou au partage de fichiers du serveur de téléchargement, si l’admin souhaite y accéder depuis son PC. Ces accès spécifiques doivent être finement filtrés (par exemple, autoriser seulement l’IP de l’admin du LAN vers l’IP du torrent box sur le port 8080).</p>
+</li>
+<li>
+<p><strong>Exemple d’architecture</strong>  : imaginez un NAS ou un mini-PC faisant office de  <em>seedbox</em>  sur VLAN 20. Il se connecte au VPN (via Gluetun) et télécharge des torrents. Le routeur/pfSense ne laisse passer que le trafic chiffré VPN entre ce NAS et le WAN, tout autre trafic est bloqué. Le reste du réseau (VLAN 1) ignore complètement VLAN 20 (pas de communication possible). Dès lors, les téléchargements ne peuvent pas révéler l’adresse IP du foyer (ils montrent l’IP VPN) et le NAS torrent ne peut pas joindre les appareils sensibles. Ce  <strong>compartimentage</strong>  renforce la sécurité globale du homelab.</p>
+</li>
+</ul>
+<p><em>(À défaut de VLAN, on peut obtenir un résultat similaire en plaçant le client torrent sur un sous-réseau différent avec une interface séparée ou en le connectant directement derrière un second routeur. L’important est la</em> <strong><em>segmentation</em></strong> <em>: réduire au minimum les passerelles entre l’environnement torrent et le LAN principal. Même en conteneur local, pensez à désactiver l’accès au réseau local dans Gluetun en ne renseignant pas</em> <em>FIREWALL_OUTBOUND_SUBNETS</em> <em>(ou en le limitant strictement)</em> <em>.)</em></p>
+<h2 id="prevention-des-fuites-dns-kill-switch-et-gestion-des-logs-pour-lanonymat"><strong>Prévention des fuites DNS, kill switch et gestion des logs pour l’anonymat</strong><a class="headerlink" href="#prevention-des-fuites-dns-kill-switch-et-gestion-des-logs-pour-lanonymat" title="Permanent link">&para;</a></h2>
+<p>Un bon VPN pour le torrent doit absolument empêcher les  <strong>fuites DNS</strong>  et inclure un  <strong>kill switch</strong>. Avec AirVPN, l’option  <em>Network Lock</em>  veille à ce qu’aucune donnée (y compris les requêtes DNS) ne sorte hors du tunnel en cas de coupure  . De même, Gluetun assure ces fonctions automatiquement : son pare-feu intégré bloque tout trafic non VPN et utilise par défaut un DNS chiffré (modifiable) pour résoudre les noms de domaine  . Il est recommandé de  <strong>désactiver IPv6</strong>  sur l’interface torrent ou dans le VPN si votre configuration ne l’utilise pas, afin d’éviter d’éventuelles fuites IPv6 si le fournisseur VPN ne gère pas bien le dual-stack. La plupart des bons VPN (AirVPN, Mullvad, ProtonVPN…) supportent IPv6 et traitent ce cas proprement (AirVPN fournit même de l’IPv6 aux clients pour éviter tout leak  ). Vérifiez après mise en place en utilisant des outils comme ipleak.net ou doileak.com pour confirmer qu’aucune requête DNS ne part vers votre FAI et que l’IP visible correspond bien au VPN.</p>
+<p>Concernant les  <strong>journaux (logs) et l’anonymat</strong>  : idéalement, votre fournisseur VPN ne doit pas conserver de logs d’activité. AirVPN, par exemple, n’enregistre aucune donnée de connexion hormis un compteur anonyme de sessions simultanées  . Mullvad et ProtonVPN ont également des politiques strictes (Mullvad a démontré qu’aucune info exploitable n’était stockée suite à une perquisition  ). Pour l’utilisateur, il est aussi judicieux de  <strong>minimiser les traces</strong>  : évitez de créer un compte VPN avec votre email personnel; préférez des emails alias ou anonymes. Payez avec des méthodes discrètes (cryptomonnaie, espèces, bons cadeaux) si vous voulez pousser l’anonymat à fond, afin que votre identité civile ne soit pas liée au compte VPN.</p>
+<p>Du côté du client BitTorrent, sachez que les torrents publics peuvent exposer l’IP VPN dans les  <em>swarm</em>. Cela n’est pas problématique (c’est le but, et elle n’est pas directement reliée à vous),  <strong>mais ne téléchargez pas sans VPN</strong>  même brièvement, sinon votre IP réelle pourrait se retrouver dans la liste des pairs partagée. On veillera par ailleurs à configurer le client torrent pour qu’il ne divulgue pas d’infos inutiles : par exemple, désactiver le  <em>tracking</em>  DHT/PEX si cela n’est pas nécessaire, éviter d’utiliser son vrai nom d’utilisateur Windows dans les échanges SMB vers le NAS, etc. Ces aspects restent mineurs comparés aux protections du VPN, mais font partie d’une hygiène globale.</p>
+<p>Enfin, on peut se demander si conserver des  <strong>logs en local</strong>  pose problème. Les journaux de Gluetun ou du client torrent (par ex. historique des téléchargements) sont stockés sur votre serveur. En cas de compromission du serveur ou de saisie physique, ces données pourraient révéler ce que vous avez téléchargé. Si c’est une préoccupation, vous pouvez configurer le client torrent pour qu’il n’enregistre pas l’historique des tâches une fois terminées, ou monter le dossier de config en  <strong>RAM</strong>  pour qu’il s’efface à chaque redémarrage. Certains vont jusqu’à faire tourner le client dans une VM chiffrée ou sur un disque chiffré, mais pour un usage homelab classique, ce niveau est souvent excessif. L’essentiel est surtout  <strong>côté VPN</strong>: assurez-vous de choisir un fournisseur de confiance qui ne logge rien d’identifiant et qui offre les fonctions de sécurité (kill switch, DNS sécurisé, ports) adaptées au torrent  . Avec AirVPN via Gluetun, par exemple, vous cumulez les avantages : pas de logs côté VPN, trafic cloisonné et chiffré, fuites bloquées, et ports configurables pour rester efficace en P2P.</p>
+<p><strong>En résumé</strong>, AirVPN et Gluetun forment une combinaison puissante pour du torrenting anonyme et performant dans un homelab. AirVPN apporte un réseau robuste et respectueux de la vie privée, tandis que Gluetun facilite son utilisation dans un environnement Docker, avec isolation et contrôles précis. D’autres VPN comme ProtonVPN ou Mullvad peuvent être utilisés via Gluetun selon vos priorités (vitesse, port forwarding, tarif), mais il faudra tenir compte des récents changements (abandon du port forwarding chez certains). Quelle que soit la solution retenue, n’oubliez pas de segmenter votre réseau pour contenir les risques, et de tester votre configuration (adresse IP visible, étanchéité DNS/IP) avant de lancer vos téléchargements. De cette façon, vous profiterez du contenu via BitTorrent en toute tranquillité, sans mettre en danger votre réseau personnel ni votre anonymat en ligne</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

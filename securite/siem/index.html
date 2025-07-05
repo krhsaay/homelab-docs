@@ -1,0 +1,1636 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../authentification/">
+      
+      
+        <link rel="next" href="../segmentation/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>SIEM (Wazuh, ELK...) - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#comparaison-wazuh-elk-stack-et-graylog-pour-un-homelab-blue-team" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SIEM (Wazuh, ELK...)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-generale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture générale
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collecte-de-logs-et-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Collecte de logs et agents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection-analyse-et-tableaux-de-bord" class="md-nav__link">
+    <span class="md-ellipsis">
+      Détection, analyse et tableaux de bord
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cas-dusage-typiques-en-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cas d’usage typiques en homelab
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-dockerlxc-et-architecture-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation Docker/LXC et architecture type
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performances-et-ressources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performances et ressources
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommandations-par-profil-dusage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommandations par profil d’usage
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="comparaison-wazuh-elk-stack-et-graylog-pour-un-homelab-blue-team"><strong>Comparaison Wazuh, ELK Stack et Graylog pour un homelab Blue Team</strong><a class="headerlink" href="#comparaison-wazuh-elk-stack-et-graylog-pour-un-homelab-blue-team" title="Permanent link">&para;</a></h1>
+<p><strong>Wazuh, ELK et Graylog</strong>  sont trois solutions open source de gestion de logs et de SIEM souvent utilisées par des Blue Teams. Elles couvrent la collecte centralisée de logs (Linux, Windows, réseau), l’analyse en temps réel, la détection d’intrusion et les alertes. Chacune a une architecture et des forces propres : Wazuh est une plateforme HIDS (sur base d’OSSEC) avec agents et détection intégrée,  <strong>ELK Stack</strong>  (Elasticsearch, Logstash, Kibana) est un écosystème de recherche et de visualisation massif, et Graylog est un système de log management avec interface unifiée. Nous détaillons ci-dessous leur architecture, fonctionnalités, cas d’usage, besoins en ressources et recommandations.</p>
+<h2 id="architecture-generale"><strong>Architecture générale</strong><a class="headerlink" href="#architecture-generale" title="Permanent link">&para;</a></h2>
+<p><em>Architecture typique de Wazuh (agents légers sur chaque hôte, serveur central et indexeurs Elasticsearch/OpenSearch) (source : documentation Wazuh).</em>  Wazuh est basé sur des  <strong>agents installés sur chaque endpoint</strong>  (Windows, Linux, Mac) qui collectent les logs système, fichiers modifiés, événements de sécurité, etc., et les envoient au serveur Wazuh central  . Le serveur Wazuh reçoit ces données, les décode et les analyse avec son moteur de règles IDS/IPS intégré, générant des alertes en cas d’événements suspects. Wazuh gère ensuite l’acheminement de ces événements vers un cluster  <strong>Elasticsearch/OpenSearch</strong>  (appelé « indexer ») via Filebeat et TLS  . La solution comprend aussi une interface web (Wazuh Dashboard) pour configurer et visualiser l’état du serveur et des agents. En version minimale, un seul serveur Wazuh et un nœud indexeur peuvent suffire, mais pour de plus grands volumes ou haute-disponibilité on sépare Wazuh serveur et indexeurs sur des machines distinctes  .</p>
+<p>En revanche,  <strong>Graylog</strong>  ne repose pas sur ses propres agents. Un déploiement de base (Core Deployment) comprend un ou deux serveurs (« Graylog server ») qui intègrent toutes les fonctions (serveur Graylog, nœud d’indexation Elasticsearch/OpenSearch, et base MongoDB pour les métadonnées)  . Ce schéma « tout-en-un » est simple à installer pour un lab mais peu évolutif. Graylog reçoit des logs via des  <em>inputs</em>  configurables : syslog (TCP/UDP), GELF (protocole maison), Beats, JDBC, etc. Les données sont routées en temps réel vers le nœud d’indexation (Elasticsearch/OpenSearch) via des  <em>streams</em>  et pipelines de traitement. Pour monter en charge (volumes de logs ou utilisateurs multiples), on peut évoluer vers un déploiement conventionnel ou distribué : les composants Graylog (serveur, nœuds de données, MongoDB) sont répartis sur plusieurs machines, assurant haute disponibilité et scalabilité  .</p>
+<p><strong>Elastic Stack (ELK)</strong>  a une architecture modulaire : Elasticsearch forme un cluster de nœuds pour stocker et rechercher les logs (indices distribués), Logstash est un pipeline de transformation flexible, et Kibana est l’interface web. En pratique, on utilise souvent  <strong>Beats</strong>  (Filebeat, Winlogbeat, etc.) comme agents légers côté hôte pour expédier directement les logs vers Elasticsearch (voire via Logstash pour enrichissement)  . Il n’y a pas de  <em>serveur SIEM</em>  unique dans ELK, mais on peut imaginer un schéma similaire : plusieurs nœuds Elasticsearch (avec répartition en shards/réplicas), au moins un Logstash pour prétraitement, et Kibana pour la visualisation. Dans un homelab, on peut se contenter d’un seul nœud Elastic et un Kibana. Un schéma Docker pré-packagé (comme [deviantony/docker-elk]  ) facilite l’installation expérimentale.</p>
+<p><strong>Tableau 1. Comparaison de l’architecture et des composants</strong></p>
+<p>TABLEAU</p>
+<h2 id="collecte-de-logs-et-agents"><strong>Collecte de logs et agents</strong><a class="headerlink" href="#collecte-de-logs-et-agents" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Wazuh</strong>  utilise ses  <strong>agents légers</strong>  multi-plateformes pour recueillir logs système, journaux de sécurité, changements de fichiers, etc. en continu. Les agents chiffrent les données (AES-128/256 par défaut  ) et ouvrent une connexion sécurisée (port 1514/TCP) vers le serveur Wazuh. Ils envoient tous les événements, qui sont ensuite décodés (analyse de texte, règles) sur le serveur. Wazuh peut aussi collecter de manière  <em>agentless</em>  (par ex. via syslog UDP/TCP ou SSH pour équipements réseau)  .</p>
+</li>
+<li>
+<p><strong>ELK Stack</strong>  ne fournit pas d’agent propriétaire, mais repose sur  <strong>Beats</strong>  (Filebeat pour logs texte, Winlogbeat pour journaux Windows, Metricbeat, etc.) ou Logstash pour récupérer les logs. En homelab, on déploie souvent des Filebeat/Winlogbeat sur les machines cibles afin d’expédier les logs vers Elasticsearch. On peut aussi configurer Logstash ou syslog pour écouter des flux. La flexibilité de Logstash permet d’enrichir ou filtrer les données, même si beaucoup d’utilisateurs optent pour des alternatives plus légères (Fluentd, Vector)  .</p>
+</li>
+<li>
+<p><strong>Graylog</strong>  ne requiert pas d’agent exclusif. Il accepte les logs en entrée via divers protocoles : syslog (UDP/TCP), GELF (Graylog Extended Log Format), Beats, Kafka, etc. Une méthode courante est d’utiliser le « Graylog Sidecar » pour configurer et lancer automatiquement Filebeat/NxLog selon Graylog. L’interface Graylog permet de créer des  <em>Inputs</em>  pour chaque protocole, puis de router ces messages vers des  <em>Streams</em>  qui filtrent et taggent les données en temps réel  .</p>
+</li>
+</ul>
+<p>Ainsi, en  <strong>homelab</strong>, on pourra utiliser par exemple :</p>
+<ul>
+<li>
+<p>Wazuh Agent sur les serveurs Linux/Windows et Linux : collecte de logs / HIDS (détection d’intrusion).</p>
+</li>
+<li>
+<p>Filebeat/Winlogbeat directes vers Elastic ou Graylog (plus générique)  .</p>
+</li>
+<li>
+<p>Syslog/Fluentd pour les équipements réseau ou appareils moins compatibles avec un agent.</p>
+</li>
+</ul>
+<h2 id="detection-analyse-et-tableaux-de-bord"><strong>Détection, analyse et tableaux de bord</strong><a class="headerlink" href="#detection-analyse-et-tableaux-de-bord" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Wazuh</strong>  est avant tout un HIDS : il analyse les logs des agents à la recherche de signatures d’attaque, modifications non autorisées (file integrity monitoring), rootkits, vulnérabilités connues, etc. Il embarque des milliers de règles prédéfinies (CVE, MITRE, directives de sécurité) et permet d’écrire ses propres décodeurs/règles  . Lorsqu’une règle déclenche, Wazuh génère une alerte priorisée. Les résultats sont stockés en archives compressées (JSON ou texte) signées par SHA256 pour intégrité  , et indexés dans Elasticsearch pour recherche via le tableau de bord. Le  <strong>dashboard Wazuh</strong>  (plugin OpenSearch/Kibana) donne une vue globale : statut des agents, inventaire de vulnérabilités, alertes récentes, conformité réglementaire, etc. L’analyse est centrée sur la sécurité (alertes critiques) et la conformité (CIS, PCI-DSS, NIST)  .</p>
+</li>
+<li>
+<p><strong>ELK Stack</strong>  est conçu d’abord pour la recherche et la visualisation de logs.  <strong>Elasticsearch</strong>  est un moteur full-text distribué très rapide pour indexer et rechercher de gros volumes de données  .  <strong>Kibana</strong>  fournit des visualisations et tableaux de bord interactifs personnalisables (histogrammes, heatmaps, séries temporelles…). Cependant, dans sa version de base  <strong>open source</strong>, ELK n’inclut pas de moteur de corrélation ou d’alerting spécifique à la sécurité. La détection d’anomalies est possible avec  <strong>Elastic Security</strong>  (anciennement « SIEM ») et machine learning, mais ces fonctionnalités avancées sont en général liées à une licence payante. Néanmoins, on peut mettre en place des règles de détection via les  <strong>Alertes Kibana</strong>  (Watchers) ou la bibliothèque de détection GitHub d’Elastic  , voire utiliser OpenSearch qui offre certaines capacités de sécurité (authentification, chiffrement) en OSS  . En pratique, l’ELK pur est surtout utile pour le «  <em>search hunting</em>  » et la création de dashboards métier, plutôt que pour l’IDS automatisé.</p>
+</li>
+<li>
+<p><strong>Graylog</strong>  combine les deux approches : c’est une plateforme d’agrégation de logs avec de nombreuses fonctions orientées sécurité. Son interface permet des recherches rapides (requêtes Lucene) et la création de tableaux de bord et graphiques en quelques clics. On utilise les  <strong>Streams</strong>  pour filtrer/segmenter les logs au fur et à mesure, et les  <strong>Alerts</strong>  pour déclencher des notifications (email, Webhook, etc.) dès qu’un critère est satisfait. Par exemple, on peut alerter sur plusieurs échecs d’authentification, détection d’IP suspecte, ou tout indicateur définissable. Contrairement à Wazuh, Graylog n’apporte pas de règles de détection prêtes à l’emploi : la logique d’alerte doit être configurée manuellement (ou via des plugins Sigma en Enterprise  ). En revanche, il peut ingérer et  <strong>corréler</strong>  des logs de plusieurs sources (serveurs, firewall, IDS) pour les analystes. Graylog Security (édition payante) ajoute même de la détection automatique d’anomalies et du pattern matching avancé  , mais en usage domestique la version open suffit souvent pour centraliser et surveiller les logs.</p>
+</li>
+</ul>
+<p><strong>Tableau de bord et alerting</strong> : Wazuh Dashboard et Kibana offrent des vues prêtes à l’emploi axées sécurité et conformité, avec rôle API pour modifications à distance  . Graylog propose un UI Web unifiée (port 9000) où l’on crée facilement dashboards, recherche et règles d’alerte  . Ces interfaces permettent aux débutants de démarrer rapidement. Les trois solutions supportent la visualisation en temps réel de données et un historique, bien que le dimensionnement du cluster (index) conditionne le volume d’historique accessible sans purger.</p>
+<h2 id="cas-dusage-typiques-en-homelab"><strong>Cas d’usage typiques en homelab</strong><a class="headerlink" href="#cas-dusage-typiques-en-homelab" title="Permanent link">&para;</a></h2>
+<p>Dans un laboratoire Blue Team domestique, on recherchera généralement :</p>
+<ul>
+<li>
+<p><strong>Collecte centralisée de logs</strong>  : agréger les journaux de tous les serveurs Linux/Windows, équipements réseaux (firewall, routeur) et VM. Par exemple, installer Wazuh Agent sur les PC Windows pour remonter les Event Logs, déployer Filebeat sur des VMs Linux pour leurs  /var/log, ou envoyer tout via syslog/Graylog.</p>
+</li>
+<li>
+<p><strong>Détection d’intrusion (HIDS/NIDS)</strong>  : surveiller les anomalies sur les hôtes. Wazuh fait figure de HIDS classique (fichiers modifiés, connexions suspectes, analyse des logs); ELK/Graylog peuvent ingérer aussi les alertes d’un NIDS (Suricata, Snort) et les corréler  . Par exemple, les logs d’IDS network Suricata peuvent être envoyés à Wazuh ou Graylog pour enrichissement et corrélation (Wazuh prend nativement en charge Suricata via un module  ).</p>
+</li>
+<li>
+<p><strong>Alerting</strong>  : générer des notifications (mail, Slack, etc.) sur événements critiques : Wazuh peut envoyer des alertes par mail ou Syslog quand une règle se déclenche. Graylog déclenche aussi des alertes définies sur des  <em>streams</em>. Kibana (ELK) permet d’utiliser des alertes Watcher ou des plugins d’action dans OpenSearch.</p>
+</li>
+<li>
+<p><strong>Monitoring temps réel</strong>  : visualiser l’activité du réseau et des hôtes via des dashboards. Par ex. tableaux Graylog pour la répartition des logs par serveur/processus, courbes de charge ou heatmaps. Elastic/Kibana propose par ailleurs des plugins comme Elastic SIEM ou Observability pour surveiller l’infrastructure (APM, métriques).</p>
+</li>
+</ul>
+<p>Ces cas d’usage sont couverts par les trois outils, mais avec des approches différentes. Dans un petit homelab, on peut par exemple utiliser Wazuh pour la détection hôte (HIDS) et également envoyer ses journaux au cluster ELK ou Graylog pour analyse globale, tirant ainsi parti du meilleur des deux mondes.</p>
+<h2 id="installation-dockerlxc-et-architecture-type"><strong>Installation Docker/LXC et architecture type</strong><a class="headerlink" href="#installation-dockerlxc-et-architecture-type" title="Permanent link">&para;</a></h2>
+<p>En environnement domestique, l’usage de conteneurs (Docker, LXC) facilite le déploiement :</p>
+<ul>
+<li>
+<p><strong>Wazuh</strong>  : la documentation officielle propose des images Docker composant le « full-stack » Wazuh (serveur, indexer, tableau de bord)  . Une simple  docker-compose  récupère tout en une fois. Le dépôt  <a href="https://github.com/wazuh/wazuh-docker">wazuh-docker</a>  fournit notamment un stack prêt à l’emploi (Wazuh Manager + OpenSearch + Dashboard)  . Pour un seul serveur Wazuh et un nœud OpenSearch, une VM ou LXC avec ~6 Go de RAM est recommandée  . Des templates Proxmox (LXC) pour Wazuh existent dans certaines communautés.</p>
+</li>
+<li>
+<p><strong>ELK</strong>  : il existe de nombreux Docker Compose tout-en-un (par ex. [deviantony/docker-elk]  ) incluant Elasticsearch, Logstash et Kibana. On peut lancer  docker-compose up  pour disposer d’un cluster minimal à 1 nœud. En LXC, il suffit d’installer Docker ou directement Elastic sur Debian/Ubuntu. Un notebook Raspberry Pi ou petit serveur (≥4 Go) peut ainsi faire tourner une instance de test (certains revendeurs fournissent des images Debian déjà configurées).</p>
+</li>
+<li>
+<p><strong>Graylog</strong>  : Graylog fournit une image Docker officielle (« graylog/graylog »). Un exemple de  docker-composeintègre 3 conteneurs : MongoDB (pour les métadonnées), Elasticsearch/OpenSearch (pour le stockage), et Graylog Server  . Le serveur Graylog écoute par défaut sur le port 9000 (web UI) et sur divers ports syslog (1514 TCP/UDP, 12201 GELF, etc.) comme montré ci-dessus  . En LXC, on installe Java 11, MongoDB et Elasticsearch avant Graylog server. Un minimum de  <strong>4 Go de RAM</strong>  est conseillé pour un petit setup Graylog  .</p>
+</li>
+</ul>
+<p><strong>Exemple d’architecture Docker pour Graylog (cluster minimal)</strong> : MongoDB + Elasticsearch (chaque container à ~1 Go RAM) + Graylog (&lt;1 Go) dans un réseau bridge. Graylog expose 9000, 12201, 1514, etc. (voir exemple [31†L182-L190]).</p>
+<h2 id="performances-et-ressources"><strong>Performances et ressources</strong><a class="headerlink" href="#performances-et-ressources" title="Permanent link">&para;</a></h2>
+<p>Ces plateformes sont gourmandes en I/O disque et RAM, particulièrement à mesure que le volume de logs croît. Les bonnes pratiques sont similaires pour toutes : utiliser des SSD rapides, allouer suffisamment de mémoire et prévoir la montée en charge.</p>
+<ul>
+<li>
+<p><strong>Mémoire</strong> : Wazuh (avec OpenSearch) demande au moins  <strong>6 Go RAM</strong>  sur l’hôte Docker complet  . Graylog conseille  <strong>4 Go minimum</strong>  pour un petit usage, mais  <strong>8–16 Go</strong>  pour la production  . Elasticsearch (ELK) peut s’exécuter sur 2–4 Go pour un usage très léger, mais 8–16 Go voire plus sont nécessaires pour un cluster de taille moyenne, en raison du heap Java. Un indice clé est que l’Elastic Stack nécessite de favoriser la RAM (environ 50% dédiée au heap Java) pour des recherches rapides. Comme le note Matt Hayes, “2 Go de RAM, c’est le minimum, 4 Go fonctionnera mieux” pour un ELK minimal  . De son côté, Wazuh recommande un calcul de  vm.max_map_count=262144  pour OpenSearch (nécessaire pour le mappage mémoire)  .</p>
+</li>
+<li>
+<p><strong>CPU</strong> : Elasticsearch est parallélisé sur plusieurs cœurs pour l’indexation et les recherches full-text. Logstash est connu gourmand en CPU et mémoire lors de fortes ingestations (selon ses pipelines). Graylog (Java + Elasticsearch) tire avantage de plusieurs cœurs aussi. En général, prévoir au moins 2 vCPU pour chaque nœud (4 CPU pour cluster ELK plus Wazuh).</p>
+</li>
+<li>
+<p><strong>Stockage</strong> : tous conseillent l’usage de  <strong>SSDs/ NVMe</strong>. Par exemple, la doc Graylog souligne l’importance de stocker le journal de messages et les indices sur des disques haute-IOPS (idéalement SSD)  . Les logs étant volumineux et en écriture continue, mieux vaut dimensionner le disque en fonction de la rétention souhaitée (par ex.  [ingest quotidien] × [jours de rétention] × 1.2)  . Wazuh archive quotidiennement ses logs avec compression et checksums  , mais conserve aussi tout dans Elasticsearch si la rétention est long-terme.</p>
+</li>
+<li>
+<p><strong>Scalabilité</strong> : toutes les solutions se  <strong>clusterisent</strong>  pour gérer plus de données. Wazuh peut déployer un cluster de serveurs Wazuh (master/worker) et un cluster OpenSearch pour l’indexation  . Graylog (Community) permet d’ajouter des Graylog Servers supplémentaires derrière un load balancer, chacun traitant les mêmes inputs, tandis que Elasticsearch se met en cluster pour les données  . Ce déploiement conventionnel assure HA et montée en charge facile  . Elastic/Opensearch est conçu pour scaler horizontalement ; on peut commencer sur un seul nœud mais passer à 3+ nœuds de données avec réplicas pour la résilience.</p>
+</li>
+<li>
+<p><strong>Sécurité</strong> : Wazuh chiffrera nativement la communication agent-serveur (AES)  , et l’API/GUI utilisent TLS et authentification. Graylog lui recommande de forcer TLS entre les nœuds et d’appliquer le RBAC (contrôle d’accès par rôles) pour sécuriser l’accès  . Elasticsearch (dans son offre OSS) offre maintenant des fonctionnalités basiques de sécurité sur Basic License (auth, HTTPS) ; la version OpenSearch (fork AWS) intègre chiffrement et ACL sans licence supplémentaire  .</p>
+</li>
+<li>
+<p><strong>Maintenance</strong> : la gestion consiste à surveiller les disques (purger/archiver les indices anciens), sauvegarder la base MongoDB (Graylog) et les snapshots d’Elasticsearch. Graylog souligne l’importance de sauvegarder Mongo, les indices OpenSearch et la config  . Wazuh préconise aussi de purger/archiver les anciens logs (ossec-archive-*.gzsignés) ou de ne compter que sur les snapshots d’Elasticsearch  . Les mises à jour impliquent souvent de mettre à jour en séquence les composants (par ex. Elasticsearch puis Wazuh). En homelab, l’automatisation (Ansible, Docker Compose) aide à réduire la charge opérationnelle  .</p>
+</li>
+</ul>
+<h2 id="recommandations-par-profil-dusage"><strong>Recommandations par profil d’usage</strong><a class="headerlink" href="#recommandations-par-profil-dusage" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Débutant / homelab simple</strong>  : préférez la solution la plus  <strong>clé-en-main</strong>. Graylog (édition Open) est simple à installer et dispose d’une interface intuitive pour démarrer. Le Docker Compose officiel permet de monter un système complet en quelques commandes. ELK est aussi abordable via un stack Docker (deviantony/docker-elk), mais Elastic demande un peu plus d’ajustements (certificates, mémoire). Wazuh, bien que puissant en détection, nécessite plus de configuration initiale (déploiement des agents, règles) – il peut être mis en place après familiarisation ou dans un second temps.</p>
+</li>
+<li>
+<p><strong>Power user / expérimenté</strong>  : si vous visez de la détection HIDS avancée, Wazuh est un excellent choix car il offre dès le départ des capacités de threat hunting (FIM, règles CVE/CIS)  . Vous pouvez associer Wazuh à une plateforme log (Graylog ou ELK) pour l’analyse forensique des alertes. ELK (ou son fork OpenSearch) convient pour manipuler et visualiser de gros volumes de données, écrire ses propres règles (Sigma/Kibana Alerts) ou utiliser du machine learning Elastic. Graylog est quant à lui très flexible pour construire des flux et alertes personnalisées via son système de  <em>streams</em>.</p>
+</li>
+<li>
+<p><strong>Usage professionnel / grand volume</strong>  : en production, les trois s’industrialiseront en clusters. Graylog Enterprise offre des fonctions SIEM avancées (correlation, archiving) et support commercial. Wazuh peut gérer des milliers d’agents sur un cluster, avec indexeurs répliqués  . L’Elastic Stack, couplé à Elastic Security, reste une référence « tout-en-un », mais sa licence propriétaire récente implique souvent de migrer vers OpenSearch ou la version Enterprise pour rester open source  .</p>
+</li>
+</ul>
+<p>En résumé,  <strong>pour un homelab Blue Team</strong>  débutant, Graylog (simple à prendre en main) ou le combo  <em>Wazuh+Graylog</em>(Wazuh pour l’IDS, Graylog pour la log-analyse) est souvent conseillé. Les utilisateurs avancés pourront opter pour Wazuh ou Elastic+Wazuh (via le plugin Wazuh pour Kibana) pour profiter de règles de détection déjà disponibles. Enfin, l’essentiel est de disposer d’une collecte de logs fiable et d’un minimum d’alerting ; les trois outils remplissent ces fonctions, à chacun de choisir selon ses préférences en terme d’interface, de langage de requête et de charge système.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

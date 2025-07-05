@@ -1,0 +1,1924 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../stockage/">
+      
+      
+        <link rel="next" href="../lxc-vs-vm/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Réseau & VLANs - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plan-de-reseau-homelab-vlan-segmentation-et-passerelles" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Réseau & VLANs
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction-pourquoi-segmenter-son-reseau" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction : Pourquoi segmenter son réseau ?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#topologie-generale-et-materiel-requis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Topologie générale et matériel requis
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-des-vlan-sur-le-pare-feu-opnsensepfsense" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration des VLAN sur le pare-feu (OPNsense/pfSense)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notions-avancees-et-meilleures-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notions avancées et meilleures pratiques
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Notions avancées et meilleures pratiques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vlan-tagges-vs-non-tagges-trunkaccess" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN taggés vs non taggés (trunk/access)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acl-et-controle-de-trafic-intra-vlan-ou-sur-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      ACL et contrôle de trafic intra-VLAN ou sur switch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#igmp-snooping-et-trafic-multicast" class="md-nav__link">
+    <span class="md-ellipsis">
+      IGMP Snooping et trafic multicast
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pare-feu-inter-vlan-vs-intra-vlan" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pare-feu inter-VLAN vs intra-VLAN
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#segmentation-par-zone-vlan-proposes-pour-le-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      Segmentation par zone : VLAN proposés pour le homelab
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segmentation par zone : VLAN proposés pour le homelab">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vlan" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lan-principal-personnel" class="md-nav__link">
+    <span class="md-ellipsis">
+      (LAN principal personnel)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-securite" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lab Sécurité
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#red-team-blue-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      (Red Team / Blue Team)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domotiqueiot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Domotique/IoT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cameras-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caméras IP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#surveillance-cctv" class="md-nav__link">
+    <span class="md-ellipsis">
+      (Surveillance CCTV)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stockage-iscsi" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stockage (iSCSI)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sauvegardes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sauvegardes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      (Backup)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#management" class="md-nav__link">
+    <span class="md-ellipsis">
+      Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oob-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      (OOB, admin)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dmz" class="md-nav__link">
+    <span class="md-ellipsis">
+      DMZ
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-demilitarisee" class="md-nav__link">
+    <span class="md-ellipsis">
+      (zone démilitarisée)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      VLAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Invités
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guest-wi-fi" class="md-nav__link">
+    <span class="md-ellipsis">
+      (Guest Wi-Fi)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion-vers-un-homelab-segmente-securise-et-evolutif" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion : Vers un homelab segmenté, sécurisé et évolutif
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/prometheus-influx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../monitoring/netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="plan-de-reseau-homelab-vlan-segmentation-et-passerelles"><strong>Plan de réseau Homelab : VLAN, Segmentation et Passerelles</strong><a class="headerlink" href="#plan-de-reseau-homelab-vlan-segmentation-et-passerelles" title="Permanent link">&para;</a></h1>
+<h2 id="introduction-pourquoi-segmenter-son-reseau"><strong>Introduction : Pourquoi segmenter son réseau ?</strong><a class="headerlink" href="#introduction-pourquoi-segmenter-son-reseau" title="Permanent link">&para;</a></h2>
+<p>Segmenter un réseau domestique en  <strong>VLAN</strong>  (Virtual LAN) consiste à créer des sous-réseaux logiques isolés les uns des autres, même s’ils partagent le même matériel physique (commutateurs, points d’accès, etc.). Cette isolation présente de nombreux avantages : amélioration de la  <strong>sécurité</strong>  (limiter qu’un appareil compromis n’affecte les autres), meilleure  <strong>maîtrise du trafic</strong>  avec des  <strong>règles firewall</strong>  plus fines, réduction du  <strong>broadcast</strong>  inutile, etc.  . Dans un homelab où coexistent divers équipements (serveurs de production personnelle, équipements domotiques, caméras IP, labos de cybersécurité, NAS de sauvegarde, etc.), les VLAN permettent de  <strong>“cloisonner” chaque catégorie d’équipements</strong>  dans son propre réseau étanche. Par exemple, les appareils IoT (domotique) souvent peu sécurisés ne pourront pas accéder à vos PC personnels sensibles  , et vos expérimentations en lab sécurité ne risqueront pas de perturber votre réseau principal.</p>
+<p>En bref, un VLAN est un  <strong>segment de réseau isolé</strong>. Les appareils au sein d’un même VLAN communiquent librement (comme s’ils étaient sur un même switch), mais ne “voient” pas ceux des autres VLAN sans passer par un routeur/pare-feu qui fait respecter des règles d’accès  . Cette isolation par VLAN est un  <strong>principe clé de la défense en profondeur</strong>  en réseau domestique : on limite drastiquement les communications non nécessaires entre les différentes  <strong>zones de confiance</strong>du homelab.</p>
+<h2 id="topologie-generale-et-materiel-requis"><strong>Topologie générale et matériel requis</strong><a class="headerlink" href="#topologie-generale-et-materiel-requis" title="Permanent link">&para;</a></h2>
+<p>Pour mettre en place des VLAN chez soi, il faut du matériel réseau prenant en charge 802.1Q (standard des VLAN). En pratique, il vous faudra :</p>
+<ul>
+<li>
+<p><strong>Un routeur/pare-feu</strong>  central capable de gérer des interfaces VLAN et de filtrer le trafic entre elles (par exemple un PC ou appliance avec OPNsense ou pfSense). Ces systèmes supportent nativement les VLAN 802.1Q et le firewall à états, ce qui est idéal pour implémenter la segmentation  .</p>
+</li>
+<li>
+<p><strong>Un commutateur manageable</strong>  (switch géré) qui supporte la configuration de VLAN. C’est indispensable pour brancher plusieurs appareils en isolant leurs ports par VLAN, surtout si le routeur n’a que peu de ports physiques  . Le switch fera transiter les trames VLAN “taggées” entre le routeur et les équipements.</p>
+</li>
+<li>
+<p>(Optionnel)  <strong>Des points d’accès Wi-Fi compatibles VLAN</strong>, si vous souhaitez avoir des SSID Wi-Fi distincts pour différentes VLAN (ex : un SSID pour le réseau principal, un pour les invités, un pour l’IoT…). De nombreux AP prosumer (Unifi, Omada, OpenWrt, etc.) permettent d’associer chaque SSID à un VLAN ID spécifique.</p>
+</li>
+</ul>
+<p>La topologie typique dans un homelab VLAN est la suivante :  <strong>le routeur/pare-feu est relié en tronc (trunk) au switch principal</strong>  via un lien Ethernet sur lequel  <em>tous</em>  les VLAN sont autorisés (trame 802.1Q taggées)  . Le routeur agit comme  <strong>passerelle par défaut</strong>  pour chaque VLAN (il a une interface virtuelle dans chacun, avec une IP de gateway). Le switch, lui, connecte les différents appareils et applique l’<strong>appartenance VLAN</strong>  sur chaque port. Les ports du switch reliés à des appareils ordinaires (PC, caméras, etc.) sont configurés en  <strong>VLAN “untagged”</strong>  d’un VLAN spécifique (on parle de port access non taggé) – le périphérique n’a pas conscience du VLAN, il reçoit juste du trafic de son sous-réseau  . En revanche, le port du switch relié au routeur est configuré en  <strong>trunk taggé</strong>  pour  <em>tous</em>  les VLAN : il transporte les trames avec leur identifiant VLAN jusqu’au routeur, qui peut ainsi router/filtrer entre VLAN  . De même, un port vers un point d’accès Wi-Fi multi-SSID sera souvent un trunk taggé transportant les VLAN des différents SSID vers l’AP.
+<em>Exemple de topologie réseau Homelab avec VLAN multiples (réseau management, primaire, IoT, invités, etc.) et un routeur OPNsense interconnecté en trunk au switch principal.</em></p>
+<p>Sur le schéma ci-dessus (inspiré d’un cas réel), on distingue plusieurs VLAN isolés : un VLAN  <strong>MGMT</strong>  pour la gestion, un VLAN  <strong>Primary</strong>  (réseau principal), un VLAN  <strong>IoT</strong>  pour les objets connectés, un VLAN  <strong>Guests</strong>  pour les invités, etc., chacun avec son plan d’adressage IP dédié  . Le routeur OPNsense (en haut) est la passerelle reliant ces VLAN et appliquant des règles de pare-feu entre eux. Le switch (TP-Link) a des ports assignés à chaque VLAN (soit en untagged pour des équipements spécifiques, soit en trunk vers le routeur et les points d’accès). Par exemple, un  <strong>NAS ou serveur</strong>peut être connecté à un port du switch configuré en VLAN “Services”, tandis qu’une  <strong>caméra IP</strong>  sera sur un port attribué au VLAN “CCTV”. Le lien entre le routeur et le switch transporte tous les VLAN taggés, permettant au routeur de voir chaque sous-réseau. Avec cette architecture, chaque catégorie d’équipements communique principalement avec le routeur, qui décide si telle VLAN a le droit de joindre telle autre ou d’accéder à Internet, selon des règles prédéfinies.</p>
+<h2 id="configuration-des-vlan-sur-le-pare-feu-opnsensepfsense"><strong>Configuration des VLAN sur le pare-feu (OPNsense/pfSense)</strong><a class="headerlink" href="#configuration-des-vlan-sur-le-pare-feu-opnsensepfsense" title="Permanent link">&para;</a></h2>
+<p>La mise en place concrète des VLAN dans OPNsense/pfSense se fait en plusieurs étapes. Voici un guide pas-à-pas synthétique :</p>
+<ol>
+<li>
+<p><strong>Définir les VLAN dans le routeur</strong> : Sur OPNsense/pfSense, commencez par créer les VLAN (menu Interfaces &gt; Other &gt; VLANs). Pour chaque VLAN, on spécifie un identifiant numérique (VID, entre 1 et 4094) et l’interface physique parent (par ex. votre port LAN connecté au switch)  . Exemple : VLAN 10 “Prod”, VLAN 20 “Lab”, VLAN 30 “Domotique”, etc.  Veillez à choisir des IDs cohérents et uniques. Une bonne pratique est de faire correspondre le numéro du VLAN avec le troisième octet de son réseau IP (ex: VLAN 10 → 192.168.<strong>10</strong>.0/24)  , afin de s’y retrouver facilement.</p>
+</li>
+<li>
+<p><strong>Assigner les interfaces</strong> : Une fois VLANs définis, il faut les associer à des interfaces logiques dans le pare-feu. Dans pfSense/OPNsense, on va dans  <em>Interfaces &gt; Assignments</em>  et on ajoute chaque VLAN comme nouvelle interface. Donnez-leur un nom significatif (LAN_PROD, LAN_IoT, etc.), puis activez-les. Assignez une  <strong>plage d’adresses IP</strong>  à chaque interface VLAN (typiquement /24). Par exemple : VLAN 10 (Prod) pourrait avoir 192.168.10.1/24 comme IP de gateway (le routeur se positionne sur .1), VLAN 20 (Lab) en 192.168.20.1/24, etc. Chaque VLAN est ainsi un sous-réseau IP distinct avec sa passerelle  .</p>
+</li>
+<li>
+<p><strong>DHCP et DNS</strong> : Configurez un serveur  <strong>DHCP</strong>  sur chaque interface VLAN pour distribuer automatiquement les IP aux hôtes de ce réseau. Sur OPNsense/pfSense, on peut copier la config DHCP du LAN principal puis ajuster la plage. De même, vous pouvez activer le service DNS (Unbound) pour qu’il écoute sur tous les VLAN, afin que les clients utilisent le routeur comme résolveur DNS. Attention toutefois : pensez à autoriser le trafic DNS vers le routeur sur chaque VLAN (voir règles plus bas).</p>
+</li>
+<li>
+<p><strong>Configuration du switch</strong> : Du côté du commutateur manageable, créez les VLAN avec les mêmes IDs. Ensuite, attribuez chaque  <strong>port du switch</strong>  au VLAN approprié.</p>
+<ul>
+<li>
+<p>Le port relié au routeur doit être configuré en  <strong>trunk/taggé sur tous les VLAN</strong>  (ou au moins sur tous ceux utilisés). Ainsi, les trames sortant du routeur avec un tag VLAN seront acceptées et propagées sur le switch  .</p>
+</li>
+<li>
+<p>Les ports reliés à des dispositifs finaux (PC, caméra, IoT, etc.) seront mis en mode  <strong>access (non taggé)</strong>  dans le VLAN correspondant à cet appareil. Par exemple, si un PC principal doit être dans le VLAN Prod (10), on met son port en VLAN 10 untagged (et aucun autre VLAN sur ce port). De cette manière, le switch ajoutera/retirera le tag VLAN automatiquement pour ce port, et le PC n’aura aucune configuration spéciale à connaître  .</p>
+</li>
+<li>
+<p>Si un port du switch est connecté à un point d’accès Wi-Fi multi-SSID ou à un hyperviseur accueillant plusieurs VLAN, ce port devra être configuré en  <strong>taggé (trunk)</strong>  pour les VLAN nécessaires (ex: taggé VLAN 10,20,30 sur le port d’un AP qui diffuse trois SSID isolés)  .</p>
+</li>
+<li>
+<p>Pour les  <strong>ports inutilisés</strong>  sur le switch, par mesure de sécurité, vous pouvez les désactiver ou les assigner à un VLAN “poubelle” non routé (ex: VLAN 999) pour éviter qu’un appareil non autorisé ne se connecte à votre insu  .</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Règles de firewall inter-VLAN</strong> : Par défaut, sur pfSense/OPNsense, chaque interface VLAN nouvellement créée n’a  <strong>aucune règle autorisant le trafic entrant</strong>, ce qui signifie qu’aucune communication  <em>depuis</em>  ce VLAN n’est permise (tout est bloqué par le policy  <em>default deny</em>). Il convient donc d’ajouter des règles pour permettre au moins l’accès à Internet depuis chaque VLAN, tout en  <strong>bloquant l’accès aux autres VLAN</strong>. Une méthode simple consiste à bloquer toute destination correspondant aux réseaux privés locaux (RFC1918) pour chaque VLAN, sauf exceptions nécessaires  . Concrètement, sur l’onglet firewall de chaque VLAN :</p>
+<ul>
+<li>
+<p>On crée en haut une règle autorisant le trafic de ce VLAN vers l’IP de  <strong>passerelle du routeur</strong>  (son adresse dans ce VLAN) pour les services indispensables comme DNS ou DHCP. Par exemple, autoriser  VLAN10_net -&gt; 192.168.10.1 (port 53)  pour permettre aux clients du VLAN 10 d’interroger le DNS du routeur  .</p>
+</li>
+<li>
+<p>En deuxième règle, on ajoute un  <strong>Bloc</strong>  de tout le trafic de  VLAN10_net  vers l’alias “RFC1918” (regroupant les plages privées 10.0.0.0/8, 192.168.0.0/16, etc.), afin d’empêcher ce VLAN d’atteindre  <em>tout réseau local interne</em>  autre que le sien  . C’est cette règle qui interdit l’inter-VLAN par défaut.</p>
+</li>
+<li>
+<p>En troisième position (après le bloc inter-VLAN donc), on met une règle  <strong>Autoriser</strong>  de  VLAN10_net  vers “*” (any) pour permettre l’accès Internet. Grâce à l’ordre, le trafic vers Internet (destinations publiques) passera, tandis que toute tentative vers IP privées sera matchée par la règle de bloc au-dessus et donc interdite  .  <em>NB:</em>  si votre pare-feu a l’option “Block private networks” activée sur l’interface WAN, il filtrera déjà l’entrée depuis internet des IP privées externes, mais ici il s’agit du trafic sortant inter-LAN.</p>
+</li>
+</ul>
+<p>Avec ce schéma de règles, chaque VLAN peut accéder au WAN mais pas aux autres LAN, sauf cas particulier. Pour ces  <strong>exceptions</strong>, on ajoutera des règles spécifiques  <em>au-dessus</em>  du bloc RFC1918. Par ex., si l’on veut permettre au VLAN Sauvegarde de joindre le NAS sur VLAN Prod sur le port NFS, on créerait une règle autorisant  Source: VLAN_Sauvegarde_net -&gt; Dest: NAS_IP (port 2049)  placée avant la règle de bloc général. De même, on peut vouloir qu’un VLAN “Management” ait le droit de joindre l’interface de gestion d’équipements sur d’autres VLAN – il faut alors prévoir ces autorisations explicitement, ou utiliser des groupes d’interfaces pour simplifier (pfsense permet de créer un groupe contenant toutes les interfaces internes et définir une règle une fois)  .</p>
+</li>
+<li>
+<p><strong>Vérifications</strong> : Une fois la configuration appliquée, connectez des appareils dans chaque VLAN et testez : chaque VLAN doit obtenir des IP correctes via DHCP, avoir accès à Internet si prévu, et  <em>ne pas</em>  pouvoir atteindre les machines des autres VLAN (par ex., un PC en VLAN 10 ne doit pas ping un PC en VLAN 20). Testez également les cas autorisés (ping de la passerelle, résolution DNS, etc.). Ajustez les règles firewall si nécessaire en cas de service légitime bloqué (ex: autoriser le VLAN IoT à contacter un serveur domotique sur VLAN Prod, mais uniquement sur le port de l’API requis).</p>
+</li>
+</ol>
+<p>En résumé, le routeur/pare-feu multi-VLAN joue le rôle de  <strong>passerelle et filtre</strong>  entre les segments. Le switch assure que la séparation niveau 2 est respectée (pas de fuite de trames entre VLAN), et le routeur contrôle au niveau 3 ce qui est autorisé ou non entre les VLAN.</p>
+<h2 id="notions-avancees-et-meilleures-pratiques"><strong>Notions avancées et meilleures pratiques</strong><a class="headerlink" href="#notions-avancees-et-meilleures-pratiques" title="Permanent link">&para;</a></h2>
+<p>Dans un homelab bien segmenté, certaines notions plus pointues peuvent entrer en jeu pour optimiser le fonctionnement ou la sécurité :</p>
+<h3 id="vlan-tagges-vs-non-tagges-trunkaccess"><strong>VLAN taggés vs non taggés (trunk/access)</strong><a class="headerlink" href="#vlan-tagges-vs-non-tagges-trunkaccess" title="Permanent link">&para;</a></h3>
+<p>Il est crucial de bien comprendre la différence entre un port  <strong>taggé (trunk)</strong>  et  <strong>non taggé (access)</strong>  sur le switch. Un port  <em>untagged</em>  dans un VLAN signifie que le périphérique connecté n’envoie ni ne reçoit de trames VLAN marquées – le switch intègre l’appareil dans le VLAN en interne, en ajoutant/retirant le tag 802.1Q lui-même. Ce mode est destiné aux équipements “normaux” (PC, imprimante, caméra, etc.) qui ne connaissent pas les VLAN  . En revanche, un port  <em>tagged trunk</em>  transporte les trames avec leurs identifiants VLAN inchangés. Il sert pour relier deux équipements VLAN-aware : par exemple la liaison entre le routeur et le switch, ou entre deux switches, ou vers un AP multi-SSID. Ces équipements comprennent les tags et peuvent appartenir à plusieurs VLAN simultanément.  <strong>Règle d’or</strong> : un port trunk peut véhiculer plusieurs VLAN (taggés), un port access ne doit appartenir qu’à un seul VLAN et présente ce VLAN en “non taggé” au device connecté.</p>
+<p>Dans la configuration, veillez à  <strong>cohérer les tags</strong>  de bout en bout : si le VLAN 20 est utilisé pour la domotique, le routeur taggue ce trafic VLAN20 sur l’interface trunk, le switch doit avoir VLAN20 activé sur le port trunk et les ports des objets domotiques en VLAN20 untagged. Une erreur de tag (ex: VLAN ID mismatch) se traduit par un appareil incapable de communiquer au-delà de son switch.</p>
+<h3 id="acl-et-controle-de-trafic-intra-vlan-ou-sur-switch"><strong>ACL et contrôle de trafic intra-VLAN ou sur switch</strong><a class="headerlink" href="#acl-et-controle-de-trafic-intra-vlan-ou-sur-switch" title="Permanent link">&para;</a></h3>
+<p>En environnement professionnel, on utilise parfois des  <strong>ACL (Access Control Lists)</strong>  sur les commutateurs de niveau 3 ou même niveau 2 pour filtrer le trafic  <em>au sein</em>  du réseau, indépendamment du pare-feu central. Dans un homelab, si vous disposez d’un switch L3 avancé, vous pourriez mettre en œuvre des ACL pour bloquer certaines communications inter-VLAN directement au niveau du switch, en complément ou à la place des règles du routeur. Cependant, dans la plupart des cas, votre pare-feu OPNsense/pfSense remplit déjà ce rôle (ses règles agissent en fait comme des ACL de niveau 3/4). L’utilisation d’ACL sur le switch peut être utile si vous faites du routage local sur un switch L3 pour décharger le routeur (cependant, ceci est rarement nécessaire à l’échelle d’un homelab). Retenez qu’ACL ou firewall reviennent à définir des règles : commencez simple (tout inter-VLAN bloqué sauf exceptions), puis affinez au besoin avec des règles spécifiques ou ACL pour des cas très précis. Un adepte résume ainsi son approche maison : isoler les VLAN, puis  <strong>“ouvrir des brèches avec des ACL pour des dispositifs spécifiques”</strong>  selon les besoins  .</p>
+<h3 id="igmp-snooping-et-trafic-multicast"><strong>IGMP Snooping et trafic multicast</strong><a class="headerlink" href="#igmp-snooping-et-trafic-multicast" title="Permanent link">&para;</a></h3>
+<p>Les réseaux locaux modernes, surtout avec domotique, Chromecast, caméras, etc., utilisent du  <strong>multicast</strong>  (mDNS, SSDP, streaming vidéo). Par défaut, une trame multicast est envoyée en broadcast sur un VLAN, ce qui peut saturer inutilement les ports. La fonction  <strong>IGMP Snooping</strong>  des switches veille à écouter les abonnements IGMP des appareils pour ne forwarder le trafic multicast qu’aux ports qui en ont besoin. Il est recommandé d’activer l’IGMP Snooping sur chaque VLAN concerné afin d’<strong>éviter la diffusion de flux multicast vers tous les ports</strong>  du VLAN  . Par exemple, sur un VLAN Caméras IP avec NVR, le switch n’enverra le flux vidéo multicast qu’au port du NVR et éventuellement aux quelques clients inscrits, plutôt qu’à tous les dispositifs du VLAN. Attention, IGMP Snooping implique qu’il y ait un  <strong>querier IGMP</strong>  sur le réseau (généralement le routeur multicast). OPNsense/pfSense peut faire office de querier si activé.</p>
+<p>Un autre défi fréquent en environnement VLAN est la découverte mDNS/Bonjour (pour imprimantes, Chromecasts, assistants vocaux, etc.) : par design, ces protocoles ne passent pas les frontières VLAN. Deux approches : soit regrouper sur un même VLAN les appareils qui doivent se découvrir (solution simple mais reniant l’isolation), soit utiliser un  <strong>mécanisme de relay/reflecteur mDNS</strong>  (par ex. le service Avahi) qui répète certaines annonces entre VLAN choisis. OPNsense inclut un plugin “os-avahi” qui peut être configuré pour refléter mDNS entre un VLAN IoT et le VLAN principal, afin que vos Chromecast (IoT) apparaissent sur votre smartphone (LAN principal) sans ouvrir tout le trafic entre ces VLAN. Cette configuration avancée améliore le confort d’usage tout en maintenant l’isolation du reste des communications.</p>
+<h3 id="pare-feu-inter-vlan-vs-intra-vlan"><strong>Pare-feu inter-VLAN vs intra-VLAN</strong><a class="headerlink" href="#pare-feu-inter-vlan-vs-intra-vlan" title="Permanent link">&para;</a></h3>
+<p>Dans notre scénario, on considère généralement que les appareils  <strong>au sein d’un même VLAN</strong>  sont de confiance similaire, donc on ne filtre pas leur communication mutuelle (ils peuvent dialoguer librement dans le VLAN). Si ce n’est pas souhaité (ex: VLAN Invités où même les clients ne doivent pas se voir), on parle d’<strong>isolation client</strong>  au niveau 2 : certaines bornes Wi-Fi permettent d’isoler les clients entre eux, ou on peut utiliser des fonctionnalités de switch (PVLAN, port isolation) pour empêcher des ports du même VLAN de communiquer directement. C’est utile surtout pour un VLAN invité ou public. Dans la plupart des VLAN privés (Prod, IoT…), laisser les appareils se voir peut être nécessaire (ex: votre smartphone pilote une ampoule sur VLAN IoT – ils doivent pouvoir communiquer  <em>si</em>  dans le même VLAN IoT). Retenez donc : on cloisonne fortement  <em>entre</em>  VLAN différents (firewall L3), et on peut éventuellement cloisonner  <em>à l’intérieur</em>  d’un même VLAN (isolation L2) selon les cas d’usage spécifiques.</p>
+<h2 id="segmentation-par-zone-vlan-proposes-pour-le-homelab"><strong>Segmentation par zone : VLAN proposés pour le homelab</strong><a class="headerlink" href="#segmentation-par-zone-vlan-proposes-pour-le-homelab" title="Permanent link">&para;</a></h2>
+<p>Passons en revue les différentes  <strong>zones VLAN</strong>  qu’on peut mettre en place dans un homelab bien organisé, en fonction des besoins évoqués (production personnelle, sécurité, domotique, stockage, etc.). Chaque VLAN correspond à un  <strong>cas d’usage</strong>  et aura ses propres règles de trafic.</p>
+<h3 id="vlan"><strong>VLAN</strong><a class="headerlink" href="#vlan" title="Permanent link">&para;</a></h3>
+<h3 id="production"><strong>Production</strong><a class="headerlink" href="#production" title="Permanent link">&para;</a></h3>
+<h3 id="lan-principal-personnel"><strong>(LAN principal personnel)</strong><a class="headerlink" href="#lan-principal-personnel" title="Permanent link">&para;</a></h3>
+<p>C’est le réseau principal pour vos équipements  <strong>de confiance</strong>  et critiques (PC personnels, laptop de travail – sauf si politique entreprise l’interdit, serveurs de prod auto-hébergés, etc.). Il peut s’agir du VLAN  <strong>10</strong>  par exemple, 192.168.10.0/24. Ce réseau a généralement  <strong>un accès complet à Internet</strong>  et peut, si nécessaire, initier des connexions vers certains services dans d’autres VLAN (ex: accéder au NAS de sauvegarde, consulter les flux des caméras, etc.). En revanche, on bloque l’accès  <em>entrant</em>  depuis les autres VLAN vers ce réseau pour le protéger. Vous traiterez ce VLAN un peu comme un réseau “interne sécurisé d’entreprise”. Vous pouvez aussi y segmenter en deux VLAN distincts si vous hébergez des applications client/serveur sensibles : par exemple VLAN “Prod-Serveurs” séparé du VLAN “Prod-Clients”. Mais pour un homelab, un seul VLAN prod suffit souvent, d’autant qu’il est plus aisé de gérer quelques règles ponctuelles à l’intérieur que de multiplier les segments. Veillez simplement à  <strong>ne pas connecter d’appareils peu fiables</strong>  (IoT, etc.) sur ce réseau.</p>
+<h3 id="vlan_1"><strong>VLAN</strong><a class="headerlink" href="#vlan_1" title="Permanent link">&para;</a></h3>
+<h3 id="lab-securite"><strong>Lab Sécurité</strong><a class="headerlink" href="#lab-securite" title="Permanent link">&para;</a></h3>
+<h3 id="red-team-blue-team"><strong>(Red Team / Blue Team)</strong><a class="headerlink" href="#red-team-blue-team" title="Permanent link">&para;</a></h3>
+<p>Pour vos besoins de labo cyber (pentest, forensic…), il est conseillé de créer un VLAN dédié  <strong>hautement isolé</strong>  du reste. Par exemple VLAN  <strong>40</strong>  = 192.168.40.0/24. Vous pouvez y faire tourner des VMs vulnérables, des attaques simulées, etc., sans risque pour votre LAN principal. Ce VLAN Lab peut même être subdivisé en plusieurs segments selon vos scénarios : un VLAN  <strong>“Red”</strong>  pour les machines d’attaque (attaquant) et un VLAN  <strong>“Blue”</strong>  pour les cibles et la surveillance (défenseur). Dans ce cas, vous pourriez introduire un  <strong>pare-feu intermédiaire</strong>  entre Red et Blue pour reproduire un environnement d’entreprise (ou utiliser OPNsense lui-même avec des règles spécifiques entre ces deux VLAN). Toutefois, si c’est un lab local purement pour exercice, un seul VLAN isolé peut suffire, ou deux VLAN isolés de tout sauf d’une connexion contrôlée entre eux. Par défaut, le VLAN Lab n’a  <strong>pas accès aux VLAN prod/domotique/etc.</strong>, et potentiellement même  <strong>pas d’accès Internet</strong>  si vous voulez tester des malwares en contenant (vous pourrez activer l’accès WAN ponctuellement via une règle ou via un proxy/VPN dédié pour le lab). L’idée est de minimiser les ponts avec l’extérieur. Vous pourriez autoriser seulement la machine de l’analyste (sur VLAN Prod par ex.) à se connecter en RDP/SSH vers le VLAN Lab Blue Team pour y faire de l’investigation, mais rien de plus. Ce VLAN est votre bac à sable dangereux : traitez-le comme une  <strong>DMZ locale</strong>  très verrouillée.</p>
+<h3 id="vlan_2"><strong>VLAN</strong><a class="headerlink" href="#vlan_2" title="Permanent link">&para;</a></h3>
+<h3 id="domotiqueiot"><strong>Domotique/IoT</strong><a class="headerlink" href="#domotiqueiot" title="Permanent link">&para;</a></h3>
+<p>Tous les équipements  <strong>domotiques, IoT et multimédia</strong>  peu sécurisés vont dans ce réseau isolé. Par exemple VLAN  <strong>30</strong>  = 192.168.30.0/24. On y met les ampoules connectées, assistants vocaux, télévisions intelligentes, prises Wi-Fi, thermostats, etc. Ce sont typiquement des appareils qui  <strong>requièrent un accès Internet</strong>  (pour leurs services cloud) mais n’ont aucune raison de communiquer avec vos PC/serveurs personnels. On configure donc ce VLAN IoT de sorte que ses appareils puissent sortir vers Internet (HTTP, MQTT… selon les besoins), mais  <strong>ne puissent pas initier de connexion vers les VLAN sensibles</strong>  (Prod, Sauvegarde…). Inversement, on peut autoriser quelques flux entrants maîtrisés : par exemple, votre smartphone (VLAN Prod) doit pouvoir envoyer des commandes vers l’API locale d’une ampoule sur VLAN IoT. Une façon propre de faire cela est de déployer un  <strong>serveur domotique central (type Home Assistant)</strong>  qui a deux interfaces réseau – une dans le VLAN IoT pour parler aux objets, et une dans le VLAN Prod pour que vous puissiez le contrôler. Si ce n’est pas possible, on ouvrira finement sur le firewall les accès nécessaires (ex: autoriser IP_du_PC → IP_ampoule port TCP spécifique). Gardez ce VLAN IoT aussi fermé que possible, car ces appareils sont souvent les plus vulnérables. Il est d’usage également de  <strong>refuser toute connexion sortante inutile</strong>  depuis IoT (filtrage par liste blanche de domaines via DNS ou règles par IP si possible) afin d’éviter qu’un objet bavard n’envoie des données à des tiers. En résumé, VLAN IoT = Internet oui, accès aux autres VLAN non (sauf exceptions minimales), accès entrants très limités.</p>
+<p>Notez enfin que les  <strong>protocoles multicast</strong>  type mDNS, SSDP sont massivement utilisés en IoT (pour la découverte plug-and-play). Comme expliqué, ceux-ci ne traversent pas les VLAN, donc si par exemple votre Google Home (VLAN IoT) doit être contrôlé par votre téléphone (VLAN Prod), vous aurez besoin d’un mécanisme comme Avahi (reflecteur mDNS) ou, plus simplement, placer le téléphone sur le VLAN IoT le temps de l’utilisation (moins sécurisé). À vous de voir le bon compromis entre  <strong>confort</strong>  et  <strong>cloisonnement</strong>.</p>
+<h3 id="vlan_3"><strong>VLAN</strong><a class="headerlink" href="#vlan_3" title="Permanent link">&para;</a></h3>
+<h3 id="cameras-ip"><strong>Caméras IP</strong><a class="headerlink" href="#cameras-ip" title="Permanent link">&para;</a></h3>
+<h3 id="surveillance-cctv"><strong>(Surveillance CCTV)</strong><a class="headerlink" href="#surveillance-cctv" title="Permanent link">&para;</a></h3>
+<p>Les caméras de surveillance réseau méritent souvent leur propre VLAN (par ex. VLAN  <strong>50</strong>  = 192.168.50.0/24), bien qu’on pourrait les mettre dans l’IoT. Elles génèrent du trafic vidéo continu et peuvent présenter des vulnérabilités sérieuses. Dans un homelab, on crée un VLAN Caméras isolé  <strong>sans accès Internet direct</strong>  (sauf si la caméra a absolument besoin de NTP ou de mises à jour par le web, mais idéalement on évite les caméras cloud). Ce VLAN ne doit communiquer qu’avec votre  <strong>NVR</strong>/serveur d’enregistrement vidéo. Par exemple, autoriser les flux  <em>de</em>  caméras → vers NVR sur les ports RTSP, et peut-être le NVR → caméras sur HTTP (pour les configurer). En dehors de cela, pas de passage. Ainsi, même si une caméra est compromise, l’attaquant ne pourra pas rebondir sur le reste de votre réseau. Un retour d’expérience de homelab recommande que les caméras n’aient  <em>aucune</em>  idée d’Internet :  <em>«CCTV – no access to outside world, cameras get time from internal NTP, and can send flux au NVR uniquement»</em>  . C’est une sage précaution. Si vous devez accéder à vos caméras depuis l’extérieur, faites-le via le NVR (qui serait lui-même soit dans un VLAN DMZ, soit via VPN). Enfin, côté performance, les caméras et NVR peuvent consommer de la bande passante en continu : assurez-vous que votre switch supporte le débit cumulé, et envisagez éventuellement un  <strong>switch PoE dédié</strong>  pour alimenter les caméras, raccordé en trunk sur le VLAN caméras du switch principal.</p>
+<h3 id="vlan_4"><strong>VLAN</strong><a class="headerlink" href="#vlan_4" title="Permanent link">&para;</a></h3>
+<h3 id="stockage-iscsi"><strong>Stockage (iSCSI)</strong><a class="headerlink" href="#stockage-iscsi" title="Permanent link">&para;</a></h3>
+<p>Pour les besoins de stockage partagé (par exemple exposer un disque iSCSI depuis un NAS vers vos hyperviseurs Proxmox/ESXi), il est fortement recommandé de dédier un VLAN spécifique au  <strong>trafic de stockage</strong>. On peut le nommer VLAN  <strong>iSCSI</strong>  ou  <strong>SAN</strong>. Souvent, ce VLAN n’a même  <em>pas</em>  de passerelle vers le routeur (pas routé) : il s’agit juste d’un réseau L2 isolé entre votre NAS/stockage et vos serveurs, pour le traffic iSCSI ou NFS. Par exemple VLAN  <strong>20</strong>  = 10.0.20.0/24, sans sortie internet. On attribue des IP fixes aux interfaces SAN de chaque hôte et du NAS. Ce réseau étant isolé, on évite toute pollution par d’autres flux, ce qui améliore les performances et la sécurité (un client du VLAN Prod n’a aucune raison d’accéder directement au VLAN iSCSI). En pratique, il faut que vos serveurs et NAS aient chacun  <strong>deux interfaces réseau</strong>  (ou une interface VLAN taggée côté hyperviseur) : l’une pour le LAN normal, l’autre pour le VLAN stockage. Les échanges iSCSI se font ainsi directement, sans passer par le routeur.</p>
+<p>Si toutefois vous avez besoin que ce VLAN iSCSI soit routé (par ex. pour accéder à l’interface d’admin du NAS depuis un PC), vous pouvez lui attribuer une interface sur OPNsense, mais dans ce cas filtrez rigoureusement l’accès (ex: seul le PC admin peut joindre l’IP de management du NAS sur ce VLAN). Beaucoup choisissent de ne  <em>pas</em>  router le VLAN SAN du tout, forçant l’accès administrateur via un jump host sur ce VLAN ou via le LAN principal du NAS. Quoiqu’il en soit, on  <strong>n’autorise pas Internet</strong>  sur ce VLAN, il doit être totalement interne. Pensez également à activer les  <strong>Jumbo Frames (MTU 9000)</strong>  sur ce VLAN si tous vos équipements le supportent, afin d’optimiser le débit de gros flux iSCSI/NFS (toutes les interfaces du NAS, serveurs et switch impliqués doivent avoir MTU 9000). Les VLAN de stockage peuvent aussi inclure les trafics de virtualisation type vMotion, replication, etc., qui bénéficient d’un réseau à part.</p>
+<h3 id="vlan_5"><strong>VLAN</strong><a class="headerlink" href="#vlan_5" title="Permanent link">&para;</a></h3>
+<h3 id="sauvegardes"><strong>Sauvegardes</strong><a class="headerlink" href="#sauvegardes" title="Permanent link">&para;</a></h3>
+<h3 id="backup"><strong>(Backup)</strong><a class="headerlink" href="#backup" title="Permanent link">&para;</a></h3>
+<p>Proche du VLAN stockage, vous pourriez déployer un VLAN distinct pour la sauvegarde de vos données. Par exemple si vous avez un serveur de backup ou un NAS où les différentes machines viennent déposer leurs sauvegardes, il peut être judicieux de l’isoler. Cependant, deux approches existent :</p>
+<ul>
+<li>
+<p><strong>Approche 1</strong> : Le serveur de sauvegarde (NAS, etc.) réside  <em>uniquement</em>  dans ce VLAN Sauvegarde, et on autorise chaque VLAN source à envoyer des données vers lui (sur les ports de backup) via le pare-feu. Par exemple, VLAN Prod peut joindre l’adresse du NAS (VLAN Backup) sur le port 873 (rsync) ou 443 (agent de backup), etc. Cela maintient la séparation, mais le trafic passe par le routeur et subit éventuellement son goulot d’étranglement.</p>
+</li>
+<li>
+<p><strong>Approche 2</strong> : Le serveur de sauvegarde a  <strong>une interface dans chaque VLAN</strong>  qui le concerne (ou au moins dans VLAN Prod et VLAN Backup). C’est plus complexe et augmente la surface, donc on préfère la première solution généralement.</p>
+</li>
+</ul>
+<p>Un VLAN Backup dédié prend son sens si les sauvegardes représentent beaucoup de trafic et qu’on peut le séparer physiquement/logiquement. Si vos sauvegardes se font la nuit, saturer le LAN principal n’est pas un gros problème, donc un VLAN séparé n’apporte pas énormément en performance (sauf à avoir des liens multiples). En sécurité en revanche, isoler le serveur de sauvegarde sur un VLAN restreint est malin : en cas de compromission d’une machine du LAN Prod (rançongiciel par ex), il lui sera plus difficile d’atteindre le NAS de sauvegarde s’il est sur un autre VLAN avec un accès uniquement unidirectionnel.  <strong>Recommandation</strong> : placez votre NAS/serveur de backup dans un VLAN séparé (par ex. VLAN 60 = 192.168.60.0/24), n’autorisez que le minimum (les machines sources peuvent envoyer des sauvegardes vers lui, mais lui ne peut initier de connexion vers elles), et n’autorisez pas ce VLAN vers Internet, sauf éventuellement pour envoyer des alertes mail de backup. Ainsi, vos backups sont conservés dans une “zone” distincte, réduisant les risques en cas de malware sur le LAN principal.</p>
+<h3 id="vlan_6"><strong>VLAN</strong><a class="headerlink" href="#vlan_6" title="Permanent link">&para;</a></h3>
+<h3 id="management"><strong>Management</strong><a class="headerlink" href="#management" title="Permanent link">&para;</a></h3>
+<h3 id="oob-admin"><strong>(OOB, admin)</strong><a class="headerlink" href="#oob-admin" title="Permanent link">&para;</a></h3>
+<p>Un VLAN souvent oublié dans les petits réseaux, mais très utile à partir d’un certain niveau de complexité, est le VLAN  <strong>Administration</strong>. Idée : regrouper toutes les  <strong>interfaces de gestion</strong>  de vos équipements critiques (routeur, switch, NAS, hyperviseur, IPMI des serveurs…) sur un réseau à part, accessible uniquement aux administrateurs. Par exemple VLAN  <strong>99</strong>  = 192.168.99.0/24. Vous configurez chaque équipement pour qu’il  <strong>n’écoute son interface d’administration web/SSH que sur l’IP de ce VLAN Management</strong>. Ainsi, même si un utilisateur malveillant se trouve sur le VLAN Prod, il ne pourra pas tenter d’accéder à l’interface du switch si celle-ci est sur VLAN 99 uniquement (et qu’il n’a pas accès à VLAN 99)  . C’est une mesure de sécurité  <strong>supplémentaire</strong> : même en environnement domestique, il est intéressant de limiter l’accès aux consoles d’admin. Concrètement, il faut que  <em>vous</em>  disposiez d’un moyen d’entrer dans ce VLAN management quand besoin (par ex. votre PC admin a un port physique ou un SSID Wi-Fi dédié à ce VLAN, ou vous basculez un VLAN taggé sur votre PC quand nécessaire). Ce n’est pas toujours le plus pratique au quotidien, mais c’est proche des pratiques professionnelles. Vous pouvez simplifier en combinant le VLAN Management avec votre VLAN Prod si vous êtes seul à utiliser le réseau, mais si vous êtes plusieurs utilisateurs non techniques chez vous, mieux vaut isoler la gestion.</p>
+<p>Dans la config proposée plus haut (image du réseau), le VLAN “LAN” était utilisé comme réseau de management dédié  . On y plaçait le switch, les AP, etc., tandis que les utilisateurs normaux étaient sur d’autres VLAN par défaut  . Cette approche se traduit par  <em>0 service d’admin</em>  accessible depuis les VLAN utilisateurs, ce qui réduit fortement les possibilités d’attaque interne sur vos équipements. En homelab, VLAN 99 Management peut ne pas être indispensable, mais il est bon de l’envisager pour “future-proof” votre design.</p>
+<h3 id="vlan_7"><strong>VLAN</strong><a class="headerlink" href="#vlan_7" title="Permanent link">&para;</a></h3>
+<h3 id="dmz"><strong>DMZ</strong><a class="headerlink" href="#dmz" title="Permanent link">&para;</a></h3>
+<h3 id="zone-demilitarisee"><strong>(zone démilitarisée)</strong><a class="headerlink" href="#zone-demilitarisee" title="Permanent link">&para;</a></h3>
+<p>La DMZ est un VLAN particulier destiné aux  <strong>services publics/exposés sur Internet</strong>. Si vous hébergez, par exemple, un serveur web accessible depuis l’extérieur, un VPN entrant, ou un reverse proxy frontal pour vos services, il est sain de le placer en DMZ. Ce VLAN DMZ (ex: VLAN 70 = 192.168.70.0/24) est isolé du LAN : seul le routeur y accède. On configure des règles NAT/Port forwarding pour diriger le trafic entrant WAN → vers l’IP du serveur en DMZ, et on autorise le minimum de ce VLAN vers l’intérieur.  <strong>Idéalement, la DMZ n’initie aucune connexion vers vos LAN internes</strong>  (sauf peut-être requêter une base de données sur un VLAN spécifique, mais dans homelab, on évite d’exposer une base interne). Un exemple concret : vous hébergez un  <strong>reverse proxy Nginx</strong>  pour accéder à vos services maison (domotic, etc.) depuis Internet. Placez ce reverse proxy en DMZ. On ouvre depuis Internet seulement le port 443 vers lui. Dans le firewall, on peut autoriser ce reverse proxy DMZ à contacter, disons, le serveur domotique en VLAN IoT sur le port requis, et c’est tout. Ainsi, si le proxy est compromis via le web, l’attaquant est confiné en DMZ. Certains adoptent même une  <strong>double barrière</strong>  en DMZ : le serveur DMZ est derrière le pare-feu principal ET possède son propre pare-feu applicatif. Dans un homelab, ceinture et bretelles sont peut-être excessives, mais l’idée est de ne jamais  <em>faire transiter du trafic Internet directement dans vos VLAN sensibles</em>. La DMZ agit comme tampon.</p>
+<p>Un utilisateur homelab témoigne par exemple :  <em>«DMZ – le seul VLAN acceptant des connexions externes (443), il héberge le reverse proxy externe et possède un double firewall»</em>  . Cela illustre bien que même en environnement perso, on peut traiter la DMZ sérieusement. En pratique, pour configurer : créez le VLAN, attribuez-le à une interface OPNsense (ex: OPT2), donnez-lui une plage IP. Reliez-y votre serveur public. Sur OPNsense, activez les règles NAT voulues vers ce VLAN, et surtout  <strong>blocquez toute sortie de la DMZ vers vos LAN</strong>  par défaut. Autorisez uniquement ce qui est nécessaire (peut-être la DMZ peut accéder à Internet pour updates, ou joindre un DNS local). Un conseil : ne réutilisez pas vos machines de LAN en DMZ ; par exemple, évitez qu’un conteneur sur votre NAS principal soit exposé : mieux vaut une VM dédiée sur un hôte en DMZ. Cela évite qu’une compromission DMZ n’affecte vos données.</p>
+<h3 id="vlan_8"><strong>VLAN</strong><a class="headerlink" href="#vlan_8" title="Permanent link">&para;</a></h3>
+<h3 id="invites"><strong>Invités</strong><a class="headerlink" href="#invites" title="Permanent link">&para;</a></h3>
+<h3 id="guest-wi-fi"><strong>(Guest Wi-Fi)</strong><a class="headerlink" href="#guest-wi-fi" title="Permanent link">&para;</a></h3>
+<p>Enfin, souvent utile dans un foyer, un VLAN  <strong>Invités</strong>  pour le Wi-Fi des visiteurs ou appareils temporaires. Par ex VLAN  <strong>80</strong>  = 192.168.80.0/24. Son objectif : fournir un accès Internet basique  <strong>sans aucun accès à vos ressources internes</strong>. Ici il faut généralement activer l’isolement client sur l’AP Wi-Fi (pour que les invités ne se voient pas entre eux), et sur le pare-feu on bloque toute destination locale. En gros, c’est très proche du VLAN IoT en termes de règles, mais on peut être encore plus restrictif (pas d’accès sortant vers des ports sensibles, éventuellement limiter la bande passante via QoS). Le VLAN Invités est un bon moyen de partager votre connexion sans compromettre le reste. Avec un portail captif ou un mot de passe distinct, vous pouvez contrôler l’utilisation. Techniquement, il suffit de créer ce VLAN invité, de le lier à un SSID dédié sur votre point d’accès, et de vérifier que les règles firewall interdisent tout accès aux autres VLAN (ce qui devrait déjà être le cas si on bloque RFC1918 en sortie).</p>
+<p>Pour résumer, isoler les invités vous protège de tout poste non maîtrisé (par exemple l’ordinateur vérolé d’un ami de passage ne pourra pas scanner/transmettre quoi que ce soit à vos machines). C’est une VLAN à considérer même si non mentionné initialement, puisque  <strong>anticiper les éventualités</strong>  est l’objectif : on ne sait jamais quand quelqu’un vous demandera le Wi-Fi – autant que ce soit un réseau distinct bridé.</p>
+<h2 id="conclusion-vers-un-homelab-segmente-securise-et-evolutif"><strong>Conclusion : Vers un homelab segmenté, sécurisé et évolutif</strong><a class="headerlink" href="#conclusion-vers-un-homelab-segmente-securise-et-evolutif" title="Permanent link">&para;</a></h2>
+<p>En implémentant une segmentation par VLAN dans votre homelab, vous posez les bases d’une architecture robuste où chaque catégorie de dispositifs évolue dans son  <strong>environnement contrôlé</strong>. La configuration peut sembler complexe au début (notamment la coordination entre routeur, switch et points d’accès), mais le gain en sécurité et en maîtrise du réseau est considérable pour un administrateur domestique. Vous avez désormais un  <strong>plan de réseau détaillé</strong>  distinguant les zones Prod, Lab, Domotique, Caméras, Stockage, Sauvegarde, etc., avec des  <strong>passerelles (routeur)</strong>  gérant les communications entre ces zones de manière filtrée.</p>
+<p>N’hésitez pas à  <strong>documenter votre topologie</strong>  (schémas, tableaux d’adressage VLAN) et à commenter vos règles firewall pour vous y retrouver. À mesure que votre homelab grandit, cette segmentation vous facilitera l’intégration de nouveaux services sans tout remettre en question : par exemple, ajouter un serveur PBX VoIP ? Créez un VLAN VoIP. Tester un cluster Kubernetes ? Peut-être un VLAN “Dev” séparé. Votre réseau est déjà prêt à cloisonner ces ajouts.</p>
+<p>En appliquant les bonnes pratiques (principe du moindre privilège entre VLAN, isolation du management, utilisation d’ACL avancées si besoin, etc.), vous rapprochez votre homelab d’un  <strong>réseau d’entreprise miniature</strong>  en termes de sérieux et de sécurité. Enfin, vérifiez régulièrement vos règles et appareils connectés – la  <strong>discipline de segmentation</strong>nécessite de s’assurer qu’aucun appareil ne se retrouve par erreur dans le mauvais VLAN ou avec des droits inappropriés. Avec cette architecture VLAN bien pensée, votre homelab pourra héberger en toute confiance vos projets personnels, vos exercices de sécurité et vos gadgets connectés, le tout  <strong>sans interférences ni risques excessifs</strong>  entre eux.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>

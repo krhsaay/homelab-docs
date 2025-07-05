@@ -1,0 +1,1778 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation pour construire un homelab sécurisé et complet">
+      
+      
+        <meta name="author" content="krhsaay">
+      
+      
+      
+        <link rel="prev" href="../grafana/">
+      
+      
+        <link rel="next" href="../netalert/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
+    
+    
+      
+        <title>Prometheus / InfluxDB - Cyber Doc</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#collecte-et-stockage-des-metriques-prometheus-vs-influxdb" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="../.." title="Cyber Doc" class="md-header__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber Doc
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Prometheus / InfluxDB
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Rechercher" placeholder="Rechercher" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Recherche">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Effacer" aria-label="Effacer" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initialisation de la recherche
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Cyber Doc" class="md-nav__button md-logo" aria-label="Cyber Doc" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cyber Doc
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accueil
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏗 Infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            🏗 Infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/proxmox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxmox VE
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/stockage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Stockage
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/reseau/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Réseau & VLANs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infrastructure/lxc-vs-vm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LXC vs VM
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🌐 Réseau
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            🌐 Réseau
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS (Pi-hole, AdGuard...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/vpn-remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Accès VPN distant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/reverse-proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reverse Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/ddns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    DNS Dynamique (DDNS)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reseau/torrent-vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    VPN et torrents
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧰 Outils
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            🧰 Outils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-fichiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Gestion de fichiers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/gestion-mots-de-passe/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Mots de passe (Vaultwarden...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/favoris/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Favoris et veille (Hoarder)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../outils/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Docker & Portainer
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📺 Média
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            📺 Média
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Streaming (Jellyfin, Plex)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/overseerr-sonarr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sonarr, Overseerr
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/clients-download.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Téléchargements (qBittorrent)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../media/photos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Photos (Immich)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🏠 Domotique
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            🏠 Domotique
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/homeassistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home Assistant
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/zigbee/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Zigbee2MQTT
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domotique/surveillance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vidéosurveillance (Frigate)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    📊 Monitoring
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            📊 Monitoring
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grafana/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Grafana
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prometheus / InfluxDB
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-comparaison-technique-prometheus-vs-influxdb" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Comparaison technique Prometheus vs InfluxDB
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-integration-dans-un-homelab" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Intégration dans un homelab
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-architecture-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Architecture type
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-cas-dusage-pratiques" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Cas d’usage pratiques
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-instructions-dinstallation" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Instructions d’installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-tableau-comparatif-recapitulatif" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Tableau comparatif récapitulatif
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../netalert/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    NetAlertX
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🔐 Sécurité
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            🔐 Sécurité
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/vaultwarden/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vaultwarden
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/authentification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentification MFA
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/siem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SIEM (Wazuh, ELK...)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../securite/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Segmentation & honeypots
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    🧪 DIY
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            🧪 DIY
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    ESP32 & capteurs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/octoprint.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OctoPrint & impression 3D
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diy/n8n.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    N8N Automatisation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="collecte-et-stockage-des-metriques-prometheus-vs-influxdb"><strong>Collecte et stockage des métriques : Prometheus vs InfluxDB</strong><a class="headerlink" href="#collecte-et-stockage-des-metriques-prometheus-vs-influxdb" title="Permanent link">&para;</a></h1>
+<p>Le  <strong>homelab</strong>  d’un ingénieur en cybersécurité requiert une solution de monitoring fiable et performante. Prometheus et InfluxDB sont deux bases de données temporelles (TSDB) populaires, chacune avec son modèle et ses forces propres. Cette documentation compare  <strong>techniquement</strong>  Prometheus (pull-based, TSDB) et InfluxDB (push-based, TSM), leur intégration avec les outils courants (Grafana, Home Assistant, MQTT, etc.), ainsi que des cas pratiques et une architecture type pour un homelab sécurisé. Des exemples de configurations Docker Compose, de bons usages de sécurité (réverse proxy, VLAN), et un tableau comparatif final sont fournis.</p>
+<h2 id="1-comparaison-technique-prometheus-vs-influxdb"><strong>1. Comparaison technique Prometheus vs InfluxDB</strong><a class="headerlink" href="#1-comparaison-technique-prometheus-vs-influxdb" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Performance et cardinalité</strong>  : Prometheus est conçu pour des environnements  <strong>cloud-native et conteneurisés</strong>, avec un modèle de collecte  <strong>par pull</strong>. Il gère efficacement les métriques à  <strong>haute cardinalité</strong>. InfluxDB, utilisant un modèle  <strong>push</strong>  (via Telegraf ou API), offre souvent un  <strong>débit d’écriture</strong>  élevé mais peut peiner avec des séries extrêmement nombreuses. Autrement dit, Prometheus facilite les requêtes agrégées sur des millions de séries (ex.  <em>histogram_quantile</em>  en PromQL), tandis qu’InfluxDB peut mieux absorber un flot intensif de données IoT.</p>
+</li>
+<li>
+<p><strong>Stockage</strong>  : Prometheus utilise son  <strong>TSDB</strong>  interne : les données sont regroupées en  <strong>blocs de 2 heures</strong>, indexés et compressés. Prometheus stocke en moyenne seulement  <strong>1–2 octets par échantillon</strong>. Un journal d’écriture (WAL) assure la durabilité jusqu’à la persistance dans les segments compactés. La rétention est gérée par les flags  --storage.tsdb.retention.time/size  (par défaut 15 jours). InfluxDB, quant à lui, utilise une architecture WAL +  <strong>TSM (Time-Structured Merge Tree)</strong>. Les points sont d’abord écrits dans un WAL puis flushés en mémoire cache et finalement vers des fichiers TSM compressés par séries (stockant les  <strong>deltas</strong>  des séries en format colonne). InfluxDB prend en charge nativement les  <strong>rétention policies</strong>  (ex.  CREATE RETENTION POLICY "one_year" ON "mydb" DURATION 52w...) et les  <strong>continuous queries</strong>  pour downsampling automatique. Par exemple :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="n">RETENTION</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;one_year&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="ss">&quot;mydb&quot;</span><span class="w"> </span><span class="n">DURATION</span><span class="w"> </span><span class="mi">52</span><span class="n">w</span><span class="w"> </span><span class="n">REPLICATION</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">DEFAULT</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="n">CONTINUOUS</span><span class="w"> </span><span class="n">QUERY</span><span class="w"> </span><span class="ss">&quot;cq_30m&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="ss">&quot;mydb&quot;</span>
+<span class="w">  </span><span class="n">RESAMPLE</span><span class="w"> </span><span class="k">EVERY</span><span class="w"> </span><span class="mi">30</span><span class="n">m</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="mi">1</span><span class="n">d</span>
+<span class="w">  </span><span class="k">BEGIN</span>
+<span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="ss">&quot;value&quot;</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="ss">&quot;downsampled&quot;</span><span class="p">.</span><span class="ss">&quot;cpu_load&quot;</span>
+<span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="ss">&quot;cpu_load&quot;</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">time</span><span class="p">(</span><span class="mi">1</span><span class="n">m</span><span class="p">),</span><span class="w"> </span><span class="o">*</span>
+<span class="w">  </span><span class="k">END</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Cette souplesse permet à InfluxDB d’archiver  <strong>long terme</strong>  avec agrégation, contrairement à Prometheus qui efface simplement les vieux blocs.</p>
+</li>
+<li>
+<p><strong>Compression</strong>  : Les deux moteurs appliquent des techniques de compression par défaut. Prometheus utilise l’algorithme  <strong>Gorilla</strong>  pour les séries numériques, et peut compresser le WAL avec Snappy. InfluxDB compresse chaque bloc TSM indépendamment : les timestamps et valeurs sont codés différemment (delta encoding, Simple8b, Snappy, XOR…) selon le type (float, int, bool, string). Le stockage en colonnes par série et l’usage de deltas améliorent l’efficacité de stockage d’InfluxDB pour des séries régulières.</p>
+</li>
+<li>
+<p><strong>Flexibilité des requêtes</strong>  : Prometheus utilise  <strong>PromQL</strong>, un langage fonctionnel conçu pour les séries étiquetées (labels). Il excelle dans les requêtes temps réel, les agrégations multi-dimensions, les joins implicites (opérations booléennes sur séquences), et les fonctions d’histogrammes ou de dérivées. InfluxDB propose  <strong>InfluxQL</strong>  (SQL-like, historique v1) et  <strong>Flux</strong>  (langage scriptable plus récent). Flux permet des transformations avancées (joins explicites, windowing, math), mais impose souvent plus de configuration. PromQL ne supporte que des valeurs numériques (float64) pour la plupart des opérateurs, InfluxQL/Flux peut gérer divers types (floats, int, bool, string).</p>
+</li>
+<li>
+<p><strong>Cas d’usage typiques</strong>  : En résumé, Prometheus est parfait pour la surveillance en temps réel d’infrastructures modernes : il intègre la découverte de services (Kubernetes, Consul, etc.), l’alerting natif via Alertmanager, et de nombreux  <em>exporters</em>  (Node Exporter, cAdvisor, Blackbox, etc.). InfluxDB brille dans les  <strong>données IoT et capteurs</strong>(ex. suivi d’énergie, températures, séries temporelles industrielles) grâce à son modèle push et ses capacités d’agrégation/de durée. Par exemple, InfluxDB est souvent cité pour les déploiements  <strong>Smart Home</strong>  et capteurs longue durée, alors que Prometheus est le choix par défaut en Cloud / containers.</p>
+</li>
+<li>
+<p><strong>Alerting</strong>  : Prometheus dispose d’un système d’alerte intégré (<em>Alertmanager</em>) facile à configurer pour envoyer des notifications (email, Slack, etc.) basées sur des règles PromQL. InfluxDB, historiquement (v1), s’appuyait sur  <strong>Kapacitor/Chronograf</strong>  pour les alertes, ce qui peut être plus lourd à configurer. Aujourd’hui, les utilisateurs d’InfluxDB ont souvent recours à  <strong>Grafana Alerting</strong>  ou à des solutions externes. Dans tous les cas, les deux solutions peuvent générer des alertes, mais la pile Prometheus est  <strong>native</strong>  (Prometheus → Alertmanager) tandis qu’InfluxDB nécessite en général un composant supplémentaire ou l’utilisation de Grafana.</p>
+</li>
+</ul>
+<h2 id="2-integration-dans-un-homelab"><strong>2. Intégration dans un homelab</strong><a class="headerlink" href="#2-integration-dans-un-homelab" title="Permanent link">&para;</a></h2>
+<p>Un homelab de cyber-sécurité requiert la surveillance de multiples composants et capteurs. Voici comment Prometheus et InfluxDB se branchent sur les outils courants :</p>
+<ul>
+<li>
+<p><strong>Grafana</strong>  : Indispensable pour visualiser les métriques. Grafana supporte  <strong>nativement Prometheus et InfluxDB</strong>comme sources de données. On peut construire des dashboards graphiques complexes, utiliser des  <strong>variables de template</strong>  pour itérer sur des hôtes ou interfaces, et déclencher des alertes via Grafana Alerting. Par exemple, un dashboard Proxmox peut agréger  node_cpu_seconds_total  (Prometheus) ou  cpu_load  (Influx) au même endroit. Grafana facilite aussi le paramétrage (templating) des requêtes et des alertes cross-source.</p>
+</li>
+<li>
+<p><strong>Home Assistant (HA)</strong>  : HA est souvent cœur d’un homelab domotique. Il offre une intégration  <strong>Prometheus</strong>  qui expose un endpoint  /api/prometheus  pour que Prometheus scrappe les états des entités HA  . InfluxDB dispose aussi d’une intégration (ou add-on) : HA peut  <strong>pousser</strong>  ses données dans InfluxDB via  influxdb:  dans  configuration.yaml. Exemple de configuration pour HA → InfluxDB :</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">influxdb</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">api_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.190</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8086</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VOTRE_TOKEN</span>
+<span class="w">  </span><span class="nt">organization</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MON_ORG</span>
+<span class="w">  </span><span class="nt">bucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mesures_domotique</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HA</span>
+</code></pre></div>
+<ul>
+<li>
+<p>Ainsi, on exploite HA comme source de données pour l’un ou l’autre système. InfluxDB est souvent privilégié pour les  <strong>graphiques longue durée</strong>  (énergie, température), tandis que Prometheus peut être utilisé pour des alertes instantanées (ex. batterie faible).</p>
+</li>
+<li>
+<p><strong>Zigbee2MQTT et capteurs domotiques (Shelly, Zigbee)</strong>  : Ces solutions transmettent leurs mesures via MQTT. Avec InfluxDB, on peut utiliser  <strong>Telegraf</strong>  (plugin  mqtt_consumer) ou un  <em>exporter MQTT</em>  pour récupérer les topics et écrire dans InfluxDB. Ce blog montre bien comment capter des mesures Shelly sur MQTT et les stocker en Influx 2.6 pour Grafana. Avec Prometheus, il n’existe pas d’endpoint Prometheus natif dans Zigbee2MQTT (sujet en discussion GitHub), on peut donc utiliser Telegraf  <em>vers</em>  Prometheus : le plugin  inputs.mqtt_consumer  de Telegraf lit les messages Zigbee2MQTT en JSON, puis le plugin  outputs.prometheus_client  les expose sur un endpoint  /metricspour que Prometheus les scrap. En résumé, capteurs Zigbee/Powermètre (Shelly) → MQTT → (Telegraf) → InfluxDB/Prometheus.</p>
+</li>
+<li>
+<p><strong>Frigate (NVR IA)</strong>  : Frigate expose une API  /api/stats  fournissant CPU, mémoire, FPS, corail, stockage, compteurs d’événements, etc. Il existe un exporter Prometheus dédié (par ex.  <a href="https://github.com/bairhys/prometheus-frigate-exporter">bairhys/prometheus-frigate-exporter</a>). Ce container interroge Frigate et met à disposition ces métriques en  /metrics. Il fournit notamment la vitesse d’inférence, l’utilisation CPU/RAM de Frigate, le FPS caméra, la température du Coral, etc.. On fera donc pointer Prometheus vers cet exporter pour collecter les métriques Frigate. InfluxDB n’a pas d’intégration directe, mais on peut remonter ces mêmes infos via Telegraf (inputs.http  ou script) ou via l’API  <em>remote write</em>  de Influx (InfluxDB 2.0 accepte aussi le protocole Prometheus).</p>
+</li>
+<li>
+<p><strong>Docker et hôtes Proxmox</strong>  : Sur chaque nœud (Proxmox ou serveur Linux), on installe  <strong>node_exporter</strong>  pour les métriques système (CPU, RAM, disques, réseau) et  <strong>cAdvisor</strong>  (ou Docker daemon metrics) pour les conteneurs Docker. Ces exporters sont scrappés par Prometheus. Avec InfluxDB, Telegraf prend le relais : on peut activer  [[inputs.cpu]],  [[inputs.mem]],  [[inputs.disk]],  [[inputs.net]],  [[inputs.docker]], etc., pour récolter les mêmes données (voir exemple de configuration Telegraf ci-dessous). Grafana affichera en aval ces données à partir d’Influx ou de Prometheus, avec les mêmes dashboards (il suffit de configurer la source de données).</p>
+</li>
+<li>
+<p><strong>Proxmox (VE)</strong>  : Proxmox n’expose pas nativement de métriques Prometheus, mais il existe plusieurs outils. Par exemple, le projet  <em>prometheus-pve-exporter</em>  récupère via l’API Proxmox l’état des VMs/CTs, ressources, statut cluster, etc., pour Prometheus. Pour InfluxDB, Telegraf dispose d’un plugin  inputs.proxmox  qui interroge l’API de Proxmox et envoie les stats (CPU, mémoire, IOPS, etc.) vers Influx. Ainsi, que vous utilisiez Prometheus ou InfluxDB, il existe des solutions (exporter ou plugin) pour intégrer Proxmox dans le monitoring.</p>
+</li>
+</ul>
+<h2 id="3-architecture-type"><strong>3. Architecture type</strong><a class="headerlink" href="#3-architecture-type" title="Permanent link">&para;</a></h2>
+<p>En pratique, on peut déployer  <strong>deux stacks distinctes</strong>  ou une architecture mixte. Les concepts clés :</p>
+<ul>
+<li>
+<p><strong>Exporters Prometheus</strong>  : Petits services HTTP exposant des métriques au format Prometheus. Exemples :  node_exporter  (host hardware),  cadvisor  (Docker),  blackbox_exporter  (ping/HTTP),  mqtt_exporter/Telegraf Prometheus (MQTT),  zabbix_exporter, etc. Prometheus scrappe périodiquement ces endpoints et stocke les données dans sa TSDB. L’Alertmanager (optionnel) gère les notifications.</p>
+</li>
+<li>
+<p><strong>Agents Telegraf pour InfluxDB</strong>  : Telegraf est un agent « plugin-based » qui pousse les données vers InfluxDB. Il lit les métriques système (inputs.cpu,  inputs.disk,  inputs.docker), IoT (inputs.mqtt_consumer,  inputs.modbus, etc.), ou même Prometheus (inputs.prometheus  plugin) et écrit dans InfluxDB (v2). InfluxDB OSS ou Cloud stocke les séries, et Grafana (ou Chronograf) sert de couche graphique.</p>
+</li>
+<li>
+<p><strong>Politique de rétention</strong>  : On définit des rétentions (durées de stockage). Prometheus purge au-delà de  retention.time. InfluxDB gère les politiques par base/bucket, et on peut configurer des TTLs en flux. Des downsamplings (CQ/Tasks) réduisent la granularité historique.</p>
+</li>
+<li>
+<p><strong>Authentification &amp; Sécurité</strong>  : En mode « homelab sécurisé », on met les services de monitoring sur un réseau de gestion isolé (VLAN dédié). Les exporters sur les VLAN IoT (capteurs) ou Docker peuvent être accessibles uniquement en internal. Tous les accès web (Grafana, InfluxUI, Prom UI, Alertmanager) passent par un reverse proxy (Nginx, Traefik) en HTTPS avec authentification forte (LDAP/htpasswd). On évite d’exposer les endpoints  :9100/metrics  (node_exporter) ou  :9103/metrics  (cadvisor) en externe, sauf éventuellement via VPN.</p>
+</li>
+</ul>
+<p><em>Figure 1 : Exemple de schéma d’architecture Prometheus (modèle pull) avec exporters et Alertmanager.</em></p>
+<p><em>Figure : Architecture typique Prometheus – Prometheus scrappe les exporters (node_exporter, cAdvisor, etc.) et envoie les alertes à Alertmanager, le tout visualisé dans Grafana.</em></p>
+<p>En complément, un  <strong>schéma ASCII</strong>  sommaire d’une architecture mixte pourrait être :</p>
+<div class="highlight"><pre><span></span><code>            ┌───────────┐
+            │  Grafana  │
+            └───▲───┬───┘
+                │   │
+         ┌──────┴─┐ └────────┐
+         │Prometheus│         │
+         └──▲────┬──┘         │
+            │    │           │
+            │  ┌─┴────────┐  │
+            │  │ Alertman- │  │
+            │  │  ager     │  │
+            │  └───────────┘  │
+┌────────┬───┴───┴──┐   ┌────┴────┐
+│ node   │ cadvisor │   │ mqtt    │
+│ exporter│         │   │ exporter│
+└────────┴──────────┘   └─────────┘
+   (hôtes)               (IoT)       
+
+┌────────┐    ┌────────────────┐ 
+│Telegraf│    │   InfluxDB     │ 
+│(Linux, │    │ (TSM engine)   │ 
+│ Docker)│    └────▲─────┬─────┘
+└──┬─────┘         │     │
+   │               │     │writes       
+   │               │     │       
+   │           ┌───┴───┐ │
+   │           │Cache  │ │
+   │           └───┬───┘ │
+   │               │     │
+   │           ┌───┴───┐ │
+   └──────────▶│ WAL   │ │
+               └───┬───┘ │
+                   │     │
+                   │ ┌───┴───┐
+                   │ │ TSM   │
+                   │ └───┬───┘
+                   │     │
+                   │Compression
+                   ▼
+</code></pre></div>
+<p>Dans ce diagramme, Prometheus  <strong>scrape</strong>  régulièrement les exporters (node_exporter,  cadvisor,  mqtt_exporter, etc.) pour remplir sa TSDB, tandis que Telegraf  <strong>push</strong>  les données vers InfluxDB qui les stocke dans le WAL puis dans des fichiers TSM compactés. Grafana interroge ensuite Prometheus  <em>et/ou</em>  InfluxDB pour afficher les tableaux de bord.</p>
+<h2 id="4-cas-dusage-pratiques"><strong>4. Cas d’usage pratiques</strong><a class="headerlink" href="#4-cas-dusage-pratiques" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p><strong>Surveillance de l’infrastructure</strong>  : On suit l’état des VMs (Proxmox, LXC, QEMU), du réseau, et du hardware. Exemples : CPU et mémoire des nœuds (via Node Exporter ou Telegraf), trafic réseau (via SNMP_exporter ou inputs.net), statut des VM (via proxmox-exporter ou inputs.proxmox). Grafana propose des dashboards préfabriqués pour Proxmox, Docker, etc. Des alertes communes : manque de mémoire (node_memory_availablebas), disque presque plein (node_filesystem  &gt;90%), ou container bloqué (perte de heartbeat).</p>
+</li>
+<li>
+<p><strong>Monitoring d’énergie et domotique</strong>  : Avec des capteurs Shelly (compteurs d’énergie, interrupteurs) ou des sondes Zigbee (température, humidité), on envoie les données via MQTT. Par exemple, un Shelly EM peut publier sa consommation sur MQTT, et un agent Telegraf (plugin MQTT) écrit cette donnée dans InfluxDB. Dans Grafana on trace l’évolution de l’énergie. InfluxDB est adapté car on peut stocker sur des années avec agrégation. Prometheus est moins naturel ici (les données évènementielles via MQTT demandent un pont push/pull) – souvent on utilise Telegraf → Prometheus proxy si nécessaire.</p>
+</li>
+<li>
+<p><strong>Alertes température / conso CPU</strong>  : On peut surveiller la température CPU du serveur ou la consommation électrique. Par exemple, installer  lm-sensors  sur un hôte Proxmox et configurer Telegraf pour lire ces capteurs, puis déclencher une alerte si  sensors_core_temp &gt; 80°C. Prometheus peut également récupérer la température via Node Exporter (with  sensors  enabled) et un rule PromQL (ALERT CPUHighTemp IF node_hwmon_temp_celsius &gt; 80). Pour la consommation, on peut déclencher si la moyenne des Watts (d’un Shelly) dépasse un seuil sur 5 min, avec une règle Alertmanager ou alert Grafana.</p>
+</li>
+</ul>
+<p>Chaque cas d’usage met en lumière le choix : Prometheus pour de l’<strong>alerting réactif</strong>  et du monitoring système, InfluxDB pour de la  <strong>collecte IoT/longue durée</strong>. Dans un homelab, on peut utiliser les deux de manière complémentaire (voir tableau ci-dessous).</p>
+<h2 id="5-instructions-dinstallation"><strong>5. Instructions d’installation</strong><a class="headerlink" href="#5-instructions-dinstallation" title="Permanent link">&para;</a></h2>
+<p>On installe généralement ces stacks via  <strong>Docker Compose</strong>  pour simplicité. Ci-dessous deux exemples de  docker-compose.yml  simplifiés.</p>
+<p><strong>Prometheus Stack</strong>  (Prometheus + Alertmanager + Grafana) :</p>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/prometheus:v2.46.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prometheus-data:/prometheus</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9090:9090&quot;</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--storage.tsdb.retention.time=15d&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;--web.enable-lifecycle&quot;</span>
+<span class="w">  </span><span class="nt">alertmanager</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prom/alertmanager:v0.25.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">alertmanager</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./alertmanager.yml:/etc/alertmanager/config.yml</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;9093:9093&quot;</span>
+<span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:10.0.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;GF_SECURITY_ADMIN_PASSWORD=MotDePasseFort&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3000:3000&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana-data:/var/lib/grafana</span>
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">prometheus-data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">grafana-data</span><span class="p">:</span>
+</code></pre></div>
+<ul>
+<li>
+<p>prometheus.yml doit lister les targets (ex. node_exporter:9100, cadvisor:8080, mqtt_exporter:9255, etc.).</p>
+</li>
+<li>
+<p>alertmanager.yml  configure les routes d’alerte et receveurs (email/Slack).</p>
+</li>
+<li>
+<p>On mappe des volumes pour persister les données (/prometheus,  /var/lib/grafana).</p>
+</li>
+</ul>
+<p><strong>InfluxDB Stack</strong>  (InfluxDB2 + Telegraf + Grafana) :</p>
+<div class="highlight"><pre><span></span><code><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;3.8&#39;</span>
+<span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">influxdb</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb:2.8</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb-data:/var/lib/influxdb2</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_MODE=setup</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_USERNAME=admin</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_PASSWORD=MotDePasseSecurise</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_ORG=my-org</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_BUCKET=mybucket</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DOCKER_INFLUXDB_INIT_RETENTION=720h</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8086:8086&quot;</span>
+<span class="w">  </span><span class="nt">telegraf</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telegraf:1.40</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">telegraf</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./telegraf.conf:/etc/telegraf/telegraf.conf:ro</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">influxdb</span>
+<span class="w">  </span><span class="nt">grafana</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana/grafana:10.0.0</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana_influx</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;GF_SECURITY_ADMIN_PASSWORD=AutreMotDePasse&quot;</span>
+<span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;3001:3000&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grafana2-data:/var/lib/grafana</span>
+<span class="nt">volumes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">influxdb-data</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">grafana2-data</span><span class="p">:</span>
+</code></pre></div>
+<ul>
+<li>
+<p>InfluxDB 2 en mode  <em>setup</em>  crée org, bucket, utilisateur à la première exécution.</p>
+</li>
+<li>
+<p>Telegraf pousse les métriques : le fichier  telegraf.conf  contient par exemple :</p>
+</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="k">[[outputs.influxdb_v2]]</span>
+<span class="w">  </span><span class="n">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;http://influxdb:8086&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;GENERE_TOKEN_INFLUX&quot;</span>
+<span class="w">  </span><span class="n">organization</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-org&quot;</span>
+<span class="w">  </span><span class="n">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;mybucket&quot;</span>
+<span class="k">[[inputs.cpu]]</span>
+<span class="w">  </span><span class="n">percpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="n">totalcpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<span class="k">[[inputs.mem]]</span>
+<span class="k">[[inputs.disk]]</span>
+<span class="k">[[inputs.net]]</span>
+<span class="k">[[inputs.docker]]</span>
+<span class="w">  </span><span class="n">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;unix:///var/run/docker.sock&quot;</span>
+<span class="k">[[inputs.mqtt_consumer]]</span>
+<span class="w">  </span><span class="n">servers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;tcp://mqtt-broker:1883&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="n">topics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;shellies/+/+/power&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;zigbee2mqtt/#&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="n">data_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;json&quot;</span>
+</code></pre></div>
+-   Grafana (port 3001) est ici configuré séparément afin de ne pas écraser l’instance Prom stack si elle existe.</p>
+<p><strong>Reverse proxy et sécurité</strong>  : En production, on place un proxy inverse (Nginx, Traefik) devant Grafana/InfluxUI/PromUI pour gérer TLS et authentification unifiée. Par exemple, on peut créer des hôtes virtuels  grafana.mondomaine.com,  prometheus.mondomaine.com, protégés par basic auth ou OAuth. Il est crucial de  <strong>persister</strong>  les volumes de base de données (ne pas reconstruire Influx/Prom et perdre les données). On met en place des  <strong>backups réguliers</strong>  :  influx backuppour InfluxDB, et snapshots pour Prometheus (ou copier le dossier de données).</p>
+<p><strong>Bonnes pratiques de réseau</strong>  : Isoler les exportateurs dans des VLAN (ex. tous les exporters IoT/OT sur un VLAN séparé, exposé uniquement au broker MQTT et aux collectors). Les containers de monitoring tournent idéalement sur un segment sécurisé. On n’ouvre pas les ports  9100,  9255, etc. hors du VPN interne. Grafana et Prometheus/InfluxUI doivent être chiffrés (HTTPS) et protégés par un système d’authentification solide (OIDC/LDAP, ou au minimum  auth.basic).</p>
+<h2 id="6-tableau-comparatif-recapitulatif"><strong>6. Tableau comparatif récapitulatif</strong><a class="headerlink" href="#6-tableau-comparatif-recapitulatif" title="Permanent link">&para;</a></h2>
+<p>TABLEAU</p>
+<p>Ce tableau synthétise les différences clés. En somme, Prometheus est idéal pour la surveillance  <strong>temps réel et multi-dimensionnelle</strong>  d’infrastructure dynamique, avec alerting natif. InfluxDB est un choix robuste pour du  <strong>historique volumineux</strong>  et des données hétérogènes, spécialement en contexte IoT/smart home. Chaque solution peut être déployée isolément ou en complément pour tirer parti de leurs points forts.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "toc.integrate", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      
+    
+  </body>
+</html>
